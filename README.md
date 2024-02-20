@@ -5,17 +5,17 @@ Your goal? Either assassinate the King or protect the throne until time's up. It
 
 Feature List
 
-    Autostart: Start the game automatically, with configurable settings.
-    6 Kits: Choose from 3 kits per team, allowing for diverse strategies.
-    2 Teams: Engage in battle as Franks (Defenders) or Vikings (Attackers).
-    Scoreboards: configurable scoreboards.
-    Customizable Config: Tailor the game settings to suit your preferences.
-    Custom Abilities:  Added for gameplay depth.
-    Throwable Axes: Thrilling combat experiences.
-    Kill Rewards: Earn rewards for each kill.
-    Spectator Mode: Join as a spectator if you enter the game late.
-    Customizable King's Health: Adjust the king's health to balance gameplay.
-    Fully Automated
+    - Autostart: Start the game automatically, with configurable settings.
+    - 6 Kits: Choose from 3 kits per team, allowing for diverse strategies.
+    - 2 Teams: Engage in battle as Franks (Defenders) or Vikings (Attackers).
+    - Scoreboards: configurable scoreboards.
+    - Customizable Config: Tailor the game settings to suit your preferences.
+    - Custom Abilities:  Added for gameplay depth.
+    - Throwable Axes: Thrilling combat experiences.
+    - Kill Rewards: Earn rewards for each kill.
+    - Spectator Mode: Join as a spectator if you enter the game late.
+    - Customizable King's Health: Adjust the king's health to balance gameplay.
+    - Fully Automated
 
 
 Getting started
@@ -59,13 +59,7 @@ Commands:
 
 Permissions
 Currently, permissions are limited to admin commands only.
-viking.admin
-
-SPECIAL THANKS TO ELECRONODE HOSTING FOR LETTING ME TEST MY PLUGIN
-
-ElectroNode Hosting focuses on Minecraft, with prices starting at 1.10 Euros per gigabyte. Affordable hosting provides excellent quality and support. The plugin has been made and tested using the ElectroNode server.
-Website: https://electronode.org/
-Discord: https://discord.gg/YAxYRrFhmD
+- viking.admin
 
 
 I appreciate your interest in this project.
