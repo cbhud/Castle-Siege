@@ -1,28 +1,39 @@
 package me.cbhud.items;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import java.util.*;
 
 public class Manager {
-    public static ItemStack blood;
     public static ItemStack stew;
 
     public static ItemStack axe;
+    public static ItemStack combataxe;
+    public static ItemStack rage;
+    public static ItemStack ragnarok;
+    public static ItemStack sight;
+    public static ItemStack harm;
+    public static ItemStack cbow;
+    public static ItemStack ctrident;
 
     public static void init() {
 
-
-        createBlood();
         createAxe();
+        createHarm();
         createStew();
+        createCombatAxe();
+        createRage();
+        createRagnarok();
+        createSight();
+        createCbow();
+        createTrident();
 
     }
 
@@ -30,57 +41,125 @@ public class Manager {
     private static void createAxe(){
         ItemStack item = new ItemStack(Material.IRON_AXE, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§cBerserker's Axe");
+        meta.setDisplayName("§cThrowable Axe");
         List<String> lore = new ArrayList<>();
-        lore.add("§7When you kill someone with this axe");
-        lore.add("§7he will drop viking blood");
-        lore.add("You can make viking stew with it");
+        lore.add("§7Right-click holding this axe");
+        lore.add("§7to throw it");
         meta.setLore(lore);
-        meta.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.setUnbreakable(true);
         item.setItemMeta(meta);
         axe = item;
-    }
-
-
-    private static void createBlood(){
-        ItemStack item = new ItemStack(Material.RED_DYE, 1);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§cViking's Blood");
-        List<String> lore = new ArrayList<>();
-        lore.add("§7You can craft viking stew with this");
-        lore.add("You can make viking stew with it");
-        meta.setLore(lore);
-        meta.addEnchant(Enchantment.DURABILITY, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
-        blood = item;
     }
 
     private static void createStew(){
         ItemStack item = new ItemStack(Material.LEGACY_MUSHROOM_SOUP, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§6Viking Stew");
+        meta.setDisplayName("§dMagic Stew");
         List<String> lore = new ArrayList<>();
-        lore.add("§8Viking stew will regenerate you");
-        lore.add("§7Gives you Regeneration for 5 seconds");
+        lore.add("§7Stew will regenerate you");
+        lore.add("§7for 5 seconds");
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         item.setItemMeta(meta);
         stew = item;
+    }
 
-        ShapelessRecipe stewRecipe = new ShapelessRecipe(NamespacedKey.minecraft("vikings_stew"), item);
-        stewRecipe.addIngredient(Material.BOWL);
-        if(Manager.blood != null) {
-            stewRecipe.addIngredient(Manager.blood.getType());
-        } else {
-            Bukkit.getLogger().severe("Error: 'blood' item is null.");
-            return;}
+    private static void createCombatAxe(){
+        ItemStack item = new ItemStack(Material.IRON_AXE, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§cBerserker's Melee");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7Berserker's melee axe");
+        lore.add("§7Used in viking fights");
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS,ItemFlag.HIDE_UNBREAKABLE);
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
+        combataxe = item;
+    }
 
-        Bukkit.getServer().addRecipe(stewRecipe);
+    private static void createRage(){
+        ItemStack item = new ItemStack(Material.RED_DYE, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§cBerserker's RAGE");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7This will give you special berserker effects");
+        lore.add("§7Right-click to use");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        item.setItemMeta(meta);
+        rage = item;
+    }
+
+    private static void createRagnarok(){
+        ItemStack item = new ItemStack(Material.MAGMA_CREAM, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§4Ragnarok");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7This will give you special Ragnarok effects");
+        lore.add("§7Strength n resistance but slowness aswell");
+        lore.add("§7Right-click to use");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        item.setItemMeta(meta);
+        ragnarok = item;
+    }
+
+    private static void createSight(){
+        ItemStack item = new ItemStack(Material.MAGMA_CREAM, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§eSkald's Sight");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7This will give you special Skald effects");
+        lore.add("§7Special vision ability and jump boost");
+        lore.add("§7Right-click to use");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        item.setItemMeta(meta);
+        sight = item;
+    }
+
+    private static void createHarm() {
+        ItemStack item = new ItemStack(Material.TIPPED_ARROW, 1);
+        ItemMeta meta = item.getItemMeta();
+
+        // Use the same meta instance for both ItemMeta and PotionMeta
+        meta.setDisplayName("§eDamage Arrow");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7This arrow gives special Skald effects");
+        lore.add("§7Special vision ability and jump boost");
+        lore.add("§7Right-click to use");
+        meta.setLore(lore);
+
+        // Set the base potion data with INSTANT_DAMAGE
+        ((PotionMeta) meta).setBasePotionData(new PotionData(PotionType.INSTANT_DAMAGE));
+
+        item.setItemMeta(meta);
+        harm = item;
+    }
+
+    private static void createCbow() {
+        ItemStack crossbow = new ItemStack(Material.CROSSBOW);
+        ItemMeta meta = crossbow.getItemMeta();
+
+            meta.addEnchant(Enchantment.QUICK_CHARGE, 3, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        crossbow.setItemMeta(meta);
+        cbow = crossbow;
 
     }
 
+    private static void createTrident() {
+        ItemStack trident = new ItemStack(Material.TRIDENT);
+        ItemMeta meta = trident.getItemMeta();
+            meta.addEnchant(Enchantment.LOYALTY, 2, true);
+            trident.setItemMeta(meta);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        trident.setItemMeta(meta);
+        ctrident = trident;
+    }
 
 
 }

@@ -1,0 +1,53 @@
+##MAX PLAYERS IN TEAM
+maxPlayersPerTeam: 16
+
+## TIME BEFORE VIKINGS HAS TO KILL THE KING
+timerMinutes: 10
+
+### ADJUST KING HEALTH NOTE IT SHOULD BE WITH ONE DECIMAL EXAMPLE : 80.0
+king-health: 80.0
+
+
+scoreboard-title: '===Castle Siege==='
+scoreboard-bottomline: 'serverip.net'
+
+##AQUA 	#BLACK 	#BLUE 	#DARK_AQUA
+#DARK_BLUE 	#DARK_GRAY 	#DARK_GREEN DARK_PURPLE
+#DARK_RED 	#GOLD 	#GRAY 	#GREEN
+#ITALIC 	#LIGHT_PURPLE 	#RED
+#WHITE 	#YELLOW
+title-color: GOLD
+bottom-color: DARK_AQUA
+
+main-color: YELLOW
+secondary-color: WHITE
+
+auto-start-players: 8
+auto-start-countdown: 60
+
+
+##SET THIS INGAME VIA COMMANDS
+
+
+spawnLocations:
+  vikings:
+    world: world
+    x: 0.0
+    y: 64.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0
+  franks:
+    world: world
+    x: 0.0
+    y: 64.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0
+  lobby:
+    world: 'world'
+    x: 0.0
+    y: 64.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0

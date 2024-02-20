@@ -2,14 +2,27 @@ name: Vikings
 main: me.cbhud.Main
 author: cbhud
 version: 1.0
-api-version: 1.20.2
+api-version: 1.17
 commands:
-  givesoup:
+  setlobby:
     description: Gives soup
     usage: /<command>
-  giveaxe:
+    permission: viking.admin
+  start:
     description: Gives soup
     usage: /<command>
-  giveblood:
+    permission: war.start
+  teamjoin:
     description: Gives soup
+    usage: /<command>
+  setspawn:
+    description: Gives soup
+    usage: /<command>
+    permission: viking.admin
+  setmobspawn:
+    description: mob
+    usage: /<command>
+    permission: viking.admin
+  kit:
+    description: kit
     usage: /<command>
