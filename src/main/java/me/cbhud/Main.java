@@ -16,7 +16,6 @@ import me.cbhud.state.GameState;
 import me.cbhud.state.GameWinner;
 import me.cbhud.team.TeamJoinCommand;
 import me.cbhud.team.TeamManager;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -33,7 +32,6 @@ public class Main extends JavaPlugin {
     private PlayerStateManager playerStateManager;
     private ScoreboardManager scoreboardManager;
     private Autostart autoStart;
-    private BukkitRunnable scoreboardUpdateTask;
     private TeamSelector teamSelector;
     private KitSelector kitSelector;
 
@@ -73,6 +71,7 @@ public class Main extends JavaPlugin {
         getCommand("teamjoin").setExecutor(new TeamJoinCommand(this, teamManager));
         getCommand("setspawn").setExecutor(new TeamSpawnCommand(this));
         getCommand("setmobspawn").setExecutor(new SetMobSpawnCommand(this));
+        getCommand("endgame").setExecutor(new EndGameCommand(this));
         getCommand("kit").setExecutor(new KitCommand(this));
         // Event registration
         getServer().getPluginManager().registerEvents(new PlayerJoin(this, game, teamManager, autoStart, configManager), this);
@@ -90,8 +89,6 @@ public class Main extends JavaPlugin {
         kitSelector = new KitSelector();
         scoreboardManager = new ScoreboardManager(this, teamManager, mobManager, configManager);
         game.setState(GameState.LOBBY);
-        int pluginId = 21060; // <-- Replace with the id of your plugin!
-        Metrics metrics = new Metrics(this, pluginId);
         getServer().getConsoleSender().sendMessage("Vikings has been enabled!");
     }
 

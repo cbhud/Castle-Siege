@@ -1,8 +1,6 @@
 package me.cbhud.spectator;
 
 import org.bukkit.entity.Player;
-import org.bukkit.*;
-
 import java.util.HashMap;
 import java.util.Map;
 

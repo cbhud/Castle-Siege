@@ -1,7 +1,6 @@
 package me.cbhud.team;
 
 import me.cbhud.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 

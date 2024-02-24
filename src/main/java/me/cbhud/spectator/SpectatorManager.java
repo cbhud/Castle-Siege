@@ -51,6 +51,7 @@ public class SpectatorManager {
         player.getActivePotionEffects().clear();
         player.getInventory().clear();
         player.setHealth(20);
+        player.setLevel(0);
 
         ItemStack clockItem = new ItemStack(Material.CLOCK);
         ItemMeta clockMeta = clockItem.getItemMeta();

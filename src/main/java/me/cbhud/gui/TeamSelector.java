@@ -1,6 +1,5 @@
 package me.cbhud.gui;
 
-import me.cbhud.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,7 +16,7 @@ public class TeamSelector implements InventoryHolder {
     private Inventory inv;
 
     public TeamSelector(){
-        inv = Bukkit.createInventory(this, 9 ,"Select Team");
+        inv = Bukkit.createInventory(this, 9 ,ChatColor.YELLOW + "Select Team");
         init();
     }
 
@@ -25,9 +24,9 @@ public class TeamSelector implements InventoryHolder {
 
         ItemStack item;
         ItemStack item2;
-        item = createItem(ChatColor.DARK_RED+"VIKINGS", Material.RED_STAINED_GLASS_PANE, Collections.singletonList(ChatColor.RED + "VIKINGS (Attackers) have to assasin the king and conquer the castle"));
+        item = createItem(ChatColor.RED+"Vikings", Material.RED_STAINED_GLASS_PANE, Collections.singletonList(ChatColor.YELLOW + "Assasin the king and conquer the castle"));
         inv.setItem(5, item);
-        item2 = createItem(ChatColor.BLUE+"FRANKS", Material.CYAN_STAINED_GLASS_PANE, Collections.singletonList(ChatColor.AQUA + "FRANKS (Defenders) have to defend the castle and king from VIKINGS"));
+        item2 = createItem(ChatColor.BLUE+"Franks", Material.CYAN_STAINED_GLASS_PANE, Collections.singletonList(ChatColor.YELLOW + "Defend the castle and king from Vikings"));
         inv.setItem(3, item2);
     }
 

@@ -117,7 +117,10 @@ public class PlayerJoin implements Listener {
             player.teleport(lobbyLocation);
         } else {
             // Handle the case when the lobby location is not set
-            player.sendMessage("Lobby location is not set. Contact an admin.");
+            player.sendMessage(ChatColor.RED + "Lobby location is not set. /setlobby");
+            player.sendMessage(ChatColor.RED + "Also don't forget to set spawns for teams and king");
+            player.sendMessage(ChatColor.RED + "/setmobspawn");
+            player.sendMessage(ChatColor.RED + "/setspawn VIKINGS or FRANKS");
         }
     }
 }

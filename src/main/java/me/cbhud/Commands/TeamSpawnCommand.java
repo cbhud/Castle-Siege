@@ -2,6 +2,7 @@ package me.cbhud.Commands;
 
 import me.cbhud.Main;
 import me.cbhud.team.Team;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,7 @@ public class TeamSpawnCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player) || !sender.hasPermission("viking.admin")) {
             sender.sendMessage("Only players can use this command.");
             return true;
         }
@@ -34,9 +35,9 @@ public class TeamSpawnCommand implements CommandExecutor {
         try {
             Team team = Team.valueOf(teamName);
             setSpawnLocation(team, player.getLocation());
-            player.sendMessage("Spawn location for " + team + " set successfully! RESTART THE SERVER BEFORE YOU START");
+            player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully! RESTART THE SERVER BEFORE YOU START");
         } catch (IllegalArgumentException e) {
-            player.sendMessage("Invalid team name. Available teams: VIKINGS, FRANKS");
+            player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: VIKINGS FRANKS");
         }
 
         return true;

@@ -41,7 +41,7 @@ public class KillEffects implements Listener {
                 player.getInventory().addItem(new ItemStack(Material.SPECTRAL_ARROW));
                 break;
             case SPEARMAN:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 2));
                 break;
             case KNIGHT:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));

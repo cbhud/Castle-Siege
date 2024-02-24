@@ -1,6 +1,7 @@
 package me.cbhud.Commands;
 
 import me.cbhud.Main;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,9 +29,9 @@ public class SetMobSpawnCommand implements CommandExecutor {
             plugin.getConfig().set("mobSpawnLocation.world", player.getLocation().getWorld().getName());
             plugin.saveConfig();
 
-            player.sendMessage("Mob spawn location set RESTART THE SERVER BEFORE YOU START!");
+            player.sendMessage(ChatColor.RED + "King's (Zombie) spawn location has been updated. RESTART THE SERVER BEFORE YOU START!!!");
         } else {
-            sender.sendMessage("Only players can use this command.");
+            sender.sendMessage(ChatColor.RED + "Only players can use this command.");
         }
 
         return true;

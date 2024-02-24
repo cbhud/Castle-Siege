@@ -2,13 +2,13 @@
 maxPlayersPerTeam: 16
 
 ## TIME BEFORE VIKINGS HAS TO KILL THE KING
-timerMinutes: 10
+timerMinutes: 8
 
 ### ADJUST KING HEALTH NOTE IT SHOULD BE WITH ONE DECIMAL EXAMPLE : 80.0
-king-health: 80.0
+king-health: 100.0
 
 
-scoreboard-title: '===Castle Siege==='
+scoreboard-title: 'Castle Siege'
 scoreboard-bottomline: 'serverip.net'
 
 ##AQUA 	#BLACK 	#BLUE 	#DARK_AQUA
@@ -17,7 +17,7 @@ scoreboard-bottomline: 'serverip.net'
 #ITALIC 	#LIGHT_PURPLE 	#RED
 #WHITE 	#YELLOW
 title-color: GOLD
-bottom-color: DARK_AQUA
+bottom-color: AQUA
 
 main-color: YELLOW
 secondary-color: WHITE

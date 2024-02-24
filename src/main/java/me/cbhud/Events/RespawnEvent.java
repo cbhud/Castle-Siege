@@ -1,8 +1,6 @@
 package me.cbhud.Events;
 
 import me.cbhud.Main;
-import me.cbhud.kits.KitType;
-import me.cbhud.spectator.PlayerStates;
 import me.cbhud.state.GameState;
 import me.cbhud.team.Team;
 import org.bukkit.Bukkit;
@@ -14,8 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-
 public class RespawnEvent implements Listener {
     private final Main plugin;
 

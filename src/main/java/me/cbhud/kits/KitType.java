@@ -4,6 +4,7 @@ import me.cbhud.items.Manager;
 import me.cbhud.team.Team;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,7 +19,14 @@ public enum KitType {
 
     MARKSMAN("MARKSMAN", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
-            Manager.cbow,
+            new ItemStack(Material.CROSSBOW) {{
+                ItemMeta meta = getItemMeta();
+                if (meta != null) {
+                    meta.addEnchant(Enchantment.QUICK_CHARGE, 3, true); // Add the enchantment
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS); // Hide the enchantment
+                    setItemMeta(meta);
+                }
+            }},
             new ItemStack(Material.AIR),
             new ItemStack(Material.ARROW, 32),
             Manager.stew
@@ -32,7 +40,14 @@ public enum KitType {
             },Team.FRANKS),
     SPEARMAN("SPEARMAN", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
-            Manager.ctrident,
+            new ItemStack(Material.TRIDENT) {{
+                ItemMeta meta = getItemMeta();
+                if (meta != null) {
+                    meta.addEnchant(Enchantment.LOYALTY, 2, true); // Add the enchantment
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS); // Hide the enchantment
+                    setItemMeta(meta);
+                }
+            }},
             Manager.stew
     ),
             true,  // <-- Add this parameter to indicate the kit has armor

@@ -2,7 +2,6 @@ package me.cbhud.Events;
 
 import me.cbhud.Main;
 import me.cbhud.items.Manager;
-import org.bukkit.plugin.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.*;

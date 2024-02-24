@@ -1,9 +1,6 @@
 package me.cbhud.state;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import me.cbhud.Main;
-import org.bukkit.scoreboard.ScoreboardManager;
+
 
 public class Game {
     private final Main plugin; // Add this field

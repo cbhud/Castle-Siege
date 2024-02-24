@@ -26,3 +26,7 @@ commands:
   kit:
     description: kit
     usage: /<command>
+  endgame:
+    description: kit
+    usage: /<command>
+    permission: war.start

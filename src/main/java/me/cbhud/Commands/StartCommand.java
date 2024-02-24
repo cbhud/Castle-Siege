@@ -8,6 +8,7 @@ import me.cbhud.state.GameState;
 import me.cbhud.team.Team;
 import me.cbhud.team.TeamManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -40,7 +41,7 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
         if (mobSpawnConfig != null) {
             mobSpawnLocation = getLocationFromConfig(mobSpawnConfig);
         } else {
-            plugin.getLogger().warning("Mob spawn location not set. Use /setmobspawn to set the location.");
+            plugin.getLogger().warning(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
         }
 
         // Load team spawn locations
@@ -51,13 +52,9 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
             if (config.contains(path)) {
                 spawnLocations.put(team, getLocationFromConfig(config.getConfigurationSection(path)));
             } else {
-                plugin.getLogger().warning("Spawn location not set for team: " + team);
+                plugin.getLogger().warning(ChatColor.RED + "Spawn location not set for team: " + team);
             }
         }
-    }
-
-    private void playEnderDragonGrowlSound() {
-        // ... (unchanged)
     }
 
     private void teleportTeamsToSpawns() {
@@ -77,7 +74,6 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
             }
         }
     }
-
     private void applyKitsToPlayers() {
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (plugin.getPlayerStateManager().getPlayerState(player) == PlayerStates.PLAYING) {
@@ -85,16 +81,17 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
                 KitType selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
 
                 if (selectedKit != null && selectedKit.getTeam() == playerTeam) {
-                    // Valid selected kit for the player's team
+                    // Player has a selected kit matching their team, give the kit
                     plugin.getPlayerKitManager().giveKit(player, selectedKit);
                 } else {
-                    // Invalid or null selected kit, provide the default kit for the team
-                    KitType defaultKit = KitType.getDefaultKit(playerTeam);
-
-                    if (defaultKit != null) {
-                        plugin.getPlayerKitManager().selectKit(player, defaultKit);
-                        plugin.getPlayerKitManager().giveKit(player, defaultKit);
-                        player.sendMessage("Invalid or no kit selected. You have received the default kit for your team.");
+                    if (selectedKit == null) {
+                        // Player hasn't selected a kit, give them the default kit for their team
+                        KitType defaultKit = KitType.getDefaultKit(playerTeam);
+                        if (defaultKit != null) {
+                            plugin.getPlayerKitManager().selectKit(player, defaultKit);
+                            plugin.getPlayerKitManager().giveKit(player, defaultKit);
+                            player.sendMessage(ChatColor.RED + "Invalid or no kit selected. You have received the default kit for your team.");
+                        }
                     }
                 }
             } else {
@@ -129,7 +126,7 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
                 if (mobSpawnLocation != null) {
                     mobManager.spawnCustomMob(mobSpawnLocation, plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
                 } else {
-                    plugin.getLogger().warning("Mob spawn location not set. Use /setmobspawn to set the location.");
+                    Bukkit.broadcastMessage(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
                     return true;
                 }
 
@@ -141,15 +138,12 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
                 plugin.getCountdownTimer().startTimer(timerMinutes);
 
                 Bukkit.broadcastMessage("§7§m----------------------------------");
-                Bukkit.broadcastMessage("");
                 Bukkit.broadcastMessage("§bFranks §fmust defend the King.");
                 Bukkit.broadcastMessage("§bFranks §fwin when countdown is over.");
                 Bukkit.broadcastMessage("");
-
                 Bukkit.broadcastMessage("§cVikings §fmust kill the King.");
                 Bukkit.broadcastMessage("§cVikings §flose when countdown is over.");
                 Bukkit.broadcastMessage("");
-
                 Bukkit.broadcastMessage("§aThe game has started!");
                 Bukkit.broadcastMessage("§7§m----------------------------------");
 
@@ -157,7 +151,7 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
                 sender.sendMessage("You do not have permission to use this command.");
             }
         } else {
-            sender.sendMessage("The game is not in LOBBY. You cannot start it now.");
+            sender.sendMessage(ChatColor.RED + "The game is not in LOBBY. You cannot start it now.");
         }
 
         return true;

@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,7 +101,7 @@ public class ScoreboardManager {
         board.updateTitle(title);
         board.updateLines("");
         board.updateLine(0, " ");
-        board.updateLine(1, mainColor +"Winnners: " + secondaryColor + plugin.getWinner().getWinner());
+        board.updateLine(1, mainColor +"Winners: " + secondaryColor + plugin.getWinner().getWinner());
         board.updateLine(2, " ");
         board.updateLine(7, bottomline);
     }

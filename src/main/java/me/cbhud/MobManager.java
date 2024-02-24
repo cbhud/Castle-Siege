@@ -13,7 +13,6 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class MobManager implements Listener {
@@ -40,7 +39,7 @@ public class MobManager implements Listener {
 
         kingZombie = (Zombie) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.ZOMBIE);
         kingZombie.setCustomNameVisible(true);
-        kingZombie.setCustomName("§b§lKing Charles");
+        kingZombie.setCustomName("§6§lKing Charles");
 
         kingZombie.setAI(false); // Disable AI movement
         kingZombie.setSilent(true); // Make the zombie silent

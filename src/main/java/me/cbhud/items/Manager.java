@@ -13,15 +13,12 @@ import java.util.*;
 
 public class Manager {
     public static ItemStack stew;
-
     public static ItemStack axe;
     public static ItemStack combataxe;
     public static ItemStack rage;
     public static ItemStack ragnarok;
     public static ItemStack sight;
     public static ItemStack harm;
-    public static ItemStack cbow;
-    public static ItemStack ctrident;
 
     public static void init() {
 
@@ -32,9 +29,6 @@ public class Manager {
         createRage();
         createRagnarok();
         createSight();
-        createCbow();
-        createTrident();
-
     }
 
 
@@ -73,7 +67,7 @@ public class Manager {
         lore.add("§7Berserker's melee axe");
         lore.add("§7Used in viking fights");
         meta.setLore(lore);
-        meta.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
+        meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS,ItemFlag.HIDE_UNBREAKABLE);
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
@@ -139,27 +133,4 @@ public class Manager {
         item.setItemMeta(meta);
         harm = item;
     }
-
-    private static void createCbow() {
-        ItemStack crossbow = new ItemStack(Material.CROSSBOW);
-        ItemMeta meta = crossbow.getItemMeta();
-
-            meta.addEnchant(Enchantment.QUICK_CHARGE, 3, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        crossbow.setItemMeta(meta);
-        cbow = crossbow;
-
-    }
-
-    private static void createTrident() {
-        ItemStack trident = new ItemStack(Material.TRIDENT);
-        ItemMeta meta = trident.getItemMeta();
-            meta.addEnchant(Enchantment.LOYALTY, 2, true);
-            trident.setItemMeta(meta);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        trident.setItemMeta(meta);
-        ctrident = trident;
-    }
-
-
 }

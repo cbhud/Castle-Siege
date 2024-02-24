@@ -1,4 +1,5 @@
 package me.cbhud.Events;
+
 import me.cbhud.gui.KitSelector;
 import me.cbhud.gui.TeamSelector;
 import org.bukkit.Material;
@@ -6,45 +7,75 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+
 public class InventoryEvent implements Listener {
+
     @EventHandler
-    public void click(InventoryClickEvent event){
-        if(event.getClickedInventory() == null){
+    public void click(InventoryClickEvent event) {
+        handleInventory(event);
+    }
+
+    @EventHandler
+    public void drag(InventoryDragEvent event) {
+        handleInventory(event);
+    }
+
+    private void handleInventory(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (event.getClickedInventory() == null) {
             return;
         }
-        if (event.getClickedInventory().getHolder() instanceof TeamSelector){
+
+        if (event.getCurrentItem() == null) {
+            return;
+        }
+
+        if (event.getClickedInventory().getHolder() instanceof TeamSelector) {
             event.setCancelled(true);
-            Player player = (Player) event.getWhoClicked();
-            if(event.getCurrentItem() == null){return;}
-            if(event.getCurrentItem().getType() == Material.RED_STAINED_GLASS_PANE){
-                player.performCommand("teamjoin vikings");
-            }
-            if(event.getCurrentItem().getType() == Material.BLUE_STAINED_GLASS_PANE){
-                player.performCommand("teamjoin franks");
+            switch (event.getCurrentItem().getType()) {
+                case RED_STAINED_GLASS_PANE:
+                    player.performCommand("teamjoin vikings");
+                    break;
+                case CYAN_STAINED_GLASS_PANE:
+                    player.performCommand("teamjoin franks");
+                    break;
+                default:
+                    break;
             }
         }
-        if (event.getClickedInventory().getHolder() instanceof KitSelector){
+        if (event.getClickedInventory().getHolder() instanceof KitSelector) {
             event.setCancelled(true);
-            Player player = (Player) event.getWhoClicked();
-            if(event.getCurrentItem() == null){return;}
-            if(event.getCurrentItem().getType() == Material.IRON_AXE){
-                player.performCommand("kit berserker");
+            switch (event.getCurrentItem().getType()) {
+                case IRON_AXE:
+                    player.performCommand("kit berserker");
+                    break;
+                case BOW:
+                    player.performCommand("kit skald");
+                    break;
+                case IRON_SWORD:
+                    player.performCommand("kit warrior");
+                    break;
+                case BLACK_BANNER:
+                    player.performCommand("kit knight");
+                    break;
+                case TRIDENT:
+                    player.performCommand("kit spearman");
+                    break;
+                case CROSSBOW:
+                    player.performCommand("kit marksman");
+                    break;
+                default:
+                    break;
             }
-            if(event.getCurrentItem().getType() == Material.BOW){
-                player.performCommand("kit skald");
-            }
-            if(event.getCurrentItem().getType() == Material.IRON_SWORD){
-                player.performCommand("kit warrior");
-            }
-            if(event.getCurrentItem().getType() == Material.BLACK_BANNER){
-                player.performCommand("kit knight");
-            }
-            if(event.getCurrentItem().getType() == Material.TRIDENT){
-                player.performCommand("kit spearman");
-            }
-            if(event.getCurrentItem().getType() == Material.CROSSBOW){
-                player.performCommand("kit marksman");
-            }
+        }
+    }
+
+    private void handleInventory(InventoryDragEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (event.getInventory().getHolder() instanceof TeamSelector ||
+                event.getInventory().getHolder() instanceof KitSelector) {
+            event.setCancelled(true);
         }
     }
 }

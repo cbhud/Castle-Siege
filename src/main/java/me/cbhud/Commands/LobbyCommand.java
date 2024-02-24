@@ -1,6 +1,7 @@
 package me.cbhud.Commands;
 
 import me.cbhud.Main;
+import org.bukkit.GameRule;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +32,7 @@ public class LobbyCommand implements CommandExecutor {
         plugin.getConfig().set("lobby.pitch", player.getLocation().getPitch());
 
         plugin.saveConfig();
+        player.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
         player.sendMessage("Lobby location set! RESTART THE SERVER BEFORE YOU START");
 
         return true;

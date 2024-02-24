@@ -1,8 +1,6 @@
 package me.cbhud.kits;
 
 import me.cbhud.Main;
-import me.cbhud.kits.KitType;
-import me.cbhud.scoreboard.ScoreboardManager;
 import me.cbhud.spectator.PlayerStates;
 import me.cbhud.state.GameState;
 import org.bukkit.ChatColor;
@@ -59,7 +57,7 @@ public class KitCommand implements CommandExecutor {
                     }
 
             } else {
-                player.sendMessage("You cannot select kit as spectator");
+                player.sendMessage(ChatColor.RED + "You cannot select kit as spectator");
             }
         } else {
             player.sendMessage(ChatColor.RED + "You can only select kits in Lobby.");

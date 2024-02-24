@@ -43,18 +43,18 @@ public class GameWinner {
 
                 // Play Ender Dragon growl sound for VIKINGS win
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.RED + "Vikings", ChatColor.RED + "won the game", 10, 70, 20);
+                    player.sendTitle(ChatColor.RED + "Vikings", ChatColor.YELLOW + "won the game", 10, 70, 20);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.MASTER, 1.0f, 0.9f);
                 }
             } else {
                 Bukkit.broadcastMessage("§7§m--------------------------");
-                Bukkit.broadcastMessage("§bFranks defended the castle!");
+                Bukkit.broadcastMessage("§aFranks defended the castle!");
                 Bukkit.broadcastMessage("§e§lKing Charles §fhas survived the siege!");
                 Bukkit.broadcastMessage("§7§m--------------------------");
 
                 // Play Note Block chime sound for FRANKS win
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.BLUE + "Franks", ChatColor.BLUE + "won the game", 10, 70, 20);
+                    player.sendTitle(ChatColor.BLUE + "Franks", ChatColor.YELLOW + "won the game", 10, 70, 20);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1.0f, 0.9f);
                 }
             }

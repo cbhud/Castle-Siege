@@ -20,10 +20,6 @@
         <configuration>
           <relocations>
             <relocation>
-              <pattern>org.bstats</pattern>
-              <shadedPattern>me.cbhud.bstats</shadedPattern>
-            </relocation>
-            <relocation>
               <pattern>fr.mrmicky.fastboard</pattern>
               <shadedPattern>me.cbhud.fastboard</shadedPattern>
             </relocation>

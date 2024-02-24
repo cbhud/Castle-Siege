@@ -4,8 +4,6 @@ import me.cbhud.state.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +57,11 @@ public class Autostart {
             Bukkit.getScheduler().cancelTask(taskId);
         }
         taskIds.clear(); // Clear the list
-        if(plugin.getGame().getState() == GameState.IN_GAME){}else {
-        Bukkit.broadcastMessage(ChatColor.RED + "There is not enough players auto-start canceled!");
+        if(plugin.getGame().getState() == GameState.IN_GAME){
+        }
+        else {
+        Bukkit.broadcastMessage(ChatColor.RED + "There are not enough players!");
     }}
-
     private void resetCountdown() {
         countdownSeconds = initialCountdownSeconds;
     }

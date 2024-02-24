@@ -2,6 +2,7 @@ package me.cbhud.team;
 
 import me.cbhud.Main;
 import me.cbhud.state.GameState;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,12 +28,13 @@ public class TeamJoinCommand implements CommandExecutor {
 
         // Check if the game state is LOBBY
         if (plugin.getGame().getState() != GameState.LOBBY) {
-            player.sendMessage("You cannot change teams while in-game.");
+            player.sendMessage(ChatColor.RED + "You cannot change teams in-game.");
             return true;
         }
 
         if (args.length != 1 || args[0] == null) {
-            player.sendMessage("Usage: /teamjoin <teamName>");
+            player.sendMessage(ChatColor.RED + "Usage: /teamjoin <teamName>");
+            player.sendMessage(ChatColor.RED + "Available teams: VIKINGS, FRANKS");
             return true;
         }
 
