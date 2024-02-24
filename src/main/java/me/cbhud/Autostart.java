@@ -60,7 +60,7 @@ public class Autostart {
         if(plugin.getGame().getState() == GameState.IN_GAME){
         }
         else {
-        Bukkit.broadcastMessage(ChatColor.RED + "There are not enough players!");
+        Bukkit.broadcastMessage(ChatColor.RED + "There are not enough players to start the game!");
     }}
     private void resetCountdown() {
         countdownSeconds = initialCountdownSeconds;

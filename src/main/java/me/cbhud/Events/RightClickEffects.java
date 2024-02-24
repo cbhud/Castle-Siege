@@ -26,7 +26,7 @@ public class RightClickEffects implements Listener {
                 if (event.getHand().equals(org.bukkit.inventory.EquipmentSlot.OFF_HAND)) {
                     player.getInventory().setItemInOffHand(null);
                 } else {
-                    player.getInventory().remove(Manager.stew);
+                    player.getInventory().setItemInMainHand(null);
                 }
             } else if (clickedItem.getItemMeta().equals(Manager.rage.getItemMeta())) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 2));

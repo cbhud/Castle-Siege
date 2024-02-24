@@ -89,7 +89,7 @@ public class Main extends JavaPlugin {
         kitSelector = new KitSelector();
         scoreboardManager = new ScoreboardManager(this, teamManager, mobManager, configManager);
         game.setState(GameState.LOBBY);
-        getServer().getConsoleSender().sendMessage("Vikings has been enabled!");
+        getServer().getConsoleSender().sendMessage("CastleSiege has been enabled!");
     }
 
     @Override

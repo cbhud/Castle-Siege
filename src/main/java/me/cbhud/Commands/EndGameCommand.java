@@ -59,7 +59,7 @@ public class EndGameCommand implements org.bukkit.command.CommandExecutor {
                     plugin.getCountdownTimer().cancelTimer();
                     teleportPlayersToLobby();
                     plugin.getGame().setState(GameState.LOBBY);
-                Bukkit.broadcastMessage(ChatColor.RED + "The Game has been force-stopped!");
+                Bukkit.broadcastMessage(ChatColor.RED + "Game force-stopped!");
 
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");

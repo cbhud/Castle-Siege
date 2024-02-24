@@ -48,10 +48,10 @@ public class SpectatorManager {
         if(player.getGameMode() != GameMode.SURVIVAL){
             player.setGameMode(GameMode.SURVIVAL);
         }
-        player.getActivePotionEffects().clear();
         player.getInventory().clear();
         player.setHealth(20);
         player.setLevel(0);
+        player.getActivePotionEffects().clear();
 
         ItemStack clockItem = new ItemStack(Material.CLOCK);
         ItemMeta clockMeta = clockItem.getItemMeta();
@@ -62,7 +62,7 @@ public class SpectatorManager {
         // Create a Nether Star item with a custom name
         ItemStack netherStarItem = new ItemStack(Material.NETHER_STAR);
         ItemMeta netherStarMeta = netherStarItem.getItemMeta();
-        netherStarMeta.setDisplayName(ChatColor.AQUA + "Select Kit"); // Set your custom name here
+        netherStarMeta.setDisplayName(ChatColor.YELLOW + "Select Kit"); // Set your custom name here
         netherStarItem.setItemMeta(netherStarMeta);
         player.getInventory().setItem(5, netherStarItem);
 

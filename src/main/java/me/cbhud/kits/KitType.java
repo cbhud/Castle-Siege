@@ -2,11 +2,13 @@ package me.cbhud.kits;
 
 import me.cbhud.items.Manager;
 import me.cbhud.team.Team;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Arrays;
 import java.util.List;
@@ -98,10 +100,10 @@ public enum KitType {
     ),
             true,
             new ItemStack[]{
-                    new ItemStack(Material.LEATHER_HELMET),
-                    new ItemStack(Material.LEATHER_CHESTPLATE),
-                    new ItemStack(Material.LEATHER_LEGGINGS),
-                    new ItemStack(Material.LEATHER_BOOTS)
+                    createDyedArmor(Material.LEATHER_HELMET, Color.RED),
+                    createDyedArmor(Material.LEATHER_CHESTPLATE, Color.RED),
+                    createDyedArmor(Material.LEATHER_LEGGINGS, Color.RED),
+                    createDyedArmor(Material.LEATHER_BOOTS, Color.RED)
             },Team.VIKINGS),
     WARRIOR("Warrior", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
@@ -159,6 +161,19 @@ public enum KitType {
         }
         return null;
     }
+
+    private static ItemStack createDyedArmor(Material material, Color color) {
+        ItemStack armorItem = new ItemStack(material);
+        LeatherArmorMeta meta = (LeatherArmorMeta) armorItem.getItemMeta();
+        if (meta != null) {
+            meta.setColor(color);
+            meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            armorItem.setItemMeta(meta);
+        }
+        return armorItem;
+    }
+
 
     public boolean hasArmor() {
         return hasArmor;

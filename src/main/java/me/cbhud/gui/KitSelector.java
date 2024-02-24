@@ -16,7 +16,7 @@ public class KitSelector implements InventoryHolder {
     private Inventory inv;
 
     public KitSelector(){
-        inv = Bukkit.createInventory(this, 9 ,ChatColor.YELLOW + "Select Kit");
+        inv = Bukkit.createInventory(this, 27 ,ChatColor.YELLOW + "Select Kit");
         init();
     }
 
@@ -31,19 +31,19 @@ public class KitSelector implements InventoryHolder {
 
         //viking
         item4 = createItem(ChatColor.RED + "Berserker", Material.IRON_AXE, Collections.singletonList(ChatColor.GRAY + "Great warrior with special ability of throwable axe"));
-        inv.setItem(5, item4);
+        inv.setItem(14, item4);
         item5 = createItem(ChatColor.RED + "Skald", Material.BOW, Collections.singletonList(ChatColor.GRAY + "Sharp shooter with special abilities of shooting poisonous arrows"));
-        inv.setItem(6, item5);
+        inv.setItem(15, item5);
         item6 = createItem(ChatColor.RED + "Warrior", Material.IRON_SWORD, Collections.singletonList(ChatColor.GRAY + "Legendary warrior with special Ragnarok ability"));
-        inv.setItem(7, item6);
+        inv.setItem(16, item6);
 
         //franks
         item = createItem(ChatColor.AQUA + "Marksman", Material.CROSSBOW, Collections.singletonList(ChatColor.GRAY + "Most precise shooter with special crossbow"));
-        inv.setItem(1, item);
+        inv.setItem(10, item);
         item2 = createItem(ChatColor.AQUA + "Spearman", Material.TRIDENT, Collections.singletonList(ChatColor.GRAY + "Armed with a spear"));
-        inv.setItem(2, item2);
+        inv.setItem(11, item2);
         item3 = createItem(ChatColor.AQUA + "Knight", Material.BLACK_BANNER, Collections.singletonList(ChatColor.GRAY + "Honored soldier who served the king"));
-        inv.setItem(3, item3);
+        inv.setItem(12, item3);
     }
 
     private ItemStack createItem(String name, Material mat, List<String> lore){
