@@ -29,28 +29,31 @@ public enum KitType {
             }},
             new ItemStack(Material.AIR),
             new ItemStack(Material.ARROW, 32),
+            Manager.stew,
+            Manager.stew,
             Manager.stew
     ),
-            true,  // <-- Add this parameter to indicate the kit has armor
+            true,
             new ItemStack[]{
-                    new ItemStack(Material.LEATHER_HELMET),
+                    new ItemStack(Material.CHAINMAIL_HELMET),
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
                     new ItemStack(Material.LEATHER_LEGGINGS),
-                    new ItemStack(Material.CHAINMAIL_BOOTS)
+                    new ItemStack(Material.LEATHER_BOOTS)
             },Team.FRANKS),
     SPEARMAN("SPEARMAN", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
             new ItemStack(Material.TRIDENT) {{
                 ItemMeta meta = getItemMeta();
                 if (meta != null) {
-                    meta.addEnchant(Enchantment.LOYALTY, 2, true); // Add the enchantment
-                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS); // Hide the enchantment
+                    meta.addEnchant(Enchantment.LOYALTY, 2, true);
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     setItemMeta(meta);
                 }
             }},
+            Manager.stew,
             Manager.stew
     ),
-            true,  // <-- Add this parameter to indicate the kit has armor
+            true,
             new ItemStack[]{
                     new ItemStack(Material.CHAINMAIL_HELMET),
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
@@ -59,6 +62,7 @@ public enum KitType {
             },Team.FRANKS),
     KNIGHT("KNIGHT", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
+            Manager.stew,
             Manager.stew
     ),
             true,
@@ -69,14 +73,14 @@ public enum KitType {
                     new ItemStack(Material.IRON_BOOTS)
             },Team.FRANKS),
 
-    //VIKINGS KITS ARE BELOW
     BERSERKER("BERSERKER", Arrays.asList(
             new ItemStack(combataxe),
             new ItemStack(axe),
             Manager.stew,
+            Manager.stew,
             Manager.rage
     ),
-            true,  // <-- Add this parameter to indicate the kit has armor
+            true,
             new ItemStack[]{
                     new ItemStack(Material.CHAINMAIL_HELMET),
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
@@ -84,10 +88,11 @@ public enum KitType {
                     new ItemStack(Material.CHAINMAIL_BOOTS)
             },Team.VIKINGS),
     SKALD("SKALD", Arrays.asList(
-            new ItemStack(Material.BOW),
             new ItemStack(Material.STONE_SWORD),
+            new ItemStack(Material.BOW),
             new ItemStack(Material.AIR),
             new ItemStack(Material.ARROW, 32),
+            Manager.stew,
             Manager.stew,
             sight
     ),
@@ -101,12 +106,13 @@ public enum KitType {
     WARRIOR("Warrior", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
             Manager.stew,
+            Manager.stew,
             ragnarok
     ),
             true,
             new ItemStack[]{
-                    new ItemStack(Material.CHAINMAIL_HELMET),
-                    new ItemStack(Material.IRON_CHESTPLATE),
+                    new ItemStack(Material.IRON_HELMET),
+                    new ItemStack(Material.CHAINMAIL_CHESTPLATE),
                     new ItemStack(Material.IRON_LEGGINGS),
                     new ItemStack(Material.CHAINMAIL_BOOTS)
             },Team.VIKINGS);
@@ -132,7 +138,7 @@ public enum KitType {
             case FRANKS:
                 return MARKSMAN;
             default:
-                return null; // Handle other cases or return a general default kit
+                return null;
         }
     }
 
@@ -151,7 +157,7 @@ public enum KitType {
                 return kitType;
             }
         }
-        return null;  // Return null if no matching KitType is found
+        return null;
     }
 
     public boolean hasArmor() {

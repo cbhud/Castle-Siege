@@ -1,5 +1,6 @@
 package me.cbhud.items;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -19,7 +20,6 @@ public class Manager {
     public static ItemStack ragnarok;
     public static ItemStack sight;
     public static ItemStack harm;
-
     public static void init() {
 
         createAxe();
@@ -30,7 +30,6 @@ public class Manager {
         createRagnarok();
         createSight();
     }
-
 
     private static void createAxe(){
         ItemStack item = new ItemStack(Material.IRON_AXE, 1);

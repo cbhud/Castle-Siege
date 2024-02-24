@@ -24,32 +24,33 @@ public class RightClickEffects implements Listener {
             if (clickedItem.getItemMeta().equals(Manager.stew.getItemMeta())) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));
                 if (event.getHand().equals(org.bukkit.inventory.EquipmentSlot.OFF_HAND)) {
-                    player.getInventory().setItemInOffHand(null); // Clear the item in the off hand
+                    player.getInventory().setItemInOffHand(null);
                 } else {
                     player.getInventory().remove(Manager.stew);
                 }
             } else if (clickedItem.getItemMeta().equals(Manager.rage.getItemMeta())) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100, 0));
                 if (event.getHand().equals(org.bukkit.inventory.EquipmentSlot.OFF_HAND)) {
-                    player.getInventory().setItemInOffHand(null); // Clear the item in the off hand
+                    player.getInventory().setItemInOffHand(null);
                 } else {
                     player.getInventory().remove(Manager.rage);
                 }
             } else if (clickedItem.getItemMeta().equals(Manager.ragnarok.getItemMeta())) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
                 if (event.getHand().equals(org.bukkit.inventory.EquipmentSlot.OFF_HAND)) {
-                    player.getInventory().setItemInOffHand(null); // Clear the item in the off hand
+                    player.getInventory().setItemInOffHand(null);
                 } else {
                     player.getInventory().remove(Manager.ragnarok);
                 }
             } else if (clickedItem.getItemMeta().equals(Manager.sight.getItemMeta())) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100, 2));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 3));
-
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 200, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 1));
                 if (event.getHand().equals(org.bukkit.inventory.EquipmentSlot.OFF_HAND)) {
-                    player.getInventory().setItemInOffHand(null); // Clear the item in the off hand
+                    player.getInventory().setItemInOffHand(null);
                 } else if (mainHandItem != null && mainHandItem.getItemMeta().equals(Manager.sight.getItemMeta())) {
                     player.getInventory().removeItem(Manager.sight);
                 }

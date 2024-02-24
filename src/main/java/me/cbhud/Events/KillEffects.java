@@ -26,7 +26,6 @@ public class KillEffects implements Listener {
         Player killer = player.getKiller();
 
         if (killer != null) {
-            // Check if the killer has a specific kit
             KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
 
             if (killerKit != null) {
@@ -41,15 +40,15 @@ public class KillEffects implements Listener {
                 player.getInventory().addItem(new ItemStack(Material.SPECTRAL_ARROW));
                 break;
             case SPEARMAN:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 2));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 break;
             case KNIGHT:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 player.addPotionEffect((new PotionEffect(PotionEffectType.REGENERATION, 100, 1)));
                 break;
             case BERSERKER:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 150, 1));
+                player.addPotionEffect((new PotionEffect(PotionEffectType.REGENERATION, 100, 1)));
                 break;
             case SKALD:
                 player.getInventory().addItem(Manager.harm);
@@ -57,10 +56,9 @@ public class KillEffects implements Listener {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
                 break;
             case WARRIOR:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 150, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));
                 break;
-            // Add cases for other kits as needed
         }
     }
 }
