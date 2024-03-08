@@ -2,6 +2,8 @@ package me.cbhud.Events;
 
 import me.cbhud.Main;
 import me.cbhud.state.GameState;
+import me.cbhud.team.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -10,12 +12,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
-
-import static org.bukkit.Material.OAK_FENCE;
 
 public class MiscEvents implements Listener {
 
@@ -58,61 +59,41 @@ public class MiscEvents implements Listener {
     public void onBlockBreak(BlockBreakEvent event){
         Block brokenBlock = event.getBlock();
         Player player = (Player) event.getPlayer();
-        if(player.hasPermission("viking.admin")){
-            event.setCancelled(false);
-            return;
-        }
-        if (player.isOp()) {
-            event.setCancelled(false);
-            return;
-        }
-        if (plugin.getGame().getState() == GameState.IN_GAME){
-            if(player.hasPermission("viking.admin")){
-                event.setCancelled(false);
-                return;
+        if (player.hasPermission("viking.admin") || player.isOp()) {
+            event.setCancelled(false); // Allow breaking any blocks
+        } else {
+            // Check if the broken block is a fence and the game is in progress
+            if (brokenBlock.getType() == Material.OAK_FENCE && plugin.getGame().getState() == GameState.IN_GAME) {
+                event.setCancelled(false); // Allow breaking the fence during the game
+            } else {
+                event.setCancelled(true); // Cancel breaking the block
             }
-            if (player.isOp()) {
-                event.setCancelled(false);
-                return;
-            }
-            if (brokenBlock.getType() == OAK_FENCE){
-                event.setCancelled(false);
-            }
-
-        }
-        event.setCancelled(true);
-    }
+        }    }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event){
         Block brokenBlock = event.getBlock();
         Player player = (Player) event.getPlayer();
-        if(player.hasPermission("viking.admin")){
-            event.setCancelled(false);
-            return;
-        }
-        if (player.isOp()) {
-            event.setCancelled(false);
-            return;
-        }
-        if (plugin.getGame().getState() == GameState.IN_GAME){
-            if(player.hasPermission("viking.admin")){
-                event.setCancelled(false);
-                return;
+        if (player.hasPermission("viking.admin") || player.isOp()) {
+            event.setCancelled(false); // Allow breaking any blocks
+        } else {
+            if (brokenBlock.getType() == Material.OAK_FENCE && plugin.getGame().getState() == GameState.IN_GAME && plugin.getTeamManager().getTeam(player) == Team.FRANKS) {
+                event.setCancelled(false); // Allow breaking the fence during the game
+            } else {
+                event.setCancelled(true); // Cancel breaking the block
             }
-            if (player.isOp()) {
-                event.setCancelled(false);
-                return;
-            }
-            if (brokenBlock.getType() == OAK_FENCE){
-                event.setCancelled(false);
-            }
-
         }
-        event.setCancelled(true);
     }
 
-
+    @EventHandler
+    public void onPickupItem(EntityPickupItemEvent event){
+        Player player = (Player) event.getEntity();
+        if (plugin.getTeamManager().getTeam(player) == Team.FRANKS && plugin.getGame().getState() == GameState.IN_GAME){
+            event.setCancelled(false);
+        }else {
+            event.setCancelled(true);
+        }
+    }
 
 }
 

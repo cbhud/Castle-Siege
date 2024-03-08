@@ -1,8 +1,8 @@
-name: Castle Siege
+name: CastleSiege
 main: me.cbhud.Main
 author: cbhud
-version: 1.0
-api-version: 1.17s
+version: 1.0.7
+api-version: 1.17
 commands:
   setlobby:
     description: Gives soup

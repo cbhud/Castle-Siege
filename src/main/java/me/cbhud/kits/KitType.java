@@ -31,6 +31,7 @@ public enum KitType {
             }},
             new ItemStack(Material.AIR),
             new ItemStack(Material.ARROW, 32),
+            new ItemStack(Material.OAK_FENCE, 4),
             Manager.stew,
             Manager.stew,
             Manager.stew
@@ -52,6 +53,7 @@ public enum KitType {
                     setItemMeta(meta);
                 }
             }},
+            new ItemStack(Material.OAK_FENCE, 2),
             Manager.stew,
             Manager.stew
     ),
@@ -65,7 +67,8 @@ public enum KitType {
     KNIGHT("KNIGHT", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
             Manager.stew,
-            Manager.stew
+            Manager.stew,
+            new ItemStack(Material.OAK_FENCE, 2)
     ),
             true,
             new ItemStack[]{

@@ -46,8 +46,8 @@ public class RightClickEffects implements Listener {
                     player.getInventory().remove(Manager.ragnarok);
                 }
             } else if (clickedItem.getItemMeta().equals(Manager.sight.getItemMeta())) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 200, 1));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 175, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 1));
                 if (event.getHand().equals(org.bukkit.inventory.EquipmentSlot.OFF_HAND)) {
                     player.getInventory().setItemInOffHand(null);

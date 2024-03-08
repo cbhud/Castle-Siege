@@ -17,8 +17,6 @@ import me.cbhud.state.GameWinner;
 import me.cbhud.team.TeamJoinCommand;
 import me.cbhud.team.TeamManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
 public class Main extends JavaPlugin {
     private Game game;
     private GameEndHandler gameEndHandler;
