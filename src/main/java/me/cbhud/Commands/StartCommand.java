@@ -3,7 +3,7 @@ package me.cbhud.Commands;
 import me.cbhud.Main;
 import me.cbhud.MobManager;
 import me.cbhud.kits.KitType;
-import me.cbhud.spectator.PlayerStates;
+import me.cbhud.playerstate.PlayerStates;
 import me.cbhud.state.GameState;
 import me.cbhud.team.Team;
 import me.cbhud.team.TeamManager;
@@ -67,7 +67,7 @@ public class StartCommand implements org.bukkit.command.CommandExecutor {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (teamManager.getTeam(player) == team) {
                         // Use teamSpawn directly instead of retrieving it from the configuration each time
-                        plugin.getSpectatorManager().setPlayerAsPlaying(player);
+                        plugin.getPlayerManager().setPlayerAsPlaying(player);
                         player.teleport(teamSpawn);
                     }
                 }

@@ -65,7 +65,7 @@ public class PlayerJoin implements Listener {
 
         if (plugin.getGame().getState() == GameState.LOBBY) {
             teleportToLobby(player);
-            plugin.getSpectatorManager().setPlayerAsLobby(player);
+            plugin.getPlayerManager().setPlayerAsLobby(player);
             plugin.getScoreboardManager().setupScoreboard(player);
             if (Bukkit.getOnlinePlayers().size() >= configManager.getAutoStartPlayers()){
                 autostartInstance.checkAutoStart(Bukkit.getOnlinePlayers().size());
@@ -78,15 +78,15 @@ public class PlayerJoin implements Listener {
             }
 
             if (!tryRandomTeamJoin(player)) {
-                player.sendTitle(ChatColor.GRAY + "There is no place in teams, ", ChatColor.GRAY + "wait until the game finishes in spectator.", 10, 70, 20);
+                player.sendTitle(ChatColor.GRAY + "Both teams are full, ", ChatColor.GRAY + "wait until the game finishes in spectator.", 10, 70, 20);
                 plugin.getScoreboardManager().setupScoreboard(player);
-                plugin.getSpectatorManager().setPlayerAsSpectator(player);
+                plugin.getPlayerManager().setPlayerAsSpectator(player);
                 teleportToLobby(player);
             }
         } else {
             plugin.getScoreboardManager().setupScoreboard(player);
             player.sendTitle(ChatColor.GRAY + "You are spectating now!", ChatColor.GRAY + "Wait until the game finishes.", 10, 70, 20);
-            plugin.getSpectatorManager().setPlayerAsSpectator(player);
+            plugin.getPlayerManager().setPlayerAsSpectator(player);
             teleportToLobby(player);
         }
     }

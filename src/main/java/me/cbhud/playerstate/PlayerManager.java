@@ -1,4 +1,4 @@
-package me.cbhud.spectator;
+package me.cbhud.playerstate;
 
 import me.cbhud.Main;
 import org.bukkit.ChatColor;
@@ -8,14 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import static me.cbhud.spectator.PlayerStates.*;
+import static me.cbhud.playerstate.PlayerStates.*;
 
-public class SpectatorManager {
+public class PlayerManager {
 
     private final Main plugin;
     private final PlayerStateManager playerStateManager;
 
-    public SpectatorManager(Main plugin, PlayerStateManager playerStateManager) {
+    public PlayerManager(Main plugin, PlayerStateManager playerStateManager) {
         this.plugin = plugin;
         this.playerStateManager = playerStateManager;
     }

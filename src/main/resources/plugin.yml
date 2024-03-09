@@ -1,7 +1,7 @@
 name: CastleSiege
 main: me.cbhud.Main
 author: cbhud
-version: 1.0.7
+version: 1.0.8
 api-version: 1.17
 commands:
   setlobby:

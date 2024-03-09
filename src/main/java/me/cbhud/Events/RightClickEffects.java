@@ -1,6 +1,9 @@
 package me.cbhud.Events;
 
+import me.cbhud.Main;
 import me.cbhud.items.Manager;
+import me.cbhud.state.GameState;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,14 +15,28 @@ import org.bukkit.potion.PotionEffectType;
 
 public class RightClickEffects implements Listener {
 
+
+    private final Main plugin;
+
+    public RightClickEffects(Main plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
-    public static void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         final ItemStack mainHandItem = player.getInventory().getItemInMainHand();
-        final ItemStack offHandItem = player.getInventory().getItemInOffHand();
 
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && event.getItem() != null) {
             ItemStack clickedItem = event.getItem();
+
+            if (clickedItem.getType() == Material.CLOCK && plugin.getGame().getState() == GameState.LOBBY) {
+                player.openInventory(plugin.getTeamSelector().getInventory());
+            }
+
+            if (clickedItem.getType() == Material.NETHER_STAR && plugin.getGame().getState() == GameState.LOBBY) {
+                player.openInventory(plugin.getKitSelector().getInventory());
+            }
 
             if (clickedItem.getItemMeta().equals(Manager.stew.getItemMeta())) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));

@@ -42,7 +42,7 @@ public class KitSelector implements InventoryHolder {
         inv.setItem(10, item);
         item2 = createItem(ChatColor.AQUA + "Spearman", Material.TRIDENT, Collections.singletonList(ChatColor.GRAY + "Armed with a spear"));
         inv.setItem(11, item2);
-        item3 = createItem(ChatColor.AQUA + "Knight", Material.BLACK_BANNER, Collections.singletonList(ChatColor.GRAY + "Honored soldier who served the king"));
+        item3 = createItem(ChatColor.AQUA + "Knight", Material.SHIELD, Collections.singletonList(ChatColor.GRAY + "Honored soldier who served the king"));
         inv.setItem(12, item3);
     }
 

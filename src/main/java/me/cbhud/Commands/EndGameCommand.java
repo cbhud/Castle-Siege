@@ -34,7 +34,7 @@ public class EndGameCommand implements org.bukkit.command.CommandExecutor {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.teleport(lobbyLocation);
-                plugin.getSpectatorManager().setPlayerAsLobby(player);
+                plugin.getPlayerManager().setPlayerAsLobby(player);
             }
         } else {
             Bukkit.getLogger().warning("World is null!");

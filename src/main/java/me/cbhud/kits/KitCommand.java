@@ -1,7 +1,7 @@
 package me.cbhud.kits;
 
 import me.cbhud.Main;
-import me.cbhud.spectator.PlayerStates;
+import me.cbhud.playerstate.PlayerStates;
 import me.cbhud.state.GameState;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

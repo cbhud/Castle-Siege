@@ -25,18 +25,14 @@ public class DamageListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player damagedPlayer = (Player) event.getEntity();
 
-            // Check if the game state is LOBBY or END
             if (plugin.getGame().getState() == GameState.LOBBY || plugin.getGame().getState() == GameState.END) {
-                // Cancel the damage event in the lobby or end state
                 event.setCancelled(true);
                 return;
             }
-
-            // Check if the damage is caused by another entity
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) event;
 
-                // Check if the damager is a player or projectile (e.g., arrows)
+
                 if (damageByEntityEvent.getDamager() instanceof Player || damageByEntityEvent.getDamager() instanceof Projectile) {
                     Player damager = null;
 

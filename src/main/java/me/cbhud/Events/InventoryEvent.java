@@ -2,7 +2,6 @@ package me.cbhud.Events;
 
 import me.cbhud.gui.KitSelector;
 import me.cbhud.gui.TeamSelector;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -56,7 +55,7 @@ public class InventoryEvent implements Listener {
                 case IRON_SWORD:
                     player.performCommand("kit warrior");
                     break;
-                case BLACK_BANNER:
+                case SHIELD:
                     player.performCommand("kit knight");
                     break;
                 case TRIDENT:

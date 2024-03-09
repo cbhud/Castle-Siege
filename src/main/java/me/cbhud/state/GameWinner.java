@@ -1,10 +1,7 @@
-// GameWinner.java
-
 package me.cbhud.state;
 
 import me.cbhud.team.Team;
 import org.bukkit.Bukkit;
-import me.cbhud.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -13,15 +10,6 @@ import org.bukkit.entity.Player;
 public class GameWinner {
 
     private Team winner;
-    private GameState state;
-    private final Main plugin;
-
-    public GameWinner(Main plugin) {
-        this.plugin = plugin;
-        this.state = GameState.LOBBY;
-    }
-
-    // Other methods...
 
     public void setWinner(Team winner) {
         this.winner = winner;

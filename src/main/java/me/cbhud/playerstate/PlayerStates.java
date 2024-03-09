@@ -1,4 +1,4 @@
-package me.cbhud.spectator;
+package me.cbhud.playerstate;
 
 public enum PlayerStates {
     PLAYERLOBBY,

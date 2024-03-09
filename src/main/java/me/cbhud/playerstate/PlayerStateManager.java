@@ -1,4 +1,4 @@
-package me.cbhud.spectator;
+package me.cbhud.playerstate;
 
 import org.bukkit.entity.Player;
 import java.util.HashMap;

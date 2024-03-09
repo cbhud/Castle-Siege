@@ -3,19 +3,16 @@ package me.cbhud.Events;
 import me.cbhud.Main;
 import me.cbhud.state.GameState;
 import me.cbhud.team.Team;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
 public class MiscEvents implements Listener {
@@ -24,20 +21,6 @@ public class MiscEvents implements Listener {
 
     public MiscEvents(Main plugin) {
         this.plugin = plugin;
-    }
-
-    @EventHandler
-    public void onRightClick(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-
-        if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && event.getItem() != null
-                && event.getItem().getType() == Material.CLOCK && plugin.getGame().getState() == GameState.LOBBY) {
-            player.openInventory(plugin.getTeamSelector().getInventory());
-        }
-        if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && event.getItem() != null
-                && event.getItem().getType() == Material.NETHER_STAR && plugin.getGame().getState() == GameState.LOBBY) {
-            player.openInventory(plugin.getKitSelector().getInventory());
-        }
     }
 
     @EventHandler
@@ -88,6 +71,9 @@ public class MiscEvents implements Listener {
     @EventHandler
     public void onPickupItem(EntityPickupItemEvent event){
         Player player = (Player) event.getEntity();
+        if (player.isOp()){
+            event.setCancelled(false);
+        }
         if (plugin.getTeamManager().getTeam(player) == Team.FRANKS && plugin.getGame().getState() == GameState.IN_GAME){
             event.setCancelled(false);
         }else {
