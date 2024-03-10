@@ -1,4 +1,4 @@
-package me.cbhud.Events;
+package me.cbhud.event;
 
 import me.cbhud.gui.KitSelector;
 import me.cbhud.gui.TeamSelector;

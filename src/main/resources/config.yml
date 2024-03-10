@@ -5,7 +5,7 @@ maxPlayersPerTeam: 16
 timerMinutes: 8
 
 ### ADJUST KING HEALTH NOTE IT SHOULD BE WITH ONE DECIMAL EXAMPLE : 80.0
-king-health: 100.0
+king-health: 80.0
 
 
 scoreboard-title: 'Castle Siege'

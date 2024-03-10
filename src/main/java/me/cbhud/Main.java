@@ -4,14 +4,12 @@ import org.bukkit.plugin.java.*;
 import me.cbhud.playerstate.*;
 import me.cbhud.scoreboard.*;
 import me.cbhud.gui.*;
-import me.cbhud.items.*;
 import org.bukkit.command.*;
 import me.cbhud.team.*;
-import me.cbhud.Commands.*;
 import me.cbhud.kits.*;
 import org.bukkit.event.*;
 import org.bukkit.plugin.*;
-import me.cbhud.Events.*;
+import me.cbhud.event.*;
 import me.cbhud.state.*;
 
 public class Main extends JavaPlugin
@@ -30,6 +28,7 @@ public class Main extends JavaPlugin
     private TeamSelector teamSelector;
     private KitSelector kitSelector;
     private MobManager mobManager;
+    private Manager manager;
     private PlayerKitManager playerKitManager;
 
     public void onEnable() {
@@ -45,15 +44,11 @@ public class Main extends JavaPlugin
         this.autoStart = new Autostart(this, configManager);
         this.gameEndHandler = new GameEndHandler(this, configManager, this.autoStart);
         this.gameWinner = new GameWinner();
-        Manager.init();
+        manager = new Manager();
         this.countdownTimer = new CountdownTimer(this);
-        this.getCommand("setlobby").setExecutor((CommandExecutor)new LobbyCommand(this));
-        this.getCommand("start").setExecutor((CommandExecutor)new StartCommand(this, this.teamManager, this.mobManager));
         this.getCommand("teamjoin").setExecutor((CommandExecutor)new TeamJoinCommand(this, this.teamManager));
-        this.getCommand("setspawn").setExecutor((CommandExecutor)new TeamSpawnCommand(this));
-        this.getCommand("setmobspawn").setExecutor((CommandExecutor)new SetMobSpawnCommand(this));
-        this.getCommand("endgame").setExecutor((CommandExecutor)new EndGameCommand(this));
         this.getCommand("kit").setExecutor((CommandExecutor)new KitCommand(this));
+        this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager));
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.game, this.teamManager, this.autoStart, configManager), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerDeathHandler(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new AxeEvent((Plugin)this), (Plugin)this);

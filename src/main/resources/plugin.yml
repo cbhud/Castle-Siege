@@ -1,32 +1,17 @@
 name: CastleSiege
 main: me.cbhud.Main
 author: cbhud
-version: 1.0.8
+version: 1.0.9
 api-version: 1.17
 commands:
-  setlobby:
-    description: Gives soup
-    usage: /<command>
-    permission: viking.admin
-  start:
-    description: Gives soup
-    usage: /<command>
-    permission: war.start
-  teamjoin:
-    description: Gives soup
-    usage: /<command>
-  setspawn:
-    description: Gives soup
-    usage: /<command>
-    permission: viking.admin
-  setmobspawn:
-    description: mob
-    usage: /<command>
+  cs:
+    description: Castle Siege main command
+    usage: /<command> <endgame|setlobby|setmobspawn|start|teamspawn>
     permission: viking.admin
   kit:
-    description: kit
+    description: Manages player kits
     usage: /<command>
-  endgame:
-    description: kit
-    usage: /<command>
-    permission: war.start
+  teamjoin:
+    description: Join a team
+    usage: /<command> <teamName>
+    permission: viking.player

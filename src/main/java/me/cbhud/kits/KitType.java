@@ -1,6 +1,6 @@
 package me.cbhud.kits;
 
-import me.cbhud.items.Manager;
+import me.cbhud.gui.Manager;
 import me.cbhud.team.Team;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import java.util.Arrays;
 import java.util.List;
 
-import static me.cbhud.items.Manager.*;
+import static me.cbhud.gui.Manager.*;
 
 public enum KitType {
 
@@ -31,7 +31,6 @@ public enum KitType {
             }},
             new ItemStack(Material.AIR),
             new ItemStack(Material.ARROW, 32),
-            new ItemStack(Material.OAK_FENCE, 4),
             Manager.stew,
             Manager.stew,
             Manager.stew
@@ -53,7 +52,6 @@ public enum KitType {
                     setItemMeta(meta);
                 }
             }},
-            new ItemStack(Material.OAK_FENCE, 2),
             Manager.stew,
             Manager.stew
     ),
@@ -67,8 +65,7 @@ public enum KitType {
     KNIGHT("KNIGHT", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
             Manager.stew,
-            Manager.stew,
-            new ItemStack(Material.OAK_FENCE, 2)
+            Manager.stew
     ),
             true,
             new ItemStack[]{

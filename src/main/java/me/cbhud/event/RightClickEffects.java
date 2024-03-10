@@ -1,7 +1,7 @@
-package me.cbhud.Events;
+package me.cbhud.event;
 
 import me.cbhud.Main;
-import me.cbhud.items.Manager;
+import me.cbhud.gui.Manager;
 import me.cbhud.state.GameState;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

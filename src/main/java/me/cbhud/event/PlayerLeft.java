@@ -1,9 +1,8 @@
-package me.cbhud.Events;
+package me.cbhud.event;
 
 import me.cbhud.Autostart;
 import me.cbhud.ConfigManager;
 import me.cbhud.Main;
-import me.cbhud.scoreboard.ScoreboardManager;
 import me.cbhud.state.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

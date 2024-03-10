@@ -1,9 +1,6 @@
-package me.cbhud.Events;
+package me.cbhud.event;
 
 import me.cbhud.Main;
-import me.cbhud.state.GameState;
-import me.cbhud.team.Team;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,19 +36,17 @@ public class MiscEvents implements Listener {
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event){
+    public void onBlockBreak(BlockBreakEvent event) {
         Block brokenBlock = event.getBlock();
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
+
         if (player.hasPermission("viking.admin") || player.isOp()) {
             event.setCancelled(false); // Allow breaking any blocks
         } else {
-            // Check if the broken block is a fence and the game is in progress
-            if (brokenBlock.getType() == Material.OAK_FENCE && plugin.getGame().getState() == GameState.IN_GAME) {
-                event.setCancelled(false); // Allow breaking the fence during the game
-            } else {
-                event.setCancelled(true); // Cancel breaking the block
+                event.setCancelled(true);
             }
-        }    }
+        }
+
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event){
@@ -59,13 +54,8 @@ public class MiscEvents implements Listener {
         Player player = (Player) event.getPlayer();
         if (player.hasPermission("viking.admin") || player.isOp()) {
             event.setCancelled(false); // Allow breaking any blocks
-        } else {
-            if (brokenBlock.getType() == Material.OAK_FENCE && plugin.getGame().getState() == GameState.IN_GAME && plugin.getTeamManager().getTeam(player) == Team.FRANKS) {
-                event.setCancelled(false); // Allow breaking the fence during the game
-            } else {
-                event.setCancelled(true); // Cancel breaking the block
-            }
         }
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -74,9 +64,7 @@ public class MiscEvents implements Listener {
         if (player.isOp()){
             event.setCancelled(false);
         }
-        if (plugin.getTeamManager().getTeam(player) == Team.FRANKS && plugin.getGame().getState() == GameState.IN_GAME){
-            event.setCancelled(false);
-        }else {
+        else {
             event.setCancelled(true);
         }
     }
