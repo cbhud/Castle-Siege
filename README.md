@@ -25,12 +25,13 @@ To set up the Castle Siege minigame, follow these steps:
 3. Restart the server after setting spawns.
 
 ## Commands
+One permission: viking.admin
 
-- `/setlobby`: Set lobby location.
-- `/start`: Start the game.
-- `/setspawn [teamName]`: Set team spawn location for either VIKINGS or FRANKS.
-- `/setmobspawn`: Set king's spawn location.
-- `/endgame`: Force stop the game without a winner.
+- `/cs setlobby`: Set lobby location.
+- `/cs start`: Start the game.
+- `/cs setspawn [teamName]`: Set team spawn location for either VIKINGS or FRANKS.
+- `/cs setmobspawn`: Set king's spawn location.
+- `/cs endgame`: Force stop the game without a winner.
 
 ## Kits
 
