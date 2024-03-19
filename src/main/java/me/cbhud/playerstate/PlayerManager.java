@@ -1,23 +1,29 @@
 package me.cbhud.playerstate;
 
 import me.cbhud.Main;
-import org.bukkit.ChatColor;
+import me.cbhud.gui.Manager;
+import me.cbhud.team.Team;
+import me.cbhud.team.TeamManager;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static me.cbhud.playerstate.PlayerStates.*;
 
 public class PlayerManager {
 
     private final Main plugin;
+    private final TeamManager teamManager;
     private final PlayerStateManager playerStateManager;
 
-    public PlayerManager(Main plugin, PlayerStateManager playerStateManager) {
+    public PlayerManager(Main plugin, PlayerStateManager playerStateManager, TeamManager teamManager) {
         this.plugin = plugin;
         this.playerStateManager = playerStateManager;
+        this.teamManager = teamManager;
     }
 
     public void setPlayerState(Player player, PlayerStates state) {
@@ -48,29 +54,44 @@ public class PlayerManager {
         if(player.getGameMode() != GameMode.SURVIVAL){
             player.setGameMode(GameMode.SURVIVAL);
         }
+        if(plugin.getTeamManager().getTeam(player) == null){
+            tryRandomTeamJoin(player);
+        }
         player.getInventory().clear();
         player.setHealth(20);
         player.setLevel(0);
         player.getActivePotionEffects().clear();
 
-        ItemStack clockItem = new ItemStack(Material.CLOCK);
-        ItemMeta clockMeta = clockItem.getItemMeta();
-        clockMeta.setDisplayName(ChatColor.YELLOW + "Select Team"); // Set your custom name here
-        clockItem.setItemMeta(clockMeta);
-        player.getInventory().setItem(3, clockItem);
 
-        // Create a Nether Star item with a custom name
-        ItemStack netherStarItem = new ItemStack(Material.NETHER_STAR);
-        ItemMeta netherStarMeta = netherStarItem.getItemMeta();
-        netherStarMeta.setDisplayName(ChatColor.YELLOW + "Select Kit"); // Set your custom name here
-        netherStarItem.setItemMeta(netherStarMeta);
-        player.getInventory().setItem(5, netherStarItem);
+        player.getInventory().setItem(3, Manager.clock);
+        player.getInventory().setItem(5, Manager.star);
 
     }
 
     public void setPlayerAsSpectator(Player player) {
         plugin.getPlayerStateManager().setPlayerState(player, SPECTATOR);
         player.setGameMode(GameMode.SPECTATOR);
+    }
+
+    private boolean tryRandomTeamJoin(Player player) {
+        // Get all available teams
+        Team[] teams = Team.values();
+
+        // Shuffle the array to randomize team selection
+        List<Team> teamList = Arrays.asList(teams);
+        Collections.shuffle(teamList);
+
+        // Try to join each team until successful or all teams are full
+        for (Team team : teamList) {
+            if (teamManager.getPlayersInTeam(team) < teamManager.getMaxPlayersPerTeam()) {
+                // Join the team and return true
+                teamManager.joinTeam(player, team);
+                return true;
+            }
+        }
+
+        // Failed to join any team
+        return false;
     }
 
     }

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,8 +36,6 @@ public class PlayerJoin implements Listener {
         this.teamManager = teamManager;
         this.autostartInstance = autostartInstance;
         this.configManager = configManager;
-
-        // Load lobby location during initialization
         loadLobbyLocation();
     }
 
@@ -64,6 +63,7 @@ public class PlayerJoin implements Listener {
         Player player = event.getPlayer();
 
         if (plugin.getGame().getState() == GameState.LOBBY) {
+            tryRandomTeamJoin(player);
             teleportToLobby(player);
             plugin.getPlayerManager().setPlayerAsLobby(player);
             plugin.getScoreboardManager().setupScoreboard(player);
@@ -91,7 +91,28 @@ public class PlayerJoin implements Listener {
         }
     }
 
-    private boolean tryRandomTeamJoin(Player player) {
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if(plugin.getGame().getState() == GameState.IN_GAME){
+        plugin.getScoreboardManager().decrementTeamPlayersCount(player);
+        if (plugin.getScoreboardManager().getVikings() < 1 && plugin.getScoreboardManager().getFranks() < 1){
+            plugin.getWinner().setWinner(null);
+            plugin.getGameEndHandler().handleGameEnd();
+        }else if (plugin.getScoreboardManager().getVikings() < 1){
+            plugin.getWinner().setWinner(Team.Franks);
+            plugin.getGameEndHandler().handleGameEnd();
+        }
+        }
+        plugin.getScoreboardManager().removeScoreboard(player);
+        plugin.getTeamManager().removeTeam(player);
+        if (plugin.getGame().getState() == GameState.LOBBY) {
+            Bukkit.getScheduler().runTask(plugin, () -> autostartInstance.checkAutoStart(Bukkit.getOnlinePlayers().size()));
+        }
+    }
+
+
+    public boolean tryRandomTeamJoin(Player player) {
         // Get all available teams
         Team[] teams = Team.values();
 

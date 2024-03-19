@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
@@ -23,12 +24,19 @@ public class Manager implements InventoryHolder {
 
     // Items
     public static ItemStack stew;
+
+    public static ItemStack clock;
+    public static ItemStack star;
     public static ItemStack axe;
     public static ItemStack combataxe;
     public static ItemStack rage;
     public static ItemStack ragnarok;
     public static ItemStack sight;
     public static ItemStack harm;
+    public static ItemStack sword;
+
+    public static ItemStack attack;
+    public static ItemStack support;
 
     // GUIs
     private final Inventory teamSelector;
@@ -50,6 +58,11 @@ public class Manager implements InventoryHolder {
         createRage();
         createRagnarok();
         createSight();
+        createClock();
+        createStar();
+        createSword();
+        createAttackWand();
+        createSupportWand();
     }
 
     private void createAxe() {
@@ -60,7 +73,8 @@ public class Manager implements InventoryHolder {
         lore.add("§7Right-click holding this axe");
         lore.add("§7to throw it");
         meta.setLore(lore);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.addEnchant(Enchantment.LUCK,1, true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
         axe = item;
@@ -87,9 +101,6 @@ public class Manager implements InventoryHolder {
         lore.add("§7Berserker's melee axe");
         lore.add("§7Used in viking fights");
         meta.setLore(lore);
-        meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
-        meta.setUnbreakable(true);
         item.setItemMeta(meta);
         combataxe = item;
     }
@@ -135,6 +146,27 @@ public class Manager implements InventoryHolder {
         sight = item;
     }
 
+    private void createClock() {
+        ItemStack item = new ItemStack(Material.CLOCK, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§eSelect Team");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7Right click to select team");
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        clock = item;
+    }
+    private void createStar() {
+        ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§eSelect Kit");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7Right click to select the kit");
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        star = item;
+    }
+
     private void createHarm() {
         ItemStack item = new ItemStack(Material.TIPPED_ARROW, 1);
         ItemMeta meta = item.getItemMeta();
@@ -147,6 +179,51 @@ public class Manager implements InventoryHolder {
         ((PotionMeta) meta).setBasePotionData(new PotionData(PotionType.INSTANT_DAMAGE));
         item.setItemMeta(meta);
         harm = item;
+    }
+
+    private void createSword() {
+        ItemStack item = new ItemStack(Material.STONE_SWORD, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§dMystic Sword");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7There is a 0.06% chance");
+        lore.add("§7to poison someone when you hit him");
+        lore.add("§7with this sword");
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.DURABILITY,1, true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
+        sword = item;
+    }
+    private void createAttackWand() {
+        ItemStack item = new ItemStack(Material.BLAZE_ROD, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§cAttack Wand");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7Right click to cast mysterious spell");
+        lore.add("§7on your opponents!");
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.DURABILITY,1, true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
+        attack = item;
+    }
+
+    private void createSupportWand() {
+        ItemStack item = new ItemStack(Material.STICK, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§aSupport Wand");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7Right click to cast mysterious spell");
+        lore.add("§7to help your teammates!");
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.DURABILITY,1, true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
+        support = item;
     }
 
     public static ItemStack createVikingTeamItem() {

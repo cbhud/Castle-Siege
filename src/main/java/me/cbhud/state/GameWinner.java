@@ -23,7 +23,7 @@ public class GameWinner {
     private void broadcastWinnerMessage() {
         if (winner != null) {
             String winnerName = winner.toString(); // Assumes that your Team enum has a proper toString method
-            if ("VIKINGS".equals(winnerName)) {
+            if ("VIKINGS".equalsIgnoreCase(winnerName)) {
                 Bukkit.broadcastMessage("§7§m--------------------------");
                 Bukkit.broadcastMessage("§cVikings conquered the castle");
                 Bukkit.broadcastMessage(ChatColor.RED + GameEndHandler.getKillername() + " §cslaughtered §e§lKing Charles");
@@ -47,7 +47,7 @@ public class GameWinner {
                 }
             }
         } else {
-            Bukkit.getLogger().warning("Winner is null. Make sure to set a valid winner.");
+            Bukkit.broadcastMessage(ChatColor.RED + "Winner is noone both teams have disconnected.");
         }
     }
 }

@@ -3,6 +3,7 @@ package me.cbhud;
 import me.cbhud.kits.KitType;
 import me.cbhud.playerstate.PlayerStates;
 import me.cbhud.state.GameState;
+import me.cbhud.state.Type;
 import me.cbhud.team.Team;
 import me.cbhud.team.TeamManager;
 import org.bukkit.Bukkit;
@@ -87,6 +88,8 @@ public class Commands implements CommandExecutor {
 
         String subCommand = args[0].toLowerCase();
         switch (subCommand) {
+            case "type":
+                return typeCommand(sender);
             case "endgame":
                 return endGameCommand(sender);
             case "setlobby":
@@ -204,6 +207,7 @@ public class Commands implements CommandExecutor {
 
     private boolean startCommand(CommandSender sender) {
         if (plugin.getGame().getState() == GameState.LOBBY) {
+            plugin.getScoreboardManager().loadTeamCount();
             if (sender.hasPermission("viking.admin")) {
                 if (mobSpawnLocation != null) {
                     mobManager.spawnCustomMob(mobSpawnLocation, plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
@@ -228,6 +232,9 @@ public class Commands implements CommandExecutor {
                 Bukkit.broadcastMessage("");
                 Bukkit.broadcastMessage("§aThe game has started!");
                 Bukkit.broadcastMessage("§7§m----------------------------------");
+                if (plugin.getType().getState() == Type.Hardcore){
+                Bukkit.broadcastMessage(ChatColor.YELLOW + "(" + ChatColor.RED + "!!!" +ChatColor.YELLOW + ")" + ChatColor.RED + "HARDCORE mode is enabled if you die you will not respawn!");
+                }
 
             } else {
                 sender.sendMessage("You do not have permission to use this command.");
@@ -248,11 +255,12 @@ public class Commands implements CommandExecutor {
         Player player = (Player) sender;
 
         try {
-            Team team = Team.valueOf(teamName.toUpperCase());
+            String teamName1 = teamName.substring(0,1).toUpperCase() + teamName.substring(1).toLowerCase();
+            Team team = Team.valueOf(teamName1);
             setSpawnLocation(team, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully! RESTART THE SERVER BEFORE YOU START");
         } catch (IllegalArgumentException e) {
-            player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: VIKINGS FRANKS");
+            player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: Vikings, Franks");
         }
 
         return true;
@@ -289,6 +297,21 @@ public class Commands implements CommandExecutor {
                 }
             }
         }
+    }
+
+    private boolean typeCommand(CommandSender sender) {
+        if (plugin.getGame().getState() == GameState.LOBBY) {
+            if (sender.hasPermission("viking.admin")) {
+
+                if (plugin.getType().getState() == Type.Normal) {
+                    plugin.getType().setState(Type.Hardcore);
+                }else{
+                    plugin.getType().setState(Type.Normal);
+                }
+                plugin.getScoreboardManager().updateScoreboardForAll();
+            }
+        }
+        return true;
     }
 
     private void applyKitsToPlayers() {

@@ -51,7 +51,7 @@ public class GameEndHandler implements Listener
             else {
                 GameEndHandler.killername = "unknown";
             }
-            this.plugin.getWinner().setWinner(Team.VIKINGS);
+            this.plugin.getWinner().setWinner(Team.Vikings);
             this.plugin.getGameEndHandler().handleGameEnd();
         }
     }
@@ -59,7 +59,7 @@ public class GameEndHandler implements Listener
     private void removeCustomZombies() {
         for (final World world : Bukkit.getWorlds()) {
             for (final LivingEntity entity : world.getLivingEntities()) {
-                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().contains("King")) {
+                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().contains("King") || entity instanceof Wolf && entity.getCustomName() != null && entity.getCustomName().contains("Wolf")) {
                     entity.remove();
                 }
             }

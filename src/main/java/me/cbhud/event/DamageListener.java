@@ -1,17 +1,25 @@
 package me.cbhud.event;
 
 import me.cbhud.Main;
+import me.cbhud.gui.Manager;
+import me.cbhud.kits.KitType;
 import me.cbhud.state.GameState;
 import me.cbhud.team.Team;
 import me.cbhud.team.TeamManager;
 import org.bukkit.entity.Player;
+import java.util.Random;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 public class DamageListener implements Listener {
     private final Main plugin;
+
+    Random rand = new Random();
     private final TeamManager teamManager;
 
     public DamageListener(Main plugin) {
@@ -53,6 +61,12 @@ public class DamageListener implements Listener {
                         if (damagedPlayerTeam != null && damagedPlayerTeam.equals(damagerTeam)) {
                             // Players in the same team, cancel the damage event
                             event.setCancelled(true);
+                        }
+                        if(damager.getInventory().getItemInMainHand().getItemMeta().equals(Manager.sword.getItemMeta()) && plugin.getPlayerKitManager().getSelectedKit(damager) == KitType.WIZARD){
+                            int n = rand.nextInt(15) + 1;
+                            if (n == 6){
+                                damagedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 0));
+                            }
                         }
                     }
                 }

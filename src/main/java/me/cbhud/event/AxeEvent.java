@@ -1,6 +1,9 @@
 package me.cbhud.event;
 
+import me.cbhud.Main;
 import me.cbhud.gui.Manager;
+import me.cbhud.state.GameState;
+import me.cbhud.team.Team;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -15,17 +18,18 @@ import org.bukkit.util.Vector;
 public class AxeEvent implements Listener {
 
     private final Plugin plugin;
+    private final Main main;
 
-    public AxeEvent(Plugin plugin) {
+    public AxeEvent(Main main, Plugin plugin) {
         this.plugin = plugin;
+        this.main = main;
     }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR || e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
-            Player p = e.getPlayer();
+        Player p = e.getPlayer();
+        if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR && main.getTeamManager().getTeam(p) == Team.Vikings && main.getGame().getState() == GameState.IN_GAME && p.getInventory().getItemInMainHand().isSimilar(Manager.axe) || e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK && main.getTeamManager().getTeam(p) == Team.Vikings && main.getGame().getState() == GameState.IN_GAME && p.getInventory().getItemInMainHand().isSimilar(Manager.axe)) {
             try {
-                if (p.getInventory().getItemInMainHand().isSimilar(Manager.axe)) {
                     Item axe = p.getWorld().dropItem(p.getEyeLocation(), p.getInventory().getItemInMainHand());
                     axe.setVelocity(p.getEyeLocation().getDirection().multiply(1.75));
                     p.getInventory().getItemInMainHand().setAmount(0);
@@ -51,10 +55,6 @@ public class AxeEvent implements Listener {
                             }
                         }
                     }.runTaskTimer(this.plugin, 0L, 1L);
-                } else {
-                    // Log a warning if the axe material is not found or does not match
-                    this.plugin.getLogger().warning("Axe material not found or does not match configured material: ");
-                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

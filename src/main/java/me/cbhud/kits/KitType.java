@@ -19,7 +19,7 @@ public enum KitType {
 
 
 
-    MARKSMAN("MARKSMAN", Arrays.asList(
+    MARKSMAN("Marksman", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
             new ItemStack(Material.CROSSBOW) {{
                 ItemMeta meta = getItemMeta();
@@ -37,13 +37,13 @@ public enum KitType {
     ),
             true,
             new ItemStack[]{
-                    new ItemStack(Material.CHAINMAIL_HELMET),
+                    new ItemStack(Material.IRON_HELMET),
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                    new ItemStack(Material.LEATHER_LEGGINGS),
-                    new ItemStack(Material.LEATHER_BOOTS)
-            },Team.FRANKS),
-    SPEARMAN("SPEARMAN", Arrays.asList(
-            new ItemStack(Material.STONE_SWORD),
+                    new ItemStack(Material.IRON_LEGGINGS),
+                    new ItemStack(Material.CHAINMAIL_BOOTS)
+            },Team.Franks),
+    SPEARMAN("Spearman", Arrays.asList(
+            new ItemStack(Material.IRON_SWORD),
             new ItemStack(Material.TRIDENT) {{
                 ItemMeta meta = getItemMeta();
                 if (meta != null) {
@@ -57,12 +57,26 @@ public enum KitType {
     ),
             true,
             new ItemStack[]{
-                    new ItemStack(Material.CHAINMAIL_HELMET),
-                    new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                    new ItemStack(Material.CHAINMAIL_LEGGINGS),
-                    new ItemStack(Material.CHAINMAIL_BOOTS)
-            },Team.FRANKS),
-    KNIGHT("KNIGHT", Arrays.asList(
+                    new ItemStack(Material.IRON_HELMET),
+                    new ItemStack(Material.IRON_CHESTPLATE),
+                    new ItemStack(Material.IRON_LEGGINGS),
+                    new ItemStack(Material.IRON_BOOTS)
+            },Team.Franks),
+    WIZARD("Wizard", Arrays.asList(
+            new ItemStack(Material.STONE_SWORD),
+            new ItemStack(Material.AIR),
+            Manager.attack,
+            support,
+            Manager.stew
+    ),
+            true,
+            new ItemStack[]{
+                    createDyedArmor(Material.LEATHER_HELMET, Color.BLUE),
+                    createDyedArmor(Material.LEATHER_CHESTPLATE, Color.BLUE),
+                    createDyedArmor(Material.LEATHER_LEGGINGS, Color.BLUE),
+                    createDyedArmor(Material.LEATHER_BOOTS, Color.BLUE)
+            },Team.Franks),
+    KNIGHT("Knight", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
             Manager.stew,
             Manager.stew
@@ -73,9 +87,9 @@ public enum KitType {
                     new ItemStack(Material.IRON_CHESTPLATE),
                     new ItemStack(Material.IRON_LEGGINGS),
                     new ItemStack(Material.IRON_BOOTS)
-            },Team.FRANKS),
+            },Team.Franks),
 
-    BERSERKER("BERSERKER", Arrays.asList(
+    BERSERKER("Berserker", Arrays.asList(
             new ItemStack(combataxe),
             new ItemStack(axe),
             Manager.stew,
@@ -88,8 +102,8 @@ public enum KitType {
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
                     new ItemStack(Material.CHAINMAIL_LEGGINGS),
                     new ItemStack(Material.CHAINMAIL_BOOTS)
-            },Team.VIKINGS),
-    SKALD("SKALD", Arrays.asList(
+            },Team.Vikings),
+    SKALD("Skald", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
             new ItemStack(Material.BOW),
             new ItemStack(Material.AIR),
@@ -104,7 +118,20 @@ public enum KitType {
                     createDyedArmor(Material.LEATHER_CHESTPLATE, Color.RED),
                     createDyedArmor(Material.LEATHER_LEGGINGS, Color.RED),
                     createDyedArmor(Material.LEATHER_BOOTS, Color.RED)
-            },Team.VIKINGS),
+            },Team.Vikings),
+    BEASTMASTER("Beastmaster", Arrays.asList(
+            new ItemStack(Material.STONE_SWORD),
+            Manager.stew,
+            Manager.stew,
+            new ItemStack(Material.BONE)
+    ),
+            true,
+            new ItemStack[]{
+                    new ItemStack(Material.LEATHER_HELMET),
+                    new ItemStack(Material.CHAINMAIL_CHESTPLATE),
+                    new ItemStack(Material.LEATHER_LEGGINGS),
+                    new ItemStack(Material.CHAINMAIL_BOOTS)
+            },Team.Vikings),
     WARRIOR("Warrior", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
             Manager.stew,
@@ -117,7 +144,7 @@ public enum KitType {
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
                     new ItemStack(Material.IRON_LEGGINGS),
                     new ItemStack(Material.CHAINMAIL_BOOTS)
-            },Team.VIKINGS);
+            },Team.Vikings);
 
     private final String displayName;
     private final List<ItemStack> items;
@@ -135,9 +162,9 @@ public enum KitType {
 
     public static KitType getDefaultKit(Team team) {
         switch (team) {
-            case VIKINGS:
+            case Vikings:
                 return SKALD;
-            case FRANKS:
+            case Franks:
                 return MARKSMAN;
             default:
                 return null;

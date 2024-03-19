@@ -11,7 +11,3 @@ commands:
   kit:
     description: Manages player kits
     usage: /<command>
-  teamjoin:
-    description: Join a team
-    usage: /<command> <teamName>
-    permission: viking.player

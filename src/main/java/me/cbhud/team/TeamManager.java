@@ -49,6 +49,10 @@ public class TeamManager {
         return playerTeams.get(player.getUniqueId().toString());
     }
 
+    public Team removeTeam(Player player){
+        return  playerTeams.put(player.getUniqueId().toString(), null);
+    }
+
     public int getMaxPlayersPerTeam() {
         return maxPlayersPerTeam;
     }

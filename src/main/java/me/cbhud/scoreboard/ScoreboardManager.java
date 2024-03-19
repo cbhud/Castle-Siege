@@ -31,6 +31,8 @@ public class ScoreboardManager {
         this.scoreboards = new HashMap<>();
     }
 
+    private int vikings;
+    private int franks;
 
 
     public void setupScoreboard(Player player) {
@@ -65,15 +67,16 @@ public class ScoreboardManager {
         board.updateTitle(title);
         board.updateLine(0, " ");
         board.updateLine(1, mainColor +"Online: " +secondaryColor+ Bukkit.getOnlinePlayers().size());
-
-        Team team = teamManager.getTeam(player);
         board.updateLine(2, " ");
-        board.updateLine(3, mainColor +"Team: " +secondaryColor+ (team != null ? team.toString() : "No Team"));
+        board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
+        Team team = teamManager.getTeam(player);
         board.updateLine(4, " ");
-        board.updateLine(5, mainColor +"Kit: " +secondaryColor+ (plugin.getPlayerKitManager().hasSelectedKit(player) ?
+        board.updateLine(5, mainColor +"Team: " +secondaryColor+ (team != null ? team.toString() : "No Team"));
+        board.updateLine(6, " ");
+        board.updateLine(7, mainColor +"Kit: " +secondaryColor+ (plugin.getPlayerKitManager().hasSelectedKit(player) ?
                 plugin.getPlayerKitManager().getSelectedKit(player).getDisplayName() : "Select kit"));
-        board.updateLine(6," ");
-        board.updateLine(7, bottomline);
+        board.updateLine(8," ");
+        board.updateLine(9, bottomline);
     }
 
     private void setupInGameScoreboard(FastBoard board) {
@@ -106,17 +109,29 @@ public class ScoreboardManager {
         board.updateLine(7, bottomline);
     }
 
+    public int getVikings(){
+        return vikings;
+    }
+
+    public int getFranks(){
+        return franks;
+    }
+
     private String formatTime(int seconds) {
         int minutes = seconds / 60;
         int remainingSeconds = seconds % 60;
         return String.format("%02d:%02d", minutes, remainingSeconds);
     }
 
-    private int getTeamPlayersCount(Team team) {
-        return (int) Bukkit.getOnlinePlayers().stream()
-                .filter(p -> teamManager.getTeam(p) == team)
+    public void loadTeamCount() {
+        vikings = (int) Bukkit.getOnlinePlayers().stream()
+                .filter(p -> teamManager.getTeam(p) == Team.Vikings)
+                .count();
+        franks = (int) Bukkit.getOnlinePlayers().stream()
+                .filter(p -> teamManager.getTeam(p) == Team.Franks)
                 .count();
     }
+
 
     public void updateScoreboard(Player player) {
         FastBoard board = scoreboards.get(player);
@@ -149,13 +164,15 @@ public class ScoreboardManager {
         String bottomline = bottomColor + configManager.getBottomline();
         board.updateLines("", "", "");
         board.updateLine(1, mainColor +"Online: " + secondaryColor + Bukkit.getOnlinePlayers().size());
-        Team team = teamManager.getTeam(player);
         board.updateLine(2, " ");
-        board.updateLine(3, mainColor +"Team: " + secondaryColor + (team != null ? team.toString() : "No Team"));
+        board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
+        Team team = teamManager.getTeam(player);
         board.updateLine(4, " ");
-        board.updateLine(5, mainColor +"Kit: " + secondaryColor + (plugin.getPlayerKitManager().hasSelectedKit(player) ? plugin.getPlayerKitManager().getSelectedKit(player).getDisplayName() : "Select kit"));
-        board.updateLine(6, "");
-        board.updateLine(7, bottomline);
+        board.updateLine(5, mainColor +"Team: " + secondaryColor + (team != null ? team.toString() : "No Team"));
+        board.updateLine(6, " ");
+        board.updateLine(7, mainColor +"Kit: " + secondaryColor + (plugin.getPlayerKitManager().hasSelectedKit(player) ? plugin.getPlayerKitManager().getSelectedKit(player).getDisplayName() : "Select kit"));
+        board.updateLine(8, "");
+        board.updateLine(9, bottomline);
     }
 
     // Updated method to include the team parameter
@@ -182,8 +199,8 @@ public class ScoreboardManager {
         Zombie king = mobManager.getKingZombie();
         double kingHealth = mobManager.getZombieHealth(king);
         board.updateLine(3, mainColor +"King's Health: " + secondaryColor + (int) kingHealth);
-        board.updateLine(5, mainColor +"Vikings: " + secondaryColor + getTeamPlayersCount(Team.VIKINGS));
-        board.updateLine(7, mainColor +"Franks: " + secondaryColor + getTeamPlayersCount(Team.FRANKS));
+        board.updateLine(5, mainColor +"Vikings: " + secondaryColor + vikings);
+        board.updateLine(7, mainColor +"Franks: " + secondaryColor + franks);
         board.updateLine(8, " ");
         board.updateLine(9, bottomline);
     }
@@ -207,6 +224,27 @@ public class ScoreboardManager {
     public void updateScoreboardForAll() {
         Bukkit.getOnlinePlayers().forEach(this::updateScoreboard);
     }
+
+    public void decrementTeamPlayersCount(Player player) {
+        ChatColor mainColor = configManager.getMainColor();
+        ChatColor secondaryColor = configManager.getSecondaryColor();
+        Team team = teamManager.getTeam(player);
+        if (team != null) {
+                switch (team) {
+                    case Franks:
+                        if(franks > 0){
+                        franks--;}
+                        break;
+                    case Vikings:
+                        if(vikings > 0) {
+                            vikings--;
+                        }
+                        break;
+                }
+            }
+        }
+
+
 
     public void removeScoreboard(Player player) {
         FastBoard board = scoreboards.remove(player);

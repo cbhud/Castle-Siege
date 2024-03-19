@@ -20,7 +20,7 @@ public class Autostart {
     public Autostart(Main plugin, ConfigManager configManager) {
         this.plugin = plugin;
         this.configManager = configManager;
-        this.playersToStart = configManager.getConfig().getInt("auto-start-players", 5);
+        this.playersToStart = configManager.getConfig().getInt("auto-start-players");
         this.initialCountdownSeconds = configManager.getConfig().getInt("auto-start-countdown", 60);
         this.countdownSeconds = initialCountdownSeconds;
     }

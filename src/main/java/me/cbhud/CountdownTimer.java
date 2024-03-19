@@ -50,8 +50,7 @@ public class CountdownTimer {
 
     public void endTimer() {
         if (plugin.getGame().getState() == GameState.IN_GAME) {
-            plugin.getWinner().setWinner(Team.FRANKS);
-            //Bukkit.broadcastMessage("The timer has run out! FRANKS successfully defended their castle!");
+            plugin.getWinner().setWinner(Team.Franks);
             plugin.getGameEndHandler().handleGameEnd();
             cancelTimer();
         }

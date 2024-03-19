@@ -1,4 +1,3 @@
-// MobManager.java
 package me.cbhud;
 
 import me.cbhud.team.Team;
@@ -63,11 +62,8 @@ public class MobManager implements Listener {
         float yaw = (float) config.getDouble("yaw");
         float pitch = (float) config.getDouble("pitch");
 
-        // Get the world from the configuration
         String worldName = config.getString("world");
         if (worldName == null) {
-            // Handle case where world name is null
-            // getLogger().warning("World name is null. Make sure to set a valid world name.");
             return null;
         }
 
@@ -80,7 +76,7 @@ public class MobManager implements Listener {
         if (isKingZombie(zombie)) {
             return zombie.getHealth();
         }
-        return 0.0; // Return a default value if the conditions are not met
+        return 0.0;
     }
 
     private boolean isKingZombie(Zombie zombie) {
@@ -111,7 +107,7 @@ public class MobManager implements Listener {
 
                 Team damagerTeam = teamManager.getTeam(damager);
 
-                if (damagerTeam == Team.FRANKS) {
+                if (damagerTeam == Team.Franks || damagerTeam == null) {
                     event.setCancelled(true);
                 }
             } else if (event.getDamager() instanceof Projectile) {
@@ -121,7 +117,7 @@ public class MobManager implements Listener {
                     Player shooter = (Player) projectile.getShooter();
                     Team shooterTeam = teamManager.getTeam(shooter);
 
-                    if (shooterTeam == Team.FRANKS) {
+                    if (shooterTeam == Team.Franks|| shooterTeam == null) {
                         event.setCancelled(true);
                     }
                 }

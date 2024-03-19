@@ -4,6 +4,7 @@ import me.cbhud.Main;
 import me.cbhud.gui.Manager;
 import me.cbhud.kits.KitType;
 import me.cbhud.state.GameState;
+import me.cbhud.state.Type;
 import me.cbhud.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,47 +33,67 @@ public class PlayerDeathHandler implements Listener {
 
     private void loadSpawnLocations() {
         FileConfiguration config = plugin.getConfig();
-        teamVikingSpawn = getSpawnLocationForTeam(config, Team.VIKINGS);
-        teamFranksSpawn = getSpawnLocationForTeam(config, Team.FRANKS);
+        teamVikingSpawn = getSpawnLocationForTeam(config, Team.Vikings);
+        teamFranksSpawn = getSpawnLocationForTeam(config, Team.Franks);
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (plugin.getGame().getState() == GameState.IN_GAME) {
-            Player player = event.getEntity();
-            event.getDrops().clear();
-            plugin.getPlayerManager().setPlayerAsSpectator(player);
-            player.sendTitle(ChatColor.RED + "You died!", ChatColor.GRAY + "Respawning... 3 seconds", 10, 70, 20);
-
-            Team team = plugin.getTeamManager().getTeam(player);
-            Location spawnLocation = getSpawnLocationForTeam(team);
-
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if (spawnLocation != null) {
-                    player.spigot().respawn();
-                    player.teleport(spawnLocation);
-                    plugin.getPlayerManager().setPlayerAsPlaying(player);
-                    plugin.getPlayerKitManager().giveKit(player, plugin.getPlayerKitManager().getSelectedKit(player));
-                } else {
-                    // Handle the case where the spawn location is null (not found)
-                    // You may want to log a warning or take appropriate action
-                    plugin.getLogger().warning("Spawn location not found for team: " + team);
-                }
-            }, 3 * 20); // 5 seconds
-        }
-        // Integrating KillEffects here
         Player player = event.getEntity();
         Player killer = player.getKiller();
-        if (killer != null) {
-            KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
-            if (killerKit != null) {
-                applyKillEffects(killer, killerKit);
+
+        if (plugin.getGame().getState() == GameState.IN_GAME) {
+
+
+            if (plugin.getType().getState() == Type.Hardcore) {
+                event.getDrops().clear();
+                plugin.getPlayerManager().setPlayerAsSpectator(player);
+                plugin.getScoreboardManager().decrementTeamPlayersCount(player);
+                player.sendTitle(ChatColor.RED + "You have died!", ChatColor.GRAY + "Better luck next time!", 10, 70, 20);
+                if (plugin.getScoreboardManager().getVikings() < 1) {
+                    plugin.getWinner().setWinner(Team.Franks);
+                    plugin.getGameEndHandler().handleGameEnd();
+                }
+                if (killer != null) {
+                    KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
+                    if (killerKit != null) {
+                        applyKillEffects(killer, killerKit);
+                    }
+                }
+                return;
+            }
+
+
+                event.getDrops().clear();
+                plugin.getPlayerManager().setPlayerAsSpectator(player);
+                player.sendTitle(ChatColor.RED + "You died!", ChatColor.GRAY + "Respawning... 5 seconds", 10, 70, 20);
+
+                Team team = plugin.getTeamManager().getTeam(player);
+                Location spawnLocation = getSpawnLocationForTeam(team);
+
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    if (spawnLocation != null) {
+                        player.spigot().respawn();
+                        player.teleport(spawnLocation);
+                        plugin.getPlayerManager().setPlayerAsPlaying(player);
+                        plugin.getPlayerKitManager().giveKit(player, plugin.getPlayerKitManager().getSelectedKit(player));
+                    } else {
+                        // Handle the case where the spawn location is null (not found)
+                        // You may want to log a warning or take appropriate action
+                        plugin.getLogger().warning("Spawn location not found for team: " + team);
+                    }
+                }, 5 * 20); // 5 seconds
+            }
+            if (killer != null) {
+                KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
+                if (killerKit != null) {
+                    applyKillEffects(killer, killerKit);
+                }
             }
         }
-    }
 
     private Location getSpawnLocationForTeam(Team team) {
-        return team == Team.VIKINGS ? teamVikingSpawn : (team == Team.FRANKS ? teamFranksSpawn : null);
+        return team == Team.Vikings ? teamVikingSpawn : (team == Team.Franks ? teamFranksSpawn : null);
     }
 
     private Location getSpawnLocationForTeam(FileConfiguration config, Team team) {
