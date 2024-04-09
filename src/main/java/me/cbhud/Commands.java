@@ -16,6 +16,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import java.util.HashMap;
 import java.util.Map;
@@ -132,7 +133,7 @@ public class Commands implements CommandExecutor {
         for (org.bukkit.World world : Bukkit.getWorlds()) {
             for (LivingEntity entity : world.getLivingEntities()) {
                 if (entity instanceof Zombie && entity.getCustomName() != null &&
-                        entity.getCustomName().equals("§6§lKing Charles")) {
+                        entity.getCustomName().equals("§6§lKing Charles") || entity instanceof Wolf && entity.getCustomName() != null && entity.getCustomName().contains("Wolf")) {
                     entity.remove();
                 }
             }
@@ -179,7 +180,7 @@ public class Commands implements CommandExecutor {
 
         plugin.saveConfig();
         player.getWorld().setGameRule(org.bukkit.GameRule.DO_MOB_SPAWNING, false);
-        player.sendMessage("Lobby location set! RESTART THE SERVER BEFORE YOU START");
+        player.sendMessage("Lobby location set!");
 
         return true;
     }
@@ -197,7 +198,8 @@ public class Commands implements CommandExecutor {
             plugin.getConfig().set("mobSpawnLocation.world", player.getLocation().getWorld().getName());
             plugin.saveConfig();
 
-            player.sendMessage(ChatColor.RED + "King's (Zombie) spawn location has been updated. RESTART THE SERVER BEFORE YOU START!!!");
+            player.sendMessage(ChatColor.GREEN + "King's spawn location has been updated.");
+            player.sendMessage(ChatColor.RED + "If you set spawns RESTART the server before you start!");
         } else {
             sender.sendMessage(ChatColor.RED + "Only players can use this command.");
         }
@@ -240,7 +242,7 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage("You do not have permission to use this command.");
             }
         } else {
-            sender.sendMessage(ChatColor.RED + "The game is not in LOBBY. You cannot start it now.");
+            sender.sendMessage(ChatColor.RED + "The game is not in LOBBY STATE. You cannot start it now.");
         }
 
         return true;
@@ -258,7 +260,8 @@ public class Commands implements CommandExecutor {
             String teamName1 = teamName.substring(0,1).toUpperCase() + teamName.substring(1).toLowerCase();
             Team team = Team.valueOf(teamName1);
             setSpawnLocation(team, player.getLocation());
-            player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully! RESTART THE SERVER BEFORE YOU START");
+            player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully!");
+            player.sendMessage(ChatColor.RED + "If you set spawns RESTART the server before you start!");
         } catch (IllegalArgumentException e) {
             player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: Vikings, Franks");
         }
@@ -305,8 +308,10 @@ public class Commands implements CommandExecutor {
 
                 if (plugin.getType().getState() == Type.Normal) {
                     plugin.getType().setState(Type.Hardcore);
+                    Bukkit.broadcastMessage("§7[§eCastleSiege§7] §cHardcore §e mode has been §aenabled!");
                 }else{
                     plugin.getType().setState(Type.Normal);
+                    Bukkit.broadcastMessage("§7[§eCastleSiege§7] §cHardcore §e mode has been §cdisabled!");
                 }
                 plugin.getScoreboardManager().updateScoreboardForAll();
             }

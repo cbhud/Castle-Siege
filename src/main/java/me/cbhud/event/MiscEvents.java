@@ -57,20 +57,21 @@ public class MiscEvents implements Listener {
     public void onBlockPlace(BlockPlaceEvent event){
         Block brokenBlock = event.getBlock();
         Player player = (Player) event.getPlayer();
-        if (player.hasPermission("viking.admin") || player.isOp()) {
+        if (player.isOp() || player.hasPermission("viking.admin")) {
             event.setCancelled(false); // Allow breaking any blocks
-        }
+        }else {
         event.setCancelled(true);
-    }
+    }}
 
     @EventHandler
     public void onPickupItem(EntityPickupItemEvent event){
-        Player player = (Player) event.getEntity();
-        if (player.isOp()){
-            event.setCancelled(false);
-        }
-        else {
-            event.setCancelled(true);
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if (player.isOp()){
+                event.setCancelled(false);
+            } else {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -148,7 +149,11 @@ public class MiscEvents implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (event.getInventory().getHolder() instanceof TeamSelector ||
                 event.getInventory().getHolder() instanceof KitSelector) {
+            if(player.isOp()){
+                event.setCancelled(false);
+            }else {
             event.setCancelled(true);
+        }
         }
     }
 

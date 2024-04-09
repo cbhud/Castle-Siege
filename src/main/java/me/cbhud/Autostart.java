@@ -10,11 +10,11 @@ import java.util.List;
 public class Autostart {
     private final Main plugin;
     private final ConfigManager configManager;
-    private int playersToStart;
-    private int initialCountdownSeconds;
+    private final int playersToStart;
+    private final int initialCountdownSeconds;
     private int countdownSeconds;
     private int taskId;
-    private List<Integer> taskIds = new ArrayList<>();
+    private final List<Integer> taskIds = new ArrayList<>();
     ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 
     public Autostart(Main plugin, ConfigManager configManager) {
@@ -34,7 +34,7 @@ public class Autostart {
     }
 
     private void startCountdown() {
-        resetCountdown(); // Reset countdown to initial value
+        resetCountdown();
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if (countdownSeconds > 0) {
                 if (countdownSeconds == initialCountdownSeconds || countdownSeconds == 45 || countdownSeconds == 30 || countdownSeconds == 15 || countdownSeconds == 10 || countdownSeconds <= 5) {
@@ -43,7 +43,7 @@ public class Autostart {
                 countdownSeconds--;
             } else {
                 Bukkit.broadcastMessage(ChatColor.GREEN + "Starting the game!");
-                String command = "start";
+                String command = "cs start";
                 Bukkit.dispatchCommand(console, command);
                 cancelCountdown(); // Cancel the repeating task after starting the game
             }

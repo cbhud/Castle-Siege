@@ -1,3 +1,11 @@
+/*  TO-DO List
+*   1. Nove ideje 
+*
+*
+*
+* */
+
+
 package me.cbhud;
 
 import org.bukkit.plugin.java.*;
@@ -31,8 +39,10 @@ public class Main extends JavaPlugin
     private Manager manager;
     private PlayerKitManager playerKitManager;
 
+    private ConfigManager configManager;
+
     public void onEnable() {
-        final ConfigManager configManager = new ConfigManager(this);
+        configManager = new ConfigManager(this);
         configManager.setup();
         this.game = new Game(this);
         this.type = new TypeManager(this);

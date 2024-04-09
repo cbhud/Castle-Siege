@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class WolfManager implements Listener {
 
@@ -60,6 +62,17 @@ public class WolfManager implements Listener {
                     }
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onRightClickEntity(PlayerInteractEntityEvent event) {
+        final Player player = event.getPlayer();
+        final ItemStack mainHandItem = player.getInventory().getItemInMainHand();
+        final Entity clickedEntity = event.getRightClicked();
+
+        if (clickedEntity.getType() == EntityType.WOLF) {
+            event.setCancelled(true);
         }
     }
 

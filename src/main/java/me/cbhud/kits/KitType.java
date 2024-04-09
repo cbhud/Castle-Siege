@@ -121,9 +121,9 @@ public enum KitType {
             },Team.Vikings),
     BEASTMASTER("Beastmaster", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
+            bone2,
             Manager.stew,
-            Manager.stew,
-            new ItemStack(Material.BONE)
+            Manager.stew
     ),
             true,
             new ItemStack[]{
@@ -145,6 +145,7 @@ public enum KitType {
                     new ItemStack(Material.IRON_LEGGINGS),
                     new ItemStack(Material.CHAINMAIL_BOOTS)
             },Team.Vikings);
+
 
     private final String displayName;
     private final List<ItemStack> items;

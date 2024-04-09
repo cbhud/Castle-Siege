@@ -99,7 +99,7 @@ public class MobManager implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Zombie && event.getEntity().getCustomName().contains("King")) {
+        if (event.getEntity() instanceof Zombie && event.getEntity().getCustomName() != null && event.getEntity().getCustomName().contains("King")) {
             Zombie zombie = (Zombie) event.getEntity();
 
             if (event.getDamager() instanceof Player) {

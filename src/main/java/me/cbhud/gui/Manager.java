@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
@@ -24,6 +23,8 @@ public class Manager implements InventoryHolder {
 
     // Items
     public static ItemStack stew;
+
+    public static ItemStack bone2;
 
     public static ItemStack clock;
     public static ItemStack star;
@@ -63,6 +64,7 @@ public class Manager implements InventoryHolder {
         createSword();
         createAttackWand();
         createSupportWand();
+        createBone();
     }
 
     private void createAxe() {
@@ -78,6 +80,18 @@ public class Manager implements InventoryHolder {
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
         axe = item;
+    }
+
+    private void createBone() {
+        ItemStack item = new ItemStack(Material.IRON_NUGGET, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§aSpawn your wolf");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7Right-click holding this bone");
+        lore.add("§7to spawn your wolf");
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        bone2 = item;
     }
 
     private void createStew() {
@@ -133,7 +147,7 @@ public class Manager implements InventoryHolder {
     }
 
     private void createSight() {
-        ItemStack item = new ItemStack(Material.MAGMA_CREAM, 1);
+        ItemStack item = new ItemStack(Material.FERMENTED_SPIDER_EYE, 1);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eSkald's Sight");
         List<String> lore = new ArrayList<>();
