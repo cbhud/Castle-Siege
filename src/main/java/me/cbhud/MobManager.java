@@ -93,7 +93,6 @@ public class MobManager implements Listener {
                 }
             }
         }
-        Bukkit.getLogger().info("King Zombie not found.");
         return null;
     }
 

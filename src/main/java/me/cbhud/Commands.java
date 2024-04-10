@@ -118,6 +118,7 @@ public class Commands implements CommandExecutor {
                 plugin.getCountdownTimer().cancelTimer();
                 teleportPlayersToLobby();
                 plugin.getGame().setState(GameState.LOBBY);
+                this.plugin.getMapRegeneration().regenerateChangedBlocks();
                 Bukkit.broadcastMessage(ChatColor.RED + "Game force-stopped!");
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");

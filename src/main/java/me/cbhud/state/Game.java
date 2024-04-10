@@ -22,8 +22,6 @@ public class Game {
         return currentState;
     }
 
-
-
-    }
+}
 
 

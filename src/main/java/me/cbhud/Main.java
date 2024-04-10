@@ -32,6 +32,7 @@ public class Main extends JavaPlugin
     private PlayerStateManager playerStateManager;
     private ScoreboardManager scoreboardManager;
     private Autostart autoStart;
+    private MapRegeneration mapRegeneration;
     private TeamSelector teamSelector;
     private KitSelector kitSelector;
     private MobManager mobManager;
@@ -71,6 +72,8 @@ public class Main extends JavaPlugin
         this.kitSelector = new KitSelector();
         this.scoreboardManager = new ScoreboardManager(this, this.teamManager, this.mobManager, configManager);
         this.game.setState(GameState.LOBBY);
+        mapRegeneration = new MapRegeneration(this);
+        getServer().getPluginManager().registerEvents(mapRegeneration, this);
         this.getServer().getConsoleSender().sendMessage("CastleSiege has been enabled!");
     }
 
@@ -125,5 +128,8 @@ public class Main extends JavaPlugin
 
     public KitSelector getKitSelector() {
         return this.kitSelector;
+    }
+    public MapRegeneration getMapRegeneration() {
+        return mapRegeneration;
     }
 }

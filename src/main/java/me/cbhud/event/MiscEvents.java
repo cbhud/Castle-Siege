@@ -3,13 +3,12 @@ package me.cbhud.event;
 import me.cbhud.Main;
 import me.cbhud.gui.KitSelector;
 import me.cbhud.gui.TeamSelector;
+import me.cbhud.state.GameState;
 import me.cbhud.team.Team;
-import org.bukkit.block.Block;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -41,33 +40,10 @@ public class MiscEvents implements Listener {
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        Block brokenBlock = event.getBlock();
-        Player player = event.getPlayer();
-
-        if (player.hasPermission("viking.admin") || player.isOp()) {
-            event.setCancelled(false); // Allow breaking any blocks
-        } else {
-                event.setCancelled(true);
-            }
-        }
-
-
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event){
-        Block brokenBlock = event.getBlock();
-        Player player = (Player) event.getPlayer();
-        if (player.isOp() || player.hasPermission("viking.admin")) {
-            event.setCancelled(false); // Allow breaking any blocks
-        }else {
-        event.setCancelled(true);
-    }}
-
-    @EventHandler
     public void onPickupItem(EntityPickupItemEvent event){
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (player.isOp()){
+            if (player.isOp() || player.hasPermission("viking.admin") || plugin.getGame().getState() == GameState.IN_GAME && plugin.getTeamManager().getTeam(player) == Team.Franks && event.getItem().getItemStack().getType() == Material.OAK_FENCE){
                 event.setCancelled(false);
             } else {
                 event.setCancelled(true);
