@@ -1,7 +1,7 @@
 name: CastleSiege
 main: me.cbhud.Main
 author: cbhud
-version: 1.1.4
+version: 1.1.6
 api-version: 1.17
 commands:
   cs:
