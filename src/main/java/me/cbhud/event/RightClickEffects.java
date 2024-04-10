@@ -7,6 +7,9 @@ import me.cbhud.state.GameState;
 import me.cbhud.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +18,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.Random;
 
@@ -39,6 +44,38 @@ public class RightClickEffects implements Listener {
 
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK){
             return;}
+
+        if (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR && plugin.getTeamManager().getTeam(player) == Team.Vikings && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe) || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK && plugin.getTeamManager().getTeam(player) == Team.Vikings && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe)) {
+            try {
+                Item axe = player.getWorld().dropItem(player.getEyeLocation(), player.getInventory().getItemInMainHand());
+                axe.setVelocity(player.getEyeLocation().getDirection().multiply(1.75));
+                player.getInventory().getItemInMainHand().setAmount(0);
+
+                new BukkitRunnable() {
+                    public void run() {
+                        for (Entity ent : axe.getNearbyEntities(0.4, 0.4, 0.4)) {
+                            if (ent instanceof LivingEntity) {
+                                LivingEntity target = (LivingEntity) ent;
+                                if (ent == player) {
+                                    continue;
+                                }
+                                target.damage(2.0);
+                                axe.setVelocity(new Vector(0, 0, 0));
+                                this.cancel();
+                                axe.remove();
+                            }
+                        }
+                        if (axe.isOnGround()) {
+                            axe.setVelocity(new Vector(0, 0, 0));
+                            this.cancel();
+                            axe.remove();
+                        }
+                    }
+                }.runTaskTimer(this.plugin, 0L, 1L);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 
         if (useSpecialItem(player, clickedItem)){
             removeItem(player, clickedItem);
@@ -82,7 +119,7 @@ public class RightClickEffects implements Listener {
         }
 
         if (item.getItemMeta().equals(Manager.bone2.getItemMeta()) && plugin.getTeamManager().getTeam(player) == Team.Vikings && plugin.getPlayerKitManager().getSelectedKit(player) == KitType.BEASTMASTER) {
-            plugin.getWolfManager().spawnCustomMob(player);
+            plugin.getMobManager().spawnWolf(player);
             return true;
         }
 

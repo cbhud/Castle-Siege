@@ -25,53 +25,42 @@ public class MiscEvents implements Listener {
     }
 
     @EventHandler
-    public void onItemDamage(final PlayerItemDamageEvent event) {
+    public void onItemDamage(PlayerItemDamageEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onDrop(PlayerDropItemEvent event){
+    public void onDrop(PlayerDropItemEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onFood(FoodLevelChangeEvent event){
+    public void onFood(FoodLevelChangeEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onPickupItem(EntityPickupItemEvent event){
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            if (player.isOp() || player.hasPermission("viking.admin") || plugin.getGame().getState() == GameState.IN_GAME && plugin.getTeamManager().getTeam(player) == Team.Franks && event.getItem().getItemStack().getType() == Material.OAK_FENCE){
-                event.setCancelled(false);
-            } else {
-                event.setCancelled(true);
-            }
+    public void onPickupItem(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        Player player = (Player) event.getEntity();
+        if (player.isOp() || player.hasPermission("viking.admin")) return;
+
+        if (plugin.getGame().getState() == GameState.IN_GAME &&
+                plugin.getTeamManager().getTeam(player) == Team.Franks &&
+                event.getItem().getItemStack().getType() == Material.OAK_FENCE) {
+            return;
         }
-    }
 
-    //EventHandler Class
-
-    @EventHandler
-    public void click(InventoryClickEvent event) {
-        handleInventory(event);
+        event.setCancelled(true);
     }
 
     @EventHandler
-    public void drag(InventoryDragEvent event) {
-        handleInventory(event);
-    }
+    public void onInventoryInteraction(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
 
-    private void handleInventory(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (event.getClickedInventory() == null) {
-            return;
-        }
-
-        if (event.getCurrentItem() == null) {
-            return;
-        }
+        if (event.getClickedInventory() == null || event.getCurrentItem() == null) return;
 
         if (event.getClickedInventory().getHolder() instanceof TeamSelector) {
             event.setCancelled(true);
@@ -84,11 +73,8 @@ public class MiscEvents implements Listener {
                     plugin.getPlayerKitManager().setDefaultKit(player, Team.Franks);
                     plugin.getTeamManager().joinTeam(player, Team.Franks);
                     break;
-                default:
-                    break;
             }
-        }
-        if (event.getClickedInventory().getHolder() instanceof KitSelector) {
+        } else if (event.getClickedInventory().getHolder() instanceof KitSelector) {
             event.setCancelled(true);
             switch (event.getCurrentItem().getType()) {
                 case IRON_AXE:
@@ -115,31 +101,20 @@ public class MiscEvents implements Listener {
                 case CROSSBOW:
                     player.performCommand("kit marksman");
                     break;
-                default:
-                    break;
             }
         }
     }
 
-    private void handleInventory(InventoryDragEvent event) {
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+
         Player player = (Player) event.getWhoClicked();
         if (event.getInventory().getHolder() instanceof TeamSelector ||
                 event.getInventory().getHolder() instanceof KitSelector) {
-            if(player.isOp()){
-                event.setCancelled(false);
-            }else {
-            event.setCancelled(true);
-        }
+            if (!player.isOp()) {
+                event.setCancelled(true);
+            }
         }
     }
-
-    //
-
-
 }
-
-
-
-
-
-

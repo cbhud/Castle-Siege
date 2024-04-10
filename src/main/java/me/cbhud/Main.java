@@ -27,16 +27,14 @@ public class Main extends JavaPlugin
     private GameEndHandler gameEndHandler;
     private GameWinner gameWinner;
     private TeamManager teamManager;
-    private CountdownTimer countdownTimer;
     private PlayerManager playerManager;
     private PlayerStateManager playerStateManager;
     private ScoreboardManager scoreboardManager;
-    private Autostart autoStart;
+    private Timers timers;
     private MapRegeneration mapRegeneration;
     private TeamSelector teamSelector;
     private KitSelector kitSelector;
     private MobManager mobManager;
-    private WolfManager wolfManager;
     private Manager manager;
     private PlayerKitManager playerKitManager;
 
@@ -52,17 +50,14 @@ public class Main extends JavaPlugin
         this.teamManager = new TeamManager(this, this.getConfig());
         this.playerManager = new PlayerManager(this, this.playerStateManager, teamManager);
         this.mobManager = new MobManager(this, this.teamManager, configManager);
-        this.wolfManager = new WolfManager(this, this.teamManager, configManager);
-        this.autoStart = new Autostart(this, configManager);
-        this.gameEndHandler = new GameEndHandler(this, configManager, this.autoStart);
+        this.timers = new Timers(this, configManager);
+        this.gameEndHandler = new GameEndHandler(this, configManager, this.timers);
         this.gameWinner = new GameWinner();
         manager = new Manager();
-        this.countdownTimer = new CountdownTimer(this);
         this.getCommand("kit").setExecutor((CommandExecutor)new KitCommand(this));
         this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager));
-        this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.game, this.teamManager, this.autoStart, configManager), (Plugin)this);
+        this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerDeathHandler(this), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new AxeEvent(this, (Plugin)this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new DamageListener(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new RightClickEffects(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new MiscEvents(this), (Plugin)this);
@@ -85,7 +80,6 @@ public class Main extends JavaPlugin
         return this.game;
     }
 
-    public WolfManager getWolfManager(){return this.wolfManager;}
     public TypeManager getType(){
         return this.type;
     }
@@ -98,8 +92,8 @@ public class Main extends JavaPlugin
         return this.gameEndHandler;
     }
 
-    public CountdownTimer getCountdownTimer() {
-        return this.countdownTimer;
+    public Timers getTimer() {
+        return this.timers;
     }
 
     public GameWinner getWinner() {
@@ -124,6 +118,10 @@ public class Main extends JavaPlugin
 
     public TeamSelector getTeamSelector() {
         return this.teamSelector;
+    }
+
+    public MobManager getMobManager(){
+        return this.mobManager;
     }
 
     public KitSelector getKitSelector() {

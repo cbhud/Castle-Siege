@@ -115,7 +115,7 @@ public class Commands implements CommandExecutor {
         if (plugin.getGame().getState() == GameState.IN_GAME) {
             if (sender.hasPermission("viking.admin")) {
                 removeCustomZombie();
-                plugin.getCountdownTimer().cancelTimer();
+                plugin.getTimer().cancelTimer();
                 teleportPlayersToLobby();
                 plugin.getGame().setState(GameState.LOBBY);
                 this.plugin.getMapRegeneration().regenerateChangedBlocks();
@@ -224,7 +224,7 @@ public class Commands implements CommandExecutor {
                 applyKitsToPlayers();
 
                 int timerMinutes = plugin.getConfig().getInt("timerMinutes", 10);
-                plugin.getCountdownTimer().startTimer(timerMinutes);
+                plugin.getTimer().startTimer(timerMinutes);
 
                 Bukkit.broadcastMessage("§7§m----------------------------------");
                 Bukkit.broadcastMessage("§bFranks §fmust defend the King.");

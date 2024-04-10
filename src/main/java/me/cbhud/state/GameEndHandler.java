@@ -13,10 +13,10 @@ public class GameEndHandler implements Listener
 {
     private final Main plugin;
     private final ConfigManager configManager;
-    private final Autostart autostart;
+    private final Timers autostart;
     static String killername;
 
-    public GameEndHandler(final Main plugin, final ConfigManager configManager, final Autostart autostart) {
+    public GameEndHandler(final Main plugin, final ConfigManager configManager, final Timers autostart) {
         this.plugin = plugin;
         this.configManager = configManager;
         plugin.getServer().getPluginManager().registerEvents((Listener)this, (Plugin)plugin);
@@ -47,7 +47,7 @@ public class GameEndHandler implements Listener
         final Player player = event.getEntity().getKiller();
         if (this.plugin.getGame().getState() != GameState.END && event.getEntity() instanceof Zombie && event.getEntity().getCustomName() != null && event.getEntity().getCustomName().contains("King") && this.plugin.getGame().getState() == GameState.IN_GAME) {
             event.getDrops().clear();
-            this.plugin.getCountdownTimer().cancelTimer();
+            this.plugin.getTimer().cancelTimer();
             if (event.getEntity().getKiller() instanceof Player) {
                 GameEndHandler.killername = player.getName();
             }

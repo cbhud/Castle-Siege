@@ -194,7 +194,7 @@ public class ScoreboardManager {
 
         String title = titleColor + "§l" + configManager.getTitle();
         String bottomline = bottomColor + configManager.getBottomline();
-        int secondsLeft = plugin.getCountdownTimer().getSecondsLeft();
+        int secondsLeft = plugin.getTimer().getSecondsLeft();
         board.updateLine(1, mainColor +"Countdown: " + secondaryColor + formatTime(secondsLeft));
         Zombie king = mobManager.getKingZombie();
         double kingHealth = mobManager.getZombieHealth(king);
