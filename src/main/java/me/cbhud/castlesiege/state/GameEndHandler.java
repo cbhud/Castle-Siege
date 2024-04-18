@@ -8,6 +8,7 @@ import org.bukkit.event.*;
 import org.bukkit.entity.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.*;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameEndHandler implements Listener
 {
@@ -26,6 +27,7 @@ public class GameEndHandler implements Listener
     public void handleGameEnd() {
         this.plugin.getGame().setState(GameState.END);
         this.removeCustomZombies();
+        setPlayerWins();
         Bukkit.getScheduler().runTaskLater((Plugin)this.plugin, () -> {
             this.plugin.getGame().setState(GameState.LOBBY);
             this.teleportPlayersToLobby();
@@ -50,6 +52,7 @@ public class GameEndHandler implements Listener
             this.plugin.getTimer().cancelTimer();
             if (event.getEntity().getKiller() instanceof Player) {
                 GameEndHandler.killername = player.getName();
+                plugin.getDbConnection().incrementKingKills(event.getEntity().getKiller().getUniqueId());
             }
             else {
                 GameEndHandler.killername = "unknown";
@@ -57,6 +60,14 @@ public class GameEndHandler implements Listener
             this.plugin.getWinner().setWinner(Team.Vikings);
             this.plugin.getGameEndHandler().handleGameEnd();
         }
+    }
+
+    private void setPlayerWins(){
+            for (final Player player : Bukkit.getOnlinePlayers()) {
+                if (plugin.getTeamManager().getTeam(player) == plugin.getWinner().getWinner()) {
+                    plugin.getDbConnection().incrementWins(player.getUniqueId());
+                }
+            }
     }
 
     private void removeCustomZombies() {

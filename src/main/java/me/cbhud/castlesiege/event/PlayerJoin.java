@@ -61,6 +61,9 @@ public class PlayerJoin implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         plugin.getScoreboardManager().setupScoreboard(player);
+        if(!plugin.getDbConnection().hasData(player.getUniqueId())){
+            plugin.getDbConnection().createProfileIfNotExists(player.getUniqueId(), player.getName());
+        }
         if (plugin.getGame().getState() == GameState.LOBBY) {
             tryRandomTeamJoin(player);
             teleport(player, lobbyLocation, "Lobby");

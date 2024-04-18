@@ -1,7 +1,7 @@
 name: CastleSiege
-main: me.cbhud.Main
+main: me.cbhud.castlesiege.Main
 author: cbhud
-version: 1.1.6
+version: 1.1.7
 api-version: 1.17
 commands:
   cs:
@@ -11,3 +11,6 @@ commands:
   kit:
     description: Manages player kits
     usage: /<command>
+  stats:
+    description: Check player stats
+    usage: /stats [player]

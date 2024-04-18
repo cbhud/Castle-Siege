@@ -20,12 +20,18 @@ import org.bukkit.plugin.*;
 import me.cbhud.castlesiege.event.*;
 import me.cbhud.castlesiege.state.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Main extends JavaPlugin
 {
     private Game game;
     private TypeManager type;
     private GameEndHandler gameEndHandler;
     private GameWinner gameWinner;
+    private Connection connection; // Declare the connection variable
     private TeamManager teamManager;
     private PlayerManager playerManager;
     private PlayerStateManager playerStateManager;
@@ -37,12 +43,20 @@ public class Main extends JavaPlugin
     private MobManager mobManager;
     private Manager manager;
     private PlayerKitManager playerKitManager;
+    private DbConnection dbConnection;
 
     private ConfigManager configManager;
 
     public void onEnable() {
+
         configManager = new ConfigManager(this);
         configManager.setup();
+
+        if (configManager.isStatsEnabled()) {
+            dbConnection = new DbConnection(this);
+            dbConnection.connect();
+        }
+
         this.game = new Game(this);
         this.type = new TypeManager(this);
         this.playerKitManager = new PlayerKitManager();
@@ -55,6 +69,7 @@ public class Main extends JavaPlugin
         this.gameWinner = new GameWinner();
         manager = new Manager();
         this.getCommand("kit").setExecutor((CommandExecutor)new KitCommand(this));
+        this.getCommand("stats").setExecutor((CommandExecutor)new StatsCommand(dbConnection));
         this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager));
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerDeathHandler(this), (Plugin)this);
@@ -74,10 +89,17 @@ public class Main extends JavaPlugin
 
     public void onDisable() {
         this.getServer().getConsoleSender().sendMessage("Vikings has been disabled!");
+        if (configManager.isStatsEnabled()) {
+            dbConnection.disconnect();
+        }
     }
 
     public Game getGame() {
         return this.game;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     public TypeManager getType(){
@@ -118,6 +140,10 @@ public class Main extends JavaPlugin
 
     public TeamSelector getTeamSelector() {
         return this.teamSelector;
+    }
+
+    public DbConnection getDbConnection() {
+        return dbConnection;
     }
 
     public MobManager getMobManager(){

@@ -44,6 +44,11 @@ public class PlayerDeathHandler implements Listener {
 
         if (plugin.getGame().getState() == GameState.IN_GAME) {
 
+            plugin.getDbConnection().incrementDeaths(player.getUniqueId());
+            if(killer != null){
+                plugin.getDbConnection().incrementKills(player.getUniqueId());
+            }
+
 
             if (plugin.getType().getState() == Type.Hardcore) {
                 event.getDrops().clear();
