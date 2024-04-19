@@ -20,6 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.UUID;
+
 public class PlayerDeathHandler implements Listener {
 
     private final Main plugin;
@@ -43,12 +45,15 @@ public class PlayerDeathHandler implements Listener {
         Player killer = player.getKiller();
 
         if (plugin.getGame().getState() == GameState.IN_GAME) {
-
-            plugin.getDbConnection().incrementDeaths(player.getUniqueId());
-            if(killer != null){
-                plugin.getDbConnection().incrementKills(player.getUniqueId());
-            }
-
+            // Increment kills and deaths asynchronously
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                UUID playerId = player.getUniqueId();
+                UUID killerId = (killer != null) ? killer.getUniqueId() : null;
+                plugin.getDbConnection().incrementDeaths(playerId);
+                if (killerId != null) {
+                    plugin.getDbConnection().incrementKills(killerId);
+                }
+            });
 
             if (plugin.getType().getState() == Type.Hardcore) {
                 event.getDrops().clear();
@@ -56,7 +61,7 @@ public class PlayerDeathHandler implements Listener {
                 plugin.getScoreboardManager().decrementTeamPlayersCount(player);
                 player.sendTitle(ChatColor.RED + "You have died!", ChatColor.GRAY + "Better luck next time!", 10, 70, 20);
                 if (plugin.getScoreboardManager().getVikings() < 1) {
-                    plugin.getWinner().setWinner(Team.Franks);
+                    plugin.getGameEndHandler().setWinner(Team.Franks);
                     plugin.getGameEndHandler().handleGameEnd();
                 }
                 if (killer != null) {
@@ -68,34 +73,34 @@ public class PlayerDeathHandler implements Listener {
                 return;
             }
 
+            event.getDrops().clear();
+            plugin.getPlayerManager().setPlayerAsSpectator(player);
+            player.sendTitle(ChatColor.RED + "You died!", ChatColor.GRAY + "Respawning... 5 seconds", 10, 70, 20);
 
-                event.getDrops().clear();
-                plugin.getPlayerManager().setPlayerAsSpectator(player);
-                player.sendTitle(ChatColor.RED + "You died!", ChatColor.GRAY + "Respawning... 5 seconds", 10, 70, 20);
+            Team team = plugin.getTeamManager().getTeam(player);
+            Location spawnLocation = getSpawnLocationForTeam(team);
 
-                Team team = plugin.getTeamManager().getTeam(player);
-                Location spawnLocation = getSpawnLocationForTeam(team);
-
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    if (spawnLocation != null) {
-                        player.spigot().respawn();
-                        player.teleport(spawnLocation);
-                        plugin.getPlayerManager().setPlayerAsPlaying(player);
-                        plugin.getPlayerKitManager().giveKit(player, plugin.getPlayerKitManager().getSelectedKit(player));
-                    } else {
-                        // Handle the case where the spawn location is null (not found)
-                        // You may want to log a warning or take appropriate action
-                        plugin.getLogger().warning("Spawn location not found for team: " + team);
-                    }
-                }, 5 * 20); // 5 seconds
-            }
-            if (killer != null) {
-                KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
-                if (killerKit != null) {
-                    applyKillEffects(killer, killerKit);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if (spawnLocation != null) {
+                    player.spigot().respawn();
+                    player.teleport(spawnLocation);
+                    plugin.getPlayerManager().setPlayerAsPlaying(player);
+                    plugin.getPlayerKitManager().giveKit(player, plugin.getPlayerKitManager().getSelectedKit(player));
+                } else {
+                    // Handle the case where the spawn location is null (not found)
+                    // You may want to log a warning or take appropriate action
+                    plugin.getLogger().warning("Spawn location not found for team: " + team);
                 }
+            }, 5 * 20); // 5 seconds
+        }
+
+        if (killer != null) {
+            KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
+            if (killerKit != null) {
+                applyKillEffects(killer, killerKit);
             }
         }
+    }
 
     private Location getSpawnLocationForTeam(Team team) {
         return team == Team.Vikings ? teamVikingSpawn : (team == Team.Franks ? teamFranksSpawn : null);

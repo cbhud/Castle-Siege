@@ -20,18 +20,12 @@ import org.bukkit.plugin.*;
 import me.cbhud.castlesiege.event.*;
 import me.cbhud.castlesiege.state.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Main extends JavaPlugin
 {
     private Game game;
     private TypeManager type;
     private GameEndHandler gameEndHandler;
-    private GameWinner gameWinner;
-    private Connection connection; // Declare the connection variable
     private TeamManager teamManager;
     private PlayerManager playerManager;
     private PlayerStateManager playerStateManager;
@@ -66,7 +60,6 @@ public class Main extends JavaPlugin
         this.mobManager = new MobManager(this, this.teamManager, configManager);
         this.timers = new Timers(this, configManager);
         this.gameEndHandler = new GameEndHandler(this, configManager, this.timers);
-        this.gameWinner = new GameWinner();
         manager = new Manager();
         this.getCommand("kit").setExecutor((CommandExecutor)new KitCommand(this));
         this.getCommand("stats").setExecutor((CommandExecutor)new StatsCommand(dbConnection));
@@ -116,10 +109,6 @@ public class Main extends JavaPlugin
 
     public Timers getTimer() {
         return this.timers;
-    }
-
-    public GameWinner getWinner() {
-        return this.gameWinner;
     }
 
     public PlayerStateManager getPlayerStateManager() {

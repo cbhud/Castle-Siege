@@ -1,11 +1,6 @@
 
-#STATS MYSQL DB
+#STATS
 stats: false
-host:
-port:
-db:
-user:
-password:
 
 ##MAX PLAYERS IN TEAM
 maxPlayersPerTeam: 16

@@ -1,12 +1,12 @@
 package me.cbhud.castlesiege.state;
 
 import me.cbhud.castlesiege.*;
+import org.bukkit.*;
 import org.bukkit.plugin.*;
 import org.bukkit.event.entity.*;
 import me.cbhud.castlesiege.team.*;
 import org.bukkit.event.*;
 import org.bukkit.entity.*;
-import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -16,8 +16,10 @@ public class GameEndHandler implements Listener
     private final ConfigManager configManager;
     private final Timers autostart;
     static String killername;
+    private Team winner;
 
-    public GameEndHandler(final Main plugin, final ConfigManager configManager, final Timers autostart) {
+
+    public GameEndHandler(final Main plugin, final ConfigManager configManager, final Timers autostart ) {
         this.plugin = plugin;
         this.configManager = configManager;
         plugin.getServer().getPluginManager().registerEvents((Listener)this, (Plugin)plugin);
@@ -57,17 +59,22 @@ public class GameEndHandler implements Listener
             else {
                 GameEndHandler.killername = "unknown";
             }
-            this.plugin.getWinner().setWinner(Team.Vikings);
+            setWinner(Team.Vikings);
             this.plugin.getGameEndHandler().handleGameEnd();
         }
     }
 
-    private void setPlayerWins(){
-            for (final Player player : Bukkit.getOnlinePlayers()) {
-                if (plugin.getTeamManager().getTeam(player) == plugin.getWinner().getWinner()) {
-                    plugin.getDbConnection().incrementWins(player.getUniqueId());
+    private void setPlayerWins() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            Team winner = getWinner();
+            if (winner != null) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (plugin.getTeamManager().getTeam(player) == winner) {
+                        plugin.getDbConnection().incrementWins(player.getUniqueId());
+                    }
                 }
             }
+        });
     }
 
     private void removeCustomZombies() {
@@ -99,4 +106,47 @@ public class GameEndHandler implements Listener
             Bukkit.getLogger().warning("World is null!");
         }
     }
+
+
+    public void setWinner(Team winner) {
+        this.winner = winner;
+        broadcastWinnerMessage();
+    }
+
+    public Team getWinner() {
+        return winner;
+    }
+
+    private void broadcastWinnerMessage() {
+        if (winner != null) {
+            String winnerName = winner.toString(); // Assumes that your Team enum has a proper toString method
+            if ("VIKINGS".equalsIgnoreCase(winnerName)) {
+                Bukkit.broadcastMessage("§7§m--------------------------");
+                Bukkit.broadcastMessage("§cVikings conquered the castle");
+                Bukkit.broadcastMessage(ChatColor.RED + GameEndHandler.getKillername() + " §cslaughtered §e§lKing Charles");
+                Bukkit.broadcastMessage("§7§m--------------------------");
+
+                // Play Ender Dragon growl sound for VIKINGS win
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendTitle(ChatColor.RED + "Vikings", ChatColor.YELLOW + "won the game", 10, 70, 20);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.MASTER, 1.0f, 0.9f);
+                }
+            } else {
+                Bukkit.broadcastMessage("§7§m--------------------------");
+                Bukkit.broadcastMessage("§aFranks defended the castle!");
+                Bukkit.broadcastMessage("§e§lKing Charles §fhas survived the siege!");
+                Bukkit.broadcastMessage("§7§m--------------------------");
+
+                // Play Note Block chime sound for FRANKS win
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendTitle(ChatColor.BLUE + "Franks", ChatColor.YELLOW + "won the game", 10, 70, 20);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1.0f, 0.9f);
+                }
+            }
+        } else {
+            Bukkit.broadcastMessage(ChatColor.RED + "Winner is noone both teams have disconnected.");
+        }
+    }
+
+
 }

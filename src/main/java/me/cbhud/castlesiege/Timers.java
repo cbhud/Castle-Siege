@@ -63,7 +63,7 @@ public class Timers {
         }
         taskIds.clear(); // Clear the list
         if (plugin.getGame().getState() == GameState.IN_GAME) {
-            plugin.getWinner().setWinner(Team.Franks);
+            plugin.getGameEndHandler().setWinner(Team.Franks);
             plugin.getGameEndHandler().handleGameEnd();
             cancelTimer();
         } else {
@@ -93,7 +93,7 @@ public class Timers {
                     }
                 } else {
                     if (plugin.getGame().getState() == GameState.IN_GAME) {
-                        plugin.getWinner().setWinner(Team.Franks);
+                        plugin.getGameEndHandler().setWinner(Team.Franks);
                         plugin.getGameEndHandler().handleGameEnd();
                         cancelTimer();
                     }

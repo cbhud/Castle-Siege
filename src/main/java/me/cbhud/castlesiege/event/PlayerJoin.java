@@ -3,7 +3,6 @@ package me.cbhud.castlesiege.event;
 import me.cbhud.castlesiege.Timers;
 import me.cbhud.castlesiege.ConfigManager;
 import me.cbhud.castlesiege.Main;
-import me.cbhud.castlesiege.Timers;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
 import me.cbhud.castlesiege.team.TeamManager;
@@ -94,10 +93,10 @@ public class PlayerJoin implements Listener {
         if (plugin.getGame().getState() == GameState.IN_GAME) {
             plugin.getScoreboardManager().decrementTeamPlayersCount(player);
             if (plugin.getScoreboardManager().getVikings() < 1 && plugin.getScoreboardManager().getFranks() < 1) {
-                plugin.getWinner().setWinner(null);
+                plugin.getGameEndHandler().setWinner(null);
                 plugin.getGameEndHandler().handleGameEnd();
             } else if (plugin.getScoreboardManager().getVikings() < 1) {
-                plugin.getWinner().setWinner(Team.Franks);
+                plugin.getGameEndHandler().setWinner(Team.Franks);
                 plugin.getGameEndHandler().handleGameEnd();
             }
         }

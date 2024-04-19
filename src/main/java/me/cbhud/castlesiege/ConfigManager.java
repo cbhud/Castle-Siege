@@ -13,13 +13,6 @@ public class ConfigManager {
     private File configFile;
     private FileConfiguration config;
 
-    // MySQL database connection settings
-    private String host;
-    private int port;
-    private String database;
-    private String username;
-    private String password;
-
     public ConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
     }
@@ -31,13 +24,6 @@ public class ConfigManager {
         }
 
         config = YamlConfiguration.loadConfiguration(configFile);
-
-        // Load MySQL database connection settings from config
-        host = config.getString("host");
-        port = config.getInt("port");
-        database = config.getString("db");
-        username = config.getString("user");
-        password = config.getString("password");
     }
 
     public void saveConfig() {
@@ -58,26 +44,6 @@ public class ConfigManager {
 
     public String getTitle() {
         return config.getString("scoreboard-title");
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getBottomline() {

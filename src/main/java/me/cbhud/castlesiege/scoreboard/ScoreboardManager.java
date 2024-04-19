@@ -104,7 +104,7 @@ public class ScoreboardManager {
         board.updateTitle(title);
         board.updateLines("");
         board.updateLine(0, " ");
-        board.updateLine(1, mainColor +"Winners: " + secondaryColor + plugin.getWinner().getWinner());
+        board.updateLine(1, mainColor +"Winners: " + secondaryColor + plugin.getGameEndHandler().getWinner());
         board.updateLine(2, " ");
         board.updateLine(7, bottomline);
     }
@@ -216,7 +216,7 @@ public class ScoreboardManager {
         String title = titleColor + "§l" + configManager.getTitle();
         String bottomline = bottomColor + configManager.getBottomline();
         board.updateLine(0, " ");
-        board.updateLine(1, mainColor + "Winnners: " + secondaryColor + plugin.getWinner().getWinner());
+        board.updateLine(1, mainColor + "Winnners: " + secondaryColor + plugin.getGameEndHandler().getWinner());
         board.updateLine(2, " ");
         board.updateLine(3, bottomline);
     }
