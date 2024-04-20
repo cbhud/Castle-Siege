@@ -37,7 +37,7 @@ public class Main extends JavaPlugin
     private MobManager mobManager;
     private Manager manager;
     private PlayerKitManager playerKitManager;
-    private DbConnection dbConnection;
+    private DataManager dataManager;
 
     private ConfigManager configManager;
 
@@ -45,8 +45,8 @@ public class Main extends JavaPlugin
 
         configManager = new ConfigManager(this);
         configManager.setup();
-        dbConnection = new DbConnection(this);
-        dbConnection.connect();
+        dataManager = new DataManager(this);
+        dataManager.connect();
 
         this.game = new Game(this);
         this.type = new TypeManager(this);
@@ -58,7 +58,7 @@ public class Main extends JavaPlugin
         this.timers = new Timers(this, configManager);
         this.gameEndHandler = new GameEndHandler(this, configManager, this.timers);
         manager = new Manager();
-        this.getCommand("stats").setExecutor((CommandExecutor)new StatsCommand(dbConnection));
+        this.getCommand("stats").setExecutor((CommandExecutor)new StatsCommand(dataManager));
         this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager));
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerDeathHandler(this), (Plugin)this);
@@ -78,7 +78,7 @@ public class Main extends JavaPlugin
 
     public void onDisable() {
         this.getServer().getConsoleSender().sendMessage("Vikings has been disabled!");
-        dbConnection.disconnect();
+        dataManager.disconnect();
     }
 
     public Game getGame() {
@@ -125,8 +125,8 @@ public class Main extends JavaPlugin
         return this.teamSelector;
     }
 
-    public DbConnection getDbConnection() {
-        return dbConnection;
+    public DataManager getDbConnection() {
+        return dataManager;
     }
 
     public MobManager getMobManager(){

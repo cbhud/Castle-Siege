@@ -11,10 +11,10 @@ import java.sql.SQLException;
 
 public class StatsCommand implements CommandExecutor {
 
-    private final DbConnection dbConnection;
+    private final DataManager dataManager;
 
-    public StatsCommand(DbConnection dbConnection) {
-        this.dbConnection = dbConnection;
+    public StatsCommand(DataManager dataManager) {
+        this.dataManager = dataManager;
     }
 
     @Override
@@ -48,13 +48,13 @@ public class StatsCommand implements CommandExecutor {
         try {
             // Prepare the SQL query
             String sql = "SELECT wins, kills, deaths, king_kills FROM player_stats WHERE username=? LIMIT 1"; // Add LIMIT 1 to ensure only one result is returned
-            synchronized (dbConnection.getConnection()) {
-                statement = dbConnection.getConnection().prepareStatement(sql);
+            synchronized (dataManager.getConnection()) {
+                statement = dataManager.getConnection().prepareStatement(sql);
             }
             statement.setString(1, username);
 
             // Execute the query
-            synchronized (dbConnection.getConnection()) {
+            synchronized (dataManager.getConnection()) {
                 resultSet = statement.executeQuery();
             }
 

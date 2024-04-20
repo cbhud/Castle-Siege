@@ -5,11 +5,11 @@ import org.h2.jdbcx.JdbcDataSource;
 import java.sql.*;
 import java.util.UUID;
 
-public class DbConnection {
+public class DataManager {
     private final Main plugin;
     private Connection connection;
 
-    public DbConnection(Main plugin) {
+    public DataManager(Main plugin) {
         this.plugin = plugin;
     }
 
