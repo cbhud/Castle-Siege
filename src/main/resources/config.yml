@@ -1,7 +1,3 @@
-
-#STATS
-stats: false
-
 ##MAX PLAYERS IN TEAM
 maxPlayersPerTeam: 16
 

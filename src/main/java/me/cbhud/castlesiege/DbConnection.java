@@ -33,7 +33,7 @@ public class DbConnection {
                         "king_kills INT NOT NULL DEFAULT 0" +
                         ")";
                 statement.executeUpdate(createTableSQL);
-                plugin.getLogger().info("[CastleSiege] Stats loaded successfully!");
+                plugin.getLogger().info("Stats loaded successfully!");
             } catch (SQLException e) {
                 plugin.getLogger().severe("Error creating player stats table: " + e.getMessage());
                 e.printStackTrace();
