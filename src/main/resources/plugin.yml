@@ -8,9 +8,6 @@ commands:
     description: Castle Siege main command
     usage: /<command> <endgame|setlobby|setmobspawn|start|teamspawn>
     permission: viking.admin
-  kit:
-    description: Manages player kits
-    usage: /<command>
   stats:
     description: Check player stats
     usage: /stats [player]

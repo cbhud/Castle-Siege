@@ -3,6 +3,7 @@ package me.cbhud.castlesiege.event;
 import me.cbhud.castlesiege.Main;
 import me.cbhud.castlesiege.gui.KitSelector;
 import me.cbhud.castlesiege.gui.TeamSelector;
+import me.cbhud.castlesiege.kits.KitType;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Material;
@@ -78,28 +79,68 @@ public class MiscEvents implements Listener {
             event.setCancelled(true);
             switch (event.getCurrentItem().getType()) {
                 case IRON_AXE:
-                    player.performCommand("kit berserker");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.BERSERKER){
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.BERSERKER);
+                    player.sendMessage("§aYou have selected Berserker kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
                 case BOW:
-                    player.performCommand("kit skald");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.SKALD) {
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.SKALD);
+                    player.sendMessage("§aYou have selected Skald kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
                 case BONE:
-                    player.performCommand("kit beastmaster");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.BEASTMASTER) {
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.BEASTMASTER);
+                    player.sendMessage("§aYou have selected Beastmaster kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
                 case IRON_SWORD:
-                    player.performCommand("kit warrior");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.WARRIOR) {
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.WARRIOR);
+                    player.sendMessage("§aYou have selected Warrior kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
                 case SHIELD:
-                    player.performCommand("kit knight");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.KNIGHT) {
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.KNIGHT);
+                    player.sendMessage("§aYou have selected Knight kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
                 case TRIDENT:
-                    player.performCommand("kit spearman");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.SPEARMAN) {
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.SPEARMAN);
+                    player.sendMessage("§aYou have selected Spearman kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
                 case SPLASH_POTION:
-                    player.performCommand("kit wizard");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.WIZARD) {
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.WIZARD);
+                    player.sendMessage("§aYou have selected Wizard kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
                 case CROSSBOW:
-                    player.performCommand("kit marksman");
+                    if (plugin.getPlayerKitManager().getSelectedKit(player) == KitType.MARKSMAN) {
+                        return;
+                    }
+                    plugin.getPlayerKitManager().selectKit(player, KitType.MARKSMAN);
+                    player.sendMessage("§aYou have selected Marksman kit.");
+                    plugin.getScoreboardManager().updateScoreboard(player);
                     break;
             }
         }

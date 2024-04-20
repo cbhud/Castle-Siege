@@ -38,10 +38,6 @@ public class ConfigManager {
         return config;
     }
 
-    public boolean isStatsEnabled() {
-        return config.getBoolean("stats");
-    }
-
     public String getTitle() {
         return config.getString("scoreboard-title");
     }

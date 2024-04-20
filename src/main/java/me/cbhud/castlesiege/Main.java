@@ -45,11 +45,8 @@ public class Main extends JavaPlugin
 
         configManager = new ConfigManager(this);
         configManager.setup();
-
-        if (configManager.isStatsEnabled()) {
-            dbConnection = new DbConnection(this);
-            dbConnection.connect();
-        }
+        dbConnection = new DbConnection(this);
+        dbConnection.connect();
 
         this.game = new Game(this);
         this.type = new TypeManager(this);
@@ -61,7 +58,6 @@ public class Main extends JavaPlugin
         this.timers = new Timers(this, configManager);
         this.gameEndHandler = new GameEndHandler(this, configManager, this.timers);
         manager = new Manager();
-        this.getCommand("kit").setExecutor((CommandExecutor)new KitCommand(this));
         this.getCommand("stats").setExecutor((CommandExecutor)new StatsCommand(dbConnection));
         this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager));
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
@@ -82,9 +78,7 @@ public class Main extends JavaPlugin
 
     public void onDisable() {
         this.getServer().getConsoleSender().sendMessage("Vikings has been disabled!");
-        if (configManager.isStatsEnabled()) {
-            dbConnection.disconnect();
-        }
+        dbConnection.disconnect();
     }
 
     public Game getGame() {
