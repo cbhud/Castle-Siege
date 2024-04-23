@@ -6,6 +6,7 @@ import me.cbhud.castlesiege.team.Team;
 import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 
 import java.util.Arrays;
@@ -44,9 +45,12 @@ public class PlayerManager {
 
     public void setPlayerAsPlaying(Player player) {
         plugin.getPlayerStateManager().setPlayerState(player, PLAYING);
-        player.setGameMode(GameMode.SURVIVAL);
-
-        // Add any other necessary configurations for the PLAYING state
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setGameMode(GameMode.SURVIVAL); // Example: Setting player's game mode to survival
+            }
+        }.runTask(plugin);
     }
 
     public void setPlayerAsLobby(Player player) {
@@ -57,6 +61,14 @@ public class PlayerManager {
         if(plugin.getTeamManager().getTeam(player) == null){
             tryRandomTeamJoin(player);
         }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setGameMode(GameMode.SURVIVAL); // Example: Setting player's game mode to survival
+            }
+        }.runTask(plugin);
+
         player.getInventory().clear();
         player.setHealth(20);
         player.setLevel(0);
@@ -65,13 +77,16 @@ public class PlayerManager {
 
         player.getInventory().setItem(3, Manager.clock);
         player.getInventory().setItem(5, Manager.star);
-
     }
 
     public void setPlayerAsSpectator(Player player) {
         plugin.getPlayerStateManager().setPlayerState(player, SPECTATOR);
-        player.setGameMode(GameMode.SPECTATOR);
-    }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setGameMode(GameMode.SPECTATOR); // Example: Setting player's game mode to survival
+            }
+        }.runTask(plugin);    }
 
     private boolean tryRandomTeamJoin(Player player) {
         // Get all available teams

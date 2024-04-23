@@ -1,6 +1,9 @@
 package me.cbhud.castlesiege.state;
 
 import me.cbhud.castlesiege.*;
+import me.cbhud.castlesiege.util.ConfigManager;
+import me.cbhud.castlesiege.util.MessagesConfiguration;
+import me.cbhud.castlesiege.util.Timers;
 import org.bukkit.*;
 import org.bukkit.plugin.*;
 import org.bukkit.event.entity.*;
@@ -8,7 +11,6 @@ import me.cbhud.castlesiege.team.*;
 import org.bukkit.event.*;
 import org.bukkit.entity.*;
 import org.bukkit.configuration.file.*;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameEndHandler implements Listener
 {
@@ -17,13 +19,15 @@ public class GameEndHandler implements Listener
     private final Timers autostart;
     static String killername;
     private Team winner;
+    private MessagesConfiguration msgConfig;
 
 
-    public GameEndHandler(final Main plugin, final ConfigManager configManager, final Timers autostart ) {
+    public GameEndHandler(final Main plugin, final ConfigManager configManager, final Timers autostart, MessagesConfiguration msgConfig) {
         this.plugin = plugin;
         this.configManager = configManager;
         plugin.getServer().getPluginManager().registerEvents((Listener)this, (Plugin)plugin);
         this.autostart = autostart;
+        this.msgConfig = msgConfig;
     }
 
     public void handleGameEnd() {
@@ -121,10 +125,10 @@ public class GameEndHandler implements Listener
         if (winner != null) {
             String winnerName = winner.toString(); // Assumes that your Team enum has a proper toString method
             if ("VIKINGS".equalsIgnoreCase(winnerName)) {
-                Bukkit.broadcastMessage("§7§m--------------------------");
-                Bukkit.broadcastMessage("§cVikings conquered the castle");
-                Bukkit.broadcastMessage(ChatColor.RED + GameEndHandler.getKillername() + " §cslaughtered §e§lKing Charles");
-                Bukkit.broadcastMessage("§7§m--------------------------");
+                for (String line : msgConfig.getVikingsWinMsg()) {
+                    line = line.replace("{killer}", getKillername());
+                    Bukkit.broadcastMessage(line);
+                }
 
                 // Play Ender Dragon growl sound for VIKINGS win
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -132,10 +136,10 @@ public class GameEndHandler implements Listener
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.MASTER, 1.0f, 0.9f);
                 }
             } else {
-                Bukkit.broadcastMessage("§7§m--------------------------");
-                Bukkit.broadcastMessage("§aFranks defended the castle!");
-                Bukkit.broadcastMessage("§e§lKing Charles §fhas survived the siege!");
-                Bukkit.broadcastMessage("§7§m--------------------------");
+
+                for (String line : msgConfig.getFranksWinMsg()) {
+                    Bukkit.broadcastMessage(line);
+                }
 
                 // Play Note Block chime sound for FRANKS win
                 for (Player player : Bukkit.getOnlinePlayers()) {

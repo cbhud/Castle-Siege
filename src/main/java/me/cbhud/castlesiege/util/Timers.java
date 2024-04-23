@@ -1,6 +1,7 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.util;
 
 import fr.mrmicky.fastboard.FastBoard;
+import me.cbhud.castlesiege.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -21,13 +22,15 @@ public class Timers {
     private final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
     private BukkitRunnable timerTask;
     private Team winner;
+    private MessagesConfiguration msgConfig;
 
-    public Timers(Main plugin, ConfigManager configManager) {
+    public Timers(Main plugin, ConfigManager configManager, MessagesConfiguration msgConfig) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.playersToStart = configManager.getConfig().getInt("auto-start-players");
         this.initialCountdownSeconds = configManager.getConfig().getInt("auto-start-countdown", 60);
         this.countdownSeconds = initialCountdownSeconds;
+        this.msgConfig = msgConfig;
     }
 
     public void checkAutoStart(int currentPlayers) {
@@ -67,7 +70,9 @@ public class Timers {
             plugin.getGameEndHandler().handleGameEnd();
             cancelTimer();
         } else {
-            Bukkit.broadcastMessage(ChatColor.RED + "There are not enough players to start the game!");
+            for (String line : msgConfig.getNotStartMsg()) {
+                Bukkit.broadcastMessage(line);
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 package me.cbhud.castlesiege.event;
 
-import me.cbhud.castlesiege.Timers;
-import me.cbhud.castlesiege.ConfigManager;
+import me.cbhud.castlesiege.util.Timers;
+import me.cbhud.castlesiege.util.ConfigManager;
 import me.cbhud.castlesiege.Main;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;

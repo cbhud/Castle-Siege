@@ -3,6 +3,8 @@ package me.cbhud.castlesiege.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -16,6 +18,7 @@ import org.bukkit.potion.PotionType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class Manager implements InventoryHolder {
 
@@ -75,9 +78,10 @@ public class Manager implements InventoryHolder {
         lore.add("§7Right-click holding this axe");
         lore.add("§7to throw it");
         meta.setLore(lore);
-        meta.addEnchant(Enchantment.LUCK,1, true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
         meta.setUnbreakable(true);
+        // Create an AttributeModifier to reduce damage by 2 (from 9 to 7)
+
         item.setItemMeta(meta);
         axe = item;
     }

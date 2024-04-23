@@ -8,6 +8,7 @@
 
 package me.cbhud.castlesiege;
 
+import me.cbhud.castlesiege.util.*;
 import org.bukkit.plugin.java.*;
 import me.cbhud.castlesiege.playerstate.*;
 import me.cbhud.castlesiege.scoreboard.*;
@@ -41,12 +42,16 @@ public class Main extends JavaPlugin
 
     private ConfigManager configManager;
 
+    private MessagesConfiguration messagesConfig;
+
     public void onEnable() {
 
         configManager = new ConfigManager(this);
         configManager.setup();
         dataManager = new DataManager(this);
         dataManager.connect();
+        messagesConfig = new MessagesConfiguration(this);
+        messagesConfig.loadConfig();
 
         this.game = new Game(this);
         this.type = new TypeManager(this);
@@ -55,11 +60,11 @@ public class Main extends JavaPlugin
         this.teamManager = new TeamManager(this, this.getConfig());
         this.playerManager = new PlayerManager(this, this.playerStateManager, teamManager);
         this.mobManager = new MobManager(this, this.teamManager, configManager);
-        this.timers = new Timers(this, configManager);
-        this.gameEndHandler = new GameEndHandler(this, configManager, this.timers);
+        this.timers = new Timers(this, configManager, messagesConfig);
+        this.gameEndHandler = new GameEndHandler(this, configManager, this.timers,messagesConfig);
         manager = new Manager();
         this.getCommand("stats").setExecutor((CommandExecutor)new StatsCommand(dataManager));
-        this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager));
+        this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager, messagesConfig));
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new PlayerDeathHandler(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents((Listener)new DamageListener(this), (Plugin)this);

@@ -1,4 +1,4 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

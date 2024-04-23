@@ -1,5 +1,6 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.util;
 
+import me.cbhud.castlesiege.Main;
 import me.cbhud.castlesiege.team.Team;
 import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.*;
@@ -42,7 +43,7 @@ public class MobManager implements Listener {
         wolf.setAngry(true);
     }
 
-    public void spawnCustomMob(Location location, ConfigurationSection mobConfig) {
+    public void spawnCustomMob(ConfigurationSection mobConfig) {
         Location spawnLocation = getLocationFromConfig(mobConfig);
 
         if (spawnLocation == null) {

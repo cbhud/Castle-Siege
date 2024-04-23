@@ -1,9 +1,9 @@
 package me.cbhud.castlesiege.scoreboard;
 
 import fr.mrmicky.fastboard.FastBoard;
-import me.cbhud.castlesiege.ConfigManager;
+import me.cbhud.castlesiege.util.ConfigManager;
 import me.cbhud.castlesiege.Main;
-import me.cbhud.castlesiege.MobManager;
+import me.cbhud.castlesiege.util.MobManager;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
 import me.cbhud.castlesiege.team.TeamManager;

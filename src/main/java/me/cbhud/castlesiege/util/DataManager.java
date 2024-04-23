@@ -1,5 +1,6 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.util;
 
+import me.cbhud.castlesiege.Main;
 import org.h2.jdbcx.JdbcDataSource;
 
 import java.sql.*;

@@ -1,5 +1,6 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.util;
 
+import me.cbhud.castlesiege.Main;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Location;

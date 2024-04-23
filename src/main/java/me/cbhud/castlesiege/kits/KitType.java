@@ -53,13 +53,14 @@ public enum KitType {
                 }
             }},
             Manager.stew,
+            Manager.stew,
             Manager.stew
     ),
             true,
             new ItemStack[]{
-                    new ItemStack(Material.IRON_HELMET),
+                    new ItemStack(Material.CHAINMAIL_HELMET),
                     new ItemStack(Material.IRON_CHESTPLATE),
-                    new ItemStack(Material.IRON_LEGGINGS),
+                    new ItemStack(Material.CHAINMAIL_LEGGINGS),
                     new ItemStack(Material.IRON_BOOTS)
             },Team.Franks),
     WIZARD("Wizard", Arrays.asList(
@@ -67,6 +68,8 @@ public enum KitType {
             new ItemStack(Material.AIR),
             Manager.attack,
             support,
+            Manager.stew,
+            Manager.stew,
             Manager.stew
     ),
             true,
@@ -78,7 +81,6 @@ public enum KitType {
             },Team.Franks),
     KNIGHT("Knight", Arrays.asList(
             new ItemStack(Material.IRON_SWORD),
-            Manager.stew,
             Manager.stew
     ),
             true,
@@ -127,9 +129,9 @@ public enum KitType {
     ),
             true,
             new ItemStack[]{
-                    new ItemStack(Material.LEATHER_HELMET),
+                    createDyedArmor(Material.LEATHER_HELMET, Color.RED),
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                    new ItemStack(Material.LEATHER_LEGGINGS),
+                    createDyedArmor(Material.LEATHER_LEGGINGS, Color.RED),
                     new ItemStack(Material.CHAINMAIL_BOOTS)
             },Team.Vikings),
     WARRIOR("Warrior", Arrays.asList(

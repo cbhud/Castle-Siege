@@ -6,6 +6,8 @@ import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.state.Type;
 import me.cbhud.castlesiege.team.Team;
 import me.cbhud.castlesiege.team.TeamManager;
+import me.cbhud.castlesiege.util.MessagesConfiguration;
+import me.cbhud.castlesiege.util.MobManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -28,11 +30,13 @@ public class Commands implements CommandExecutor {
 
     private Location mobSpawnLocation;
     private Map<Team, Location> spawnLocations;
+    private MessagesConfiguration configMsg;
 
-    public Commands(Main plugin, TeamManager teamManager, MobManager mobManager) {
+    public Commands(Main plugin, TeamManager teamManager, MobManager mobManager, MessagesConfiguration configMsg) {
         this.plugin = plugin;
         this.teamManager = teamManager;
         this.mobManager = mobManager;
+        this.configMsg = configMsg;
 
         loadConfigValues(); // Load configuration values during initialization
     }
@@ -119,7 +123,7 @@ public class Commands implements CommandExecutor {
                 teleportPlayersToLobby();
                 plugin.getGame().setState(GameState.LOBBY);
                 this.plugin.getMapRegeneration().regenerateChangedBlocks();
-                Bukkit.broadcastMessage(ChatColor.RED + "Game force-stopped!");
+                Bukkit.broadcastMessage(configMsg.getForceStopMsg().toString());
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             }
@@ -142,26 +146,33 @@ public class Commands implements CommandExecutor {
     }
 
     private void teleportPlayersToLobby() {
-        FileConfiguration config = plugin.getConfig();
+        // Submitting the lobby teleportation task asynchronously
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            FileConfiguration config = plugin.getConfig();
 
-        if (config.contains("lobby.world")) {
-            String worldName = config.getString("lobby.world");
-            double x = config.getDouble("lobby.x");
-            double y = config.getDouble("lobby.y");
-            double z = config.getDouble("lobby.z");
-            float yaw = (float) config.getDouble("lobby.yaw");
-            float pitch = (float) config.getDouble("lobby.pitch");
+            if (config.contains("lobby.world")) {
+                String worldName = config.getString("lobby.world");
+                double x = config.getDouble("lobby.x");
+                double y = config.getDouble("lobby.y");
+                double z = config.getDouble("lobby.z");
+                float yaw = (float) config.getDouble("lobby.yaw");
+                float pitch = (float) config.getDouble("lobby.pitch");
 
-            Location lobbyLocation = new Location(plugin.getServer().getWorld(worldName), x, y, z, yaw, pitch);
+                Location lobbyLocation = new Location(plugin.getServer().getWorld(worldName), x, y, z, yaw, pitch);
 
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.teleport(lobbyLocation);
-                plugin.getPlayerManager().setPlayerAsLobby(player);
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    // Teleport players to the lobby asynchronously
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        player.teleport(lobbyLocation);
+                        plugin.getPlayerManager().setPlayerAsLobby(player);
+                    });
+                }
+            } else {
+                Bukkit.getLogger().warning("World is null!");
             }
-        } else {
-            Bukkit.getLogger().warning("World is null!");
-        }
+        });
     }
+
 
     private boolean lobbyCommand(CommandSender sender) {
         if (!(sender instanceof Player)) {
@@ -181,7 +192,8 @@ public class Commands implements CommandExecutor {
 
         plugin.saveConfig();
         player.getWorld().setGameRule(org.bukkit.GameRule.DO_MOB_SPAWNING, false);
-        player.sendMessage("Lobby location set!");
+        player.sendMessage(ChatColor.GREEN + "Lobby location set!");
+        loadConfigValues();
 
         return true;
     }
@@ -200,7 +212,7 @@ public class Commands implements CommandExecutor {
             plugin.saveConfig();
 
             player.sendMessage(ChatColor.GREEN + "King's spawn location has been updated.");
-            player.sendMessage(ChatColor.RED + "If you set spawns RESTART the server before you start!");
+            loadConfigValues();
         } else {
             sender.sendMessage(ChatColor.RED + "Only players can use this command.");
         }
@@ -213,28 +225,21 @@ public class Commands implements CommandExecutor {
             plugin.getScoreboardManager().loadTeamCount();
             if (sender.hasPermission("viking.admin")) {
                 if (mobSpawnLocation != null) {
-                    mobManager.spawnCustomMob(mobSpawnLocation, plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
+                    mobManager.spawnCustomMob(plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
                 } else {
                     Bukkit.broadcastMessage(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
                     return true;
                 }
 
                 plugin.getGame().setState(GameState.IN_GAME);
-                teleportTeamsToSpawns();
-                applyKitsToPlayers();
+                teleportTeamsToSpawnsAndApplyKits();
 
                 int timerMinutes = plugin.getConfig().getInt("timerMinutes", 10);
                 plugin.getTimer().startTimer(timerMinutes);
 
-                Bukkit.broadcastMessage("§7§m----------------------------------");
-                Bukkit.broadcastMessage("§bFranks §fmust defend the King.");
-                Bukkit.broadcastMessage("§bFranks §fwin when countdown is over.");
-                Bukkit.broadcastMessage("");
-                Bukkit.broadcastMessage("§cVikings §fmust kill the King.");
-                Bukkit.broadcastMessage("§cVikings §flose when countdown is over.");
-                Bukkit.broadcastMessage("");
-                Bukkit.broadcastMessage("§aThe game has started!");
-                Bukkit.broadcastMessage("§7§m----------------------------------");
+                for (String line : configMsg.getStartMsg()) {
+                    Bukkit.broadcastMessage(line);
+                }
                 if (plugin.getType().getState() == Type.Hardcore){
                 Bukkit.broadcastMessage(ChatColor.YELLOW + "(" + ChatColor.RED + "!!!" +ChatColor.YELLOW + ")" + ChatColor.RED + "HARDCORE mode is enabled if you die you will not respawn!");
                 }
@@ -262,7 +267,7 @@ public class Commands implements CommandExecutor {
             Team team = Team.valueOf(teamName1);
             setSpawnLocation(team, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully!");
-            player.sendMessage(ChatColor.RED + "If you set spawns RESTART the server before you start!");
+            loadConfigValues();
         } catch (IllegalArgumentException e) {
             player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: Vikings, Franks");
         }
@@ -285,23 +290,53 @@ public class Commands implements CommandExecutor {
         plugin.saveConfig();
     }
 
-    private void teleportTeamsToSpawns() {
-        Team[] teams = Team.values();
+    private void teleportTeamsToSpawnsAndApplyKits() {
+        // Submitting the teleportation and kit application task asynchronously
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            Team[] teams = Team.values();
 
-        for (Team team : teams) {
-            Location teamSpawn = spawnLocations.get(team);
-            if (teamSpawn != null) {
-                // Teleport players in the team to their spawn location
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (teamManager.getTeam(player) == team) {
-                        // Use teamSpawn directly instead of retrieving it from the configuration each time
-                        plugin.getPlayerManager().setPlayerAsPlaying(player);
-                        player.teleport(teamSpawn);
+            for (Team team : teams) {
+                Location teamSpawn = spawnLocations.get(team);
+                if (teamSpawn != null) {
+                    // Teleport players in the team to their spawn location
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (teamManager.getTeam(player) == team) {
+                            // Use teamSpawn directly instead of retrieving it from the configuration each time
+                            plugin.getPlayerManager().setPlayerAsPlaying(player);
+
+                            // Teleport the player asynchronously
+                            Bukkit.getScheduler().runTask(plugin, () -> player.teleport(teamSpawn));
+
+                            // Apply kits to players asynchronously
+                            Bukkit.getScheduler().runTask(plugin, () -> {
+                                if (plugin.getPlayerStateManager().getPlayerState(player) == PlayerStates.PLAYING) {
+                                    Team playerTeam = plugin.getTeamManager().getTeam(player);
+                                    KitType selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
+
+                                    if (selectedKit != null && selectedKit.getTeam() == playerTeam) {
+                                        // Player has a selected kit matching their team, give the kit
+                                        plugin.getPlayerKitManager().giveKit(player, selectedKit);
+                                    } else {
+                                        if (selectedKit == null) {
+                                            // Player hasn't selected a kit, give them the default kit for their team
+                                            KitType defaultKit = KitType.getDefaultKit(playerTeam);
+                                            if (defaultKit != null) {
+                                                plugin.getPlayerKitManager().selectKit(player, defaultKit);
+                                                plugin.getPlayerKitManager().giveKit(player, defaultKit);
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    player.sendMessage("You haven't selected a kit!");
+                                }
+                            });
+                        }
                     }
                 }
             }
-        }
+        });
     }
+
 
     private boolean typeCommand(CommandSender sender) {
         if (plugin.getGame().getState() == GameState.LOBBY) {
@@ -309,10 +344,10 @@ public class Commands implements CommandExecutor {
 
                 if (plugin.getType().getState() == Type.Normal) {
                     plugin.getType().setState(Type.Hardcore);
-                    Bukkit.broadcastMessage("§7[§eCastleSiege§7] §cHardcore §e mode has been §aenabled!");
+                    Bukkit.broadcastMessage(configMsg.getHardcoreMsg().toString() + "§aenabled!");
                 }else{
                     plugin.getType().setState(Type.Normal);
-                    Bukkit.broadcastMessage("§7[§eCastleSiege§7] §cHardcore §e mode has been §cdisabled!");
+                    Bukkit.broadcastMessage(configMsg.getHardcoreMsg().toString() + " §cdisabled!");
                 }
                 plugin.getScoreboardManager().updateScoreboardForAll();
             }
@@ -320,29 +355,5 @@ public class Commands implements CommandExecutor {
         return true;
     }
 
-    private void applyKitsToPlayers() {
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            if (plugin.getPlayerStateManager().getPlayerState(player) == PlayerStates.PLAYING) {
-                Team playerTeam = plugin.getTeamManager().getTeam(player);
-                KitType selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
 
-                if (selectedKit != null && selectedKit.getTeam() == playerTeam) {
-                    // Player has a selected kit matching their team, give the kit
-                    plugin.getPlayerKitManager().giveKit(player, selectedKit);
-                } else {
-                    if (selectedKit == null) {
-                        // Player hasn't selected a kit, give them the default kit for their team
-                        KitType defaultKit = KitType.getDefaultKit(playerTeam);
-                        if (defaultKit != null) {
-                            plugin.getPlayerKitManager().selectKit(player, defaultKit);
-                            plugin.getPlayerKitManager().giveKit(player, defaultKit);
-                            player.sendMessage(ChatColor.RED + "Invalid or no kit selected. You have received the default kit for your team.");
-                        }
-                    }
-                }
-            } else {
-                player.sendMessage("You haven't selected a kit!");
-            }
-        });
-    }
 }
