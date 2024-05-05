@@ -9,10 +9,12 @@ import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.entity.Player;
 import java.util.Random;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -37,6 +39,7 @@ public class DamageListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) event;
 
@@ -62,7 +65,8 @@ public class DamageListener implements Listener {
                             // Players in the same team, cancel the damage event
                             event.setCancelled(true);
                         }
-                        if(damager.getInventory().getItemInMainHand().getItemMeta().equals(Manager.sword.getItemMeta()) && plugin.getPlayerKitManager().getSelectedKit(damager) == KitType.WIZARD){
+                        ItemMeta damagerItemMeta = damager.getInventory().getItemInMainHand().getItemMeta();
+                        if (damagerItemMeta != null && damagerItemMeta.equals(Manager.sword.getItemMeta()) && plugin.getPlayerKitManager().getSelectedKit(damager) == KitType.WIZARD) {
                             int n = rand.nextInt(15) + 1;
                             if (n == 6){
                                 damagedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 0));
@@ -74,4 +78,3 @@ public class DamageListener implements Listener {
         }
     }
 }
-

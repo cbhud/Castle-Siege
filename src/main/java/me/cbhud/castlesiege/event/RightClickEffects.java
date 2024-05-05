@@ -59,7 +59,7 @@ public class RightClickEffects implements Listener {
                                 if (ent == player) {
                                     continue;
                                 }
-                                target.damage(2.0);
+                                target.damage(1.5);
                                 axe.setVelocity(new Vector(0, 0, 0));
                                 this.cancel();
                                 axe.remove();
@@ -114,12 +114,7 @@ public class RightClickEffects implements Listener {
         if (item.getItemMeta().equals(Manager.sight.getItemMeta())) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, EFFECT_DURATION * 2, 1));
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, EFFECT_DURATION, 1));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, EFFECT_DURATION, 1));
-            return true;
-        }
-
-        if (item.getItemMeta().equals(Manager.bone2.getItemMeta()) && plugin.getTeamManager().getTeam(player) == Team.Vikings && plugin.getPlayerKitManager().getSelectedKit(player) == KitType.BEASTMASTER) {
-            plugin.getMobManager().spawnWolf(player);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, 1));
             return true;
         }
 
@@ -128,6 +123,7 @@ public class RightClickEffects implements Listener {
                 if (nearbyPlayer.getLocation().distance(player.getLocation()) <= 10 &&
                         plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Vikings) {
                     applyRandomEffect(nearbyPlayer);
+                    player.sendMessage(ChatColor.RED + "You cast spell on your opponents");
                 }
             }
             return true;
@@ -138,6 +134,7 @@ public class RightClickEffects implements Listener {
                 if (nearbyPlayer.getLocation().distance(player.getLocation()) <= 10 &&
                         plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Franks) {
                     applyRandomSupportEffect(nearbyPlayer);
+                    player.sendMessage(ChatColor.GREEN + "You cast spell on your teammates helping them");
                 }
             }
             return true;
@@ -162,7 +159,7 @@ public class RightClickEffects implements Listener {
                 player.sendMessage(ChatColor.RED + "Opponent team wizard cast blindness spell on you");
                 break;
             default:
-                player.sendMessage(ChatColor.RED + "Your spell was weak this time!");
+                break;
         }
     }
 

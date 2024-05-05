@@ -7,6 +7,8 @@ timerMinutes: 8
 ### ADJUST KING HEALTH NOTE IT SHOULD BE WITH ONE DECIMAL EXAMPLE : 80.0
 king-health: 80.0
 
+## ADJUST BOMBARDIER KIT TNT COOLDOWN TO YOUR NEEDS
+tntCooldown: 120
 
 scoreboard-title: 'Castle Siege'
 scoreboard-bottomline: 'serverip.net'

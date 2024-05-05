@@ -43,6 +43,7 @@ public class Main extends JavaPlugin
     private ConfigManager configManager;
 
     private MessagesConfiguration messagesConfig;
+    private TNTThrower tntThrower;
 
     public void onEnable() {
 
@@ -63,13 +64,13 @@ public class Main extends JavaPlugin
         this.timers = new Timers(this, configManager, messagesConfig);
         this.gameEndHandler = new GameEndHandler(this, configManager, this.timers,messagesConfig);
         manager = new Manager();
-        this.getCommand("stats").setExecutor((CommandExecutor)new StatsCommand(dataManager));
-        this.getCommand("cs").setExecutor((CommandExecutor)new Commands(this, teamManager, mobManager, messagesConfig));
-        this.getServer().getPluginManager().registerEvents((Listener)new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new PlayerDeathHandler(this), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new DamageListener(this), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new RightClickEffects(this), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new MiscEvents(this), (Plugin)this);
+        this.getCommand("stats").setExecutor(new StatsCommand(dataManager));
+        this.getCommand("cs").setExecutor(new Commands(this, teamManager, mobManager, messagesConfig));
+        this.getServer().getPluginManager().registerEvents(new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
+        this.getServer().getPluginManager().registerEvents(new PlayerDeathHandler(this), (Plugin)this);
+        this.getServer().getPluginManager().registerEvents(new DamageListener(this), (Plugin)this);
+        this.getServer().getPluginManager().registerEvents(new RightClickEffects(this), (Plugin)this);
+        this.getServer().getPluginManager().registerEvents(new MiscEvents(this), (Plugin)this);
         this.saveDefaultConfig();
         this.reloadConfig();
         this.teamSelector = new TeamSelector();
@@ -78,11 +79,13 @@ public class Main extends JavaPlugin
         this.game.setState(GameState.LOBBY);
         mapRegeneration = new MapRegeneration(this);
         getServer().getPluginManager().registerEvents(mapRegeneration, this);
+        tntThrower = new TNTThrower(this, this.configManager);
+        getServer().getPluginManager().registerEvents(tntThrower, this);
         this.getServer().getConsoleSender().sendMessage("CastleSiege has been enabled!");
     }
 
     public void onDisable() {
-        this.getServer().getConsoleSender().sendMessage("Vikings has been disabled!");
+        this.getServer().getConsoleSender().sendMessage("CastleSiege has been disabled!");
         dataManager.disconnect();
     }
 
@@ -109,6 +112,7 @@ public class Main extends JavaPlugin
     public Timers getTimer() {
         return this.timers;
     }
+    public TNTThrower tntThrower(){return this.tntThrower;}
 
     public PlayerStateManager getPlayerStateManager() {
         return this.playerStateManager;

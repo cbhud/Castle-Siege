@@ -3,6 +3,7 @@ package me.cbhud.castlesiege.state;
 import me.cbhud.castlesiege.*;
 import me.cbhud.castlesiege.util.ConfigManager;
 import me.cbhud.castlesiege.util.MessagesConfiguration;
+import me.cbhud.castlesiege.util.TNTThrower;
 import me.cbhud.castlesiege.util.Timers;
 import org.bukkit.*;
 import org.bukkit.plugin.*;
@@ -34,6 +35,7 @@ public class GameEndHandler implements Listener
         this.plugin.getGame().setState(GameState.END);
         this.removeCustomZombies();
         setPlayerWins();
+        plugin.tntThrower().clearCooldowns();
         Bukkit.getScheduler().runTaskLater((Plugin)this.plugin, () -> {
             this.plugin.getGame().setState(GameState.LOBBY);
             this.teleportPlayersToLobby();

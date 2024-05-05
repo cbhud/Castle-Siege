@@ -30,19 +30,6 @@ public class MobManager implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-
-    public void spawnWolf(Player player) {
-        Location spawnLocation = player.getLocation();
-
-        wolf = (Wolf) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.WOLF);
-        wolf.setAdult();
-        wolf.setCustomNameVisible(true);
-        wolf.setCustomName(ChatColor.YELLOW + player.getName() + "'s Wolf");
-        wolf.setOwner(player);
-        wolf.setCanPickupItems(false); // Zombie cannot pick up items
-        wolf.setAngry(true);
-    }
-
     public void spawnCustomMob(ConfigurationSection mobConfig) {
         Location spawnLocation = getLocationFromConfig(mobConfig);
 
@@ -114,33 +101,21 @@ public class MobManager implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
-        if (event.getEntity() instanceof Wolf) {
-            Wolf wolf = (Wolf) event.getEntity();
-
-            if (event.getDamager() instanceof Player) {
-                Player damager = (Player) event.getDamager();
-
-                Team damagerTeam = teamManager.getTeam(damager);
-
-                if (damagerTeam == Team.Vikings || damagerTeam == null) {
+        if (event.getDamager() instanceof TNTPrimed) {
+            if (event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                if (plugin.getTeamManager().getTeam(player) == Team.Vikings) {
                     event.setCancelled(true);
                 }
-            } else if (event.getDamager() instanceof Projectile) {
-                Projectile projectile = (Projectile) event.getDamager();
-
-                if (projectile.getShooter() instanceof Player) {
-                    Player shooter = (Player) projectile.getShooter();
-                    Team shooterTeam = teamManager.getTeam(shooter);
-
-                    if (shooterTeam == Team.Vikings|| shooterTeam == null) {
-                        event.setCancelled(true);
-                    }
-                }
             }
-        }
+            }
 
         if (event.getEntity() instanceof Zombie && event.getEntity().getCustomName() != null && event.getEntity().getCustomName().contains("King")) {
             Zombie zombie = (Zombie) event.getEntity();
+
+            if (event.getDamager() instanceof TNTPrimed) {
+                event.setCancelled(true);
+            }
 
             if (event.getDamager() instanceof Player) {
                 Player damager = (Player) event.getDamager();
@@ -164,41 +139,5 @@ public class MobManager implements Listener {
             }
         }
     }
-
-
-    @EventHandler
-    public void onRightClickEntity(PlayerInteractEntityEvent event) {
-        final Player player = event.getPlayer();
-        final ItemStack mainHandItem = player.getInventory().getItemInMainHand();
-        final Entity clickedEntity = event.getRightClicked();
-
-        if (clickedEntity.getType() == EntityType.WOLF) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onEntityTarget(EntityTargetLivingEntityEvent event) {
-        if (event.getEntity() instanceof Wolf) {
-            Wolf wolf = (Wolf) event.getEntity();
-
-            // Check if the wolf already has a target or if it's targeting a player
-            if (wolf.getTarget() == null || wolf.getTarget() instanceof Player) {
-                // Iterate over nearby players
-                for (Player nearbyPlayer : wolf.getWorld().getPlayers()) {
-                    if (nearbyPlayer.getLocation().distance(wolf.getLocation()) <= 15) {
-                        // Check if the nearby player belongs to the "Franks" team
-                        if (teamManager.getTeam(nearbyPlayer) == Team.Franks) {
-                            wolf.setTarget(nearbyPlayer);
-                            break; // Stop searching once a player from the "Franks" team is found
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-
 
 }

@@ -23,10 +23,4 @@ public class PlayerStateManager {
         playerStates.put(player, state);
     }
 
-    public void removePlayerState(Player player) {
-        playerStates.remove(player);
-    }
-
-
-
 }

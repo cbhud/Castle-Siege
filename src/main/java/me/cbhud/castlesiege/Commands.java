@@ -123,6 +123,7 @@ public class Commands implements CommandExecutor {
                 teleportPlayersToLobby();
                 plugin.getGame().setState(GameState.LOBBY);
                 this.plugin.getMapRegeneration().regenerateChangedBlocks();
+                plugin.tntThrower().clearCooldowns();
                 Bukkit.broadcastMessage(configMsg.getForceStopMsg().toString());
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
@@ -344,7 +345,7 @@ public class Commands implements CommandExecutor {
 
                 if (plugin.getType().getState() == Type.Normal) {
                     plugin.getType().setState(Type.Hardcore);
-                    Bukkit.broadcastMessage(configMsg.getHardcoreMsg().toString() + "§aenabled!");
+                    Bukkit.broadcastMessage(configMsg.getHardcoreMsg().toString() + " §aenabled!");
                 }else{
                     plugin.getType().setState(Type.Normal);
                     Bukkit.broadcastMessage(configMsg.getHardcoreMsg().toString() + " §cdisabled!");

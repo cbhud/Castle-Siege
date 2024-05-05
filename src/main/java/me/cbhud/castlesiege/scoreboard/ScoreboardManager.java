@@ -132,7 +132,6 @@ public class ScoreboardManager {
                 .count();
     }
 
-
     public void updateScoreboard(Player player) {
         FastBoard board = scoreboards.get(player);
         if (board != null) {
@@ -226,8 +225,6 @@ public class ScoreboardManager {
     }
 
     public void decrementTeamPlayersCount(Player player) {
-        ChatColor mainColor = configManager.getMainColor();
-        ChatColor secondaryColor = configManager.getSecondaryColor();
         Team team = teamManager.getTeam(player);
         if (team != null) {
                 switch (team) {
@@ -243,8 +240,6 @@ public class ScoreboardManager {
                 }
             }
         }
-
-
 
     public void removeScoreboard(Player player) {
         FastBoard board = scoreboards.remove(player);

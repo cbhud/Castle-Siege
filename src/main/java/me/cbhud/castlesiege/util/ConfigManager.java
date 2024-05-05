@@ -66,6 +66,11 @@ public class ConfigManager {
         return config.getInt("auto-start-players", 5);
     }
 
+    public int getTntCooldown() {
+        return config.getInt("tntCooldown", 120);
+    }
+
+
     public int getAutoStartCountdown() {
         return config.getInt("auto-start-countdown", 60);
     }

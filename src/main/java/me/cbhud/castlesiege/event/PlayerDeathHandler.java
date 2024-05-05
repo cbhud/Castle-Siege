@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,7 +46,6 @@ public class PlayerDeathHandler implements Listener {
         Player killer = player.getKiller();
 
         if (plugin.getGame().getState() == GameState.IN_GAME) {
-            // Increment kills and deaths asynchronously
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 UUID playerId = player.getUniqueId();
                 UUID killerId = (killer != null) ? killer.getUniqueId() : null;
@@ -134,27 +134,59 @@ public class PlayerDeathHandler implements Listener {
         switch (kitType) {
             case MARKSMAN:
                 player.getInventory().addItem(new ItemStack(Material.SPECTRAL_ARROW));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 break;
             case SPEARMAN:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 break;
             case KNIGHT:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
-                player.addPotionEffect((new PotionEffect(PotionEffectType.REGENERATION, 100, 1)));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
                 break;
             case BERSERKER:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 150, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 100, 0));
                 player.addPotionEffect((new PotionEffect(PotionEffectType.REGENERATION, 100, 1)));
                 break;
             case SKALD:
                 player.getInventory().addItem(Manager.harm);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 2));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 100, 1));
                 break;
             case WARRIOR:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));
+                break;
+            case WIZARD:
+                triggerArcaneBlast(player);
+                break;
+            case BOMBARDIER:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100, 1));
                 break;
         }
     }
+
+
+
+    private void triggerArcaneBlast(Player wizard) {
+        int blastRadius = 10; // Adjust as needed
+        double blastDamage = 3.0; // Adjust as needed
+
+        Location blastLocation = wizard.getLocation();
+
+        // Damage nearby enemies within the blast radius who are on Team Vikings
+        for (Entity entity : blastLocation.getWorld().getNearbyEntities(blastLocation, blastRadius, blastRadius, blastRadius)) {
+            if (entity instanceof Player) {
+                Player nearbyPlayer = (Player) entity;
+                if (plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Vikings) {
+                    nearbyPlayer.damage(blastDamage, wizard);
+                }
+            }
+        }
+
+        // Inform the wizard about the successful blast
+        wizard.sendMessage("You unleash an arcane blast, damaging nearby enemies with explosion!");
+    }
+
+
+
 }

@@ -21,15 +21,7 @@ public enum KitType {
 
     MARKSMAN("Marksman", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
-            new ItemStack(Material.CROSSBOW) {{
-                ItemMeta meta = getItemMeta();
-                if (meta != null) {
-                    meta.addEnchant(Enchantment.QUICK_CHARGE, 3, true); // Add the enchantment
-                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS); // Hide the enchantment
-                    setItemMeta(meta);
-                }
-            }},
-            new ItemStack(Material.AIR),
+            new ItemStack(Material.CROSSBOW),
             new ItemStack(Material.ARROW, 32),
             Manager.stew,
             Manager.stew,
@@ -37,9 +29,9 @@ public enum KitType {
     ),
             true,
             new ItemStack[]{
-                    new ItemStack(Material.IRON_HELMET),
+                    new ItemStack(Material.CHAINMAIL_HELMET),
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                    new ItemStack(Material.IRON_LEGGINGS),
+                    new ItemStack(Material.CHAINMAIL_LEGGINGS),
                     new ItemStack(Material.CHAINMAIL_BOOTS)
             },Team.Franks),
     SPEARMAN("Spearman", Arrays.asList(
@@ -47,12 +39,11 @@ public enum KitType {
             new ItemStack(Material.TRIDENT) {{
                 ItemMeta meta = getItemMeta();
                 if (meta != null) {
-                    meta.addEnchant(Enchantment.LOYALTY, 2, true);
+                    meta.addEnchant(Enchantment.LOYALTY, 1, true);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     setItemMeta(meta);
                 }
             }},
-            Manager.stew,
             Manager.stew,
             Manager.stew
     ),
@@ -64,8 +55,7 @@ public enum KitType {
                     new ItemStack(Material.IRON_BOOTS)
             },Team.Franks),
     WIZARD("Wizard", Arrays.asList(
-            new ItemStack(Material.STONE_SWORD),
-            new ItemStack(Material.AIR),
+            sword,
             Manager.attack,
             support,
             Manager.stew,
@@ -92,11 +82,10 @@ public enum KitType {
             },Team.Franks),
 
     BERSERKER("Berserker", Arrays.asList(
-            new ItemStack(combataxe),
+            Manager.combataxe,
             new ItemStack(axe),
-            Manager.stew,
-            Manager.stew,
-            Manager.rage
+            Manager.rage,
+            stew
     ),
             true,
             new ItemStack[]{
@@ -108,7 +97,6 @@ public enum KitType {
     SKALD("Skald", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
             new ItemStack(Material.BOW),
-            new ItemStack(Material.AIR),
             new ItemStack(Material.ARROW, 32),
             Manager.stew,
             Manager.stew,
@@ -121,17 +109,17 @@ public enum KitType {
                     createDyedArmor(Material.LEATHER_LEGGINGS, Color.RED),
                     createDyedArmor(Material.LEATHER_BOOTS, Color.RED)
             },Team.Vikings),
-    BEASTMASTER("Beastmaster", Arrays.asList(
+    BOMBARDIER("Bombardier", Arrays.asList(
             new ItemStack(Material.STONE_SWORD),
-            bone2,
+            new ItemStack(Material.TNT),
             Manager.stew,
             Manager.stew
     ),
             true,
             new ItemStack[]{
-                    createDyedArmor(Material.LEATHER_HELMET, Color.RED),
+                    new ItemStack(Material.CHAINMAIL_HELMET),
                     new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                    createDyedArmor(Material.LEATHER_LEGGINGS, Color.RED),
+                    new ItemStack(Material.CHAINMAIL_LEGGINGS),
                     new ItemStack(Material.CHAINMAIL_BOOTS)
             },Team.Vikings),
     WARRIOR("Warrior", Arrays.asList(
@@ -194,8 +182,9 @@ public enum KitType {
 
     private static ItemStack createDyedArmor(Material material, Color color) {
         ItemStack armorItem = new ItemStack(material);
-        LeatherArmorMeta meta = (LeatherArmorMeta) armorItem.getItemMeta();
-        if (meta != null) {
+        ItemMeta itemMeta = armorItem.getItemMeta();
+        if (itemMeta instanceof LeatherArmorMeta) {
+            LeatherArmorMeta meta = (LeatherArmorMeta) itemMeta;
             meta.setColor(color);
             meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

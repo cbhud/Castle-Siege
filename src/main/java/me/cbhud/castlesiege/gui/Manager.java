@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
@@ -26,9 +27,6 @@ public class Manager implements InventoryHolder {
 
     // Items
     public static ItemStack stew;
-
-    public static ItemStack bone2;
-
     public static ItemStack clock;
     public static ItemStack star;
     public static ItemStack axe;
@@ -38,7 +36,6 @@ public class Manager implements InventoryHolder {
     public static ItemStack sight;
     public static ItemStack harm;
     public static ItemStack sword;
-
     public static ItemStack attack;
     public static ItemStack support;
 
@@ -58,7 +55,6 @@ public class Manager implements InventoryHolder {
         createAxe();
         createHarm();
         createStew();
-        createCombatAxe();
         createRage();
         createRagnarok();
         createSight();
@@ -67,7 +63,7 @@ public class Manager implements InventoryHolder {
         createSword();
         createAttackWand();
         createSupportWand();
-        createBone();
+        createCombatAxe();
     }
 
     private void createAxe() {
@@ -78,24 +74,33 @@ public class Manager implements InventoryHolder {
         lore.add("§7Right-click holding this axe");
         lore.add("§7to throw it");
         meta.setLore(lore);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
         meta.setUnbreakable(true);
+
         // Create an AttributeModifier to reduce damage by 2 (from 9 to 7)
+        AttributeModifier modifier = new AttributeModifier("Damage", 4, AttributeModifier.Operation.ADD_NUMBER);
+        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, modifier);
 
         item.setItemMeta(meta);
         axe = item;
     }
 
-    private void createBone() {
-        ItemStack item = new ItemStack(Material.IRON_NUGGET, 1);
+    private void createCombatAxe() {
+        ItemStack item = new ItemStack(Material.IRON_AXE, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§aSpawn your wolf");
+        meta.setDisplayName("§eCombat Axe");
         List<String> lore = new ArrayList<>();
-        lore.add("§7Right-click holding this bone");
-        lore.add("§7to spawn your wolf");
+        lore.add("§7Berserker's combat axe");
         meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
+        meta.setUnbreakable(true);
+
+        // Create an AttributeModifier to reduce damage by 2 (from 9 to 7)
+        AttributeModifier modifier = new AttributeModifier("Damage", 4, AttributeModifier.Operation.ADD_NUMBER);
+        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, modifier);
+
         item.setItemMeta(meta);
-        bone2 = item;
+        combataxe = item;
     }
 
     private void createStew() {
@@ -109,18 +114,6 @@ public class Manager implements InventoryHolder {
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         item.setItemMeta(meta);
         stew = item;
-    }
-
-    private void createCombatAxe() {
-        ItemStack item = new ItemStack(Material.IRON_AXE, 1);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§cBerserker's Melee");
-        List<String> lore = new ArrayList<>();
-        lore.add("§7Berserker's melee axe");
-        lore.add("§7Used in viking fights");
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        combataxe = item;
     }
 
     private void createRage() {

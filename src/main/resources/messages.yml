@@ -1,0 +1,32 @@
+startmsg:
+  - "&7&m--------------------------"
+  - "&bFranks &fmust defend the King."
+  - "&bFranks &fwin when countdown is over."
+  - ""
+  - "&cVikings &fmust kill the King."
+  - "&cVikings &flose when countdown is over."
+  - ""
+  - "&aThe game has started!"
+  - "&7&m--------------------------"
+
+vikingswinmsg:
+  - "&7&m--------------------------"
+  - "&cVikings conquered the castle"
+  - "{killer} &cslaughtered &e&lKing Charles"
+  - "&7&m--------------------------"
+
+frankswinmsg:
+  - "&7&m--------------------------"
+  - "&aFranks defended the castle!"
+  - "&e&lKing Charles &fhas survived the siege!"
+  - "&7&m--------------------------"
+
+hardcodemsg:
+  - "&cHardcore &emode has been" ## it is automatically gonna say if its enabled or disabled you dont need that part
+
+forcestopmsg:
+  - "&cThe game has been force-stopped by an administrator!"
+
+notenoughtostart:
+  - "&cThere are not enough players to start the game!"
+

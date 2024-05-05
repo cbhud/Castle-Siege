@@ -104,14 +104,14 @@ public class MiscEvents implements Listener {
                         return;
                     }
                     break;
-                case BONE:
-                    KitType beastmaster = KitType.BEASTMASTER;
+                case TNT:
+                    KitType beastmaster = KitType.BOMBARDIER;
                     if (plugin.getPlayerKitManager().getSelectedKit(player) == beastmaster) {
                         return;
                     }
                     if (beastmaster.getTeam() == plugin.getTeamManager().getTeam(player)) {
                         plugin.getPlayerKitManager().selectKit(player, beastmaster);
-                        player.sendMessage("§aYou have selected Beastmaster kit.");
+                        player.sendMessage("§aYou have selected Bombardier kit.");
                         plugin.getScoreboardManager().updateScoreboard(player);
                     } else {
                         return;

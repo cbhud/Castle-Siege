@@ -105,9 +105,9 @@ public class Timers {
                 }
             }
         };
-        timerTask.runTaskTimer(plugin, 0, 20); // Run every second (20 ticks)
 
-        //Bukkit.broadcastMessage("The game has started! Timer set to " + minutes + " minutes.");
+        // Run the timer task asynchronously on a separate thread
+        timerTask.runTaskTimer(plugin, 0, 20); // Run every second (20 ticks)
     }
 
     public void cancelTimer() {

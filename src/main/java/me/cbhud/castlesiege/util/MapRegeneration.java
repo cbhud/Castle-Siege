@@ -34,18 +34,22 @@ public class MapRegeneration implements Listener {
         if (plugin.getGame().getState() == GameState.IN_GAME && event.getBlock().getType() == Material.OAK_FENCE) {
             event.setCancelled(false);
             Location location = event.getBlock().getLocation();
-            originalBlockStates.put(location, event.getBlock().getType());
+            originalBlockStates.put(location, Material.OAK_FENCE);
             changedBlocks.put(location, Material.AIR);
             if(plugin.getTeamManager().getTeam(player) == Team.Franks){
+                player.getInventory().addItem(new ItemStack(Material.OAK_FENCE, 1));
+            }
+
                 event.getBlock().setType(Material.AIR);
 
-                // Give an OAK_FENCE to the player
-                player.getInventory().addItem(new ItemStack(Material.OAK_FENCE, 1));
-            }else {
-                event.getBlock().setType(Material.AIR);
-            }
         } else event.setCancelled(!player.hasPermission("viking.admin") || !player.isOp()); // Allow breaking any blocks
 
+    }
+
+
+    public void add(Location location){
+        originalBlockStates.put(location, Material.OAK_FENCE);
+        changedBlocks.put(location, Material.AIR);
     }
 
 
@@ -58,10 +62,9 @@ public class MapRegeneration implements Listener {
                 event.setCancelled(false);
                 Location location = event.getBlock().getLocation();
                 originalBlockStates.put(location, Material.AIR);
-                changedBlocks.put(location, event.getBlock().getType());
+                changedBlocks.put(location, Material.OAK_FENCE);
         }else event.setCancelled(!player.isOp() || !player.hasPermission("viking.admin")); // Allow breaking any blocks
     }
-
 
     public void regenerateChangedBlocks() {
         for (Map.Entry<Location, Material> entry : changedBlocks.entrySet()) {
@@ -71,7 +74,6 @@ public class MapRegeneration implements Listener {
                 location.getBlock().setType(originalMaterial);
             }
         }
-        // Clear changed blocks after regeneration
         changedBlocks.clear();
         originalBlockStates.clear();
     }
