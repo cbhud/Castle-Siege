@@ -2,15 +2,11 @@ package me.cbhud.castlesiege.event;
 
 import me.cbhud.castlesiege.Main;
 import me.cbhud.castlesiege.gui.Manager;
-import me.cbhud.castlesiege.kits.KitType;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -22,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class RightClickEffects implements Listener {
 

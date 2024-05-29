@@ -13,10 +13,8 @@ import org.bukkit.plugin.java.*;
 import me.cbhud.castlesiege.playerstate.*;
 import me.cbhud.castlesiege.scoreboard.*;
 import me.cbhud.castlesiege.gui.*;
-import org.bukkit.command.*;
 import me.cbhud.castlesiege.team.*;
 import me.cbhud.castlesiege.kits.*;
-import org.bukkit.event.*;
 import org.bukkit.plugin.*;
 import me.cbhud.castlesiege.event.*;
 import me.cbhud.castlesiege.state.*;
@@ -29,7 +27,6 @@ public class Main extends JavaPlugin
     private GameEndHandler gameEndHandler;
     private TeamManager teamManager;
     private PlayerManager playerManager;
-    private PlayerStateManager playerStateManager;
     private ScoreboardManager scoreboardManager;
     private Timers timers;
     private MapRegeneration mapRegeneration;
@@ -57,9 +54,8 @@ public class Main extends JavaPlugin
         this.game = new Game(this);
         this.type = new TypeManager(this);
         this.playerKitManager = new PlayerKitManager();
-        this.playerStateManager = new PlayerStateManager();
         this.teamManager = new TeamManager(this, this.getConfig());
-        this.playerManager = new PlayerManager(this, this.playerStateManager, teamManager);
+        this.playerManager = new PlayerManager(this, teamManager);
         this.mobManager = new MobManager(this, this.teamManager, configManager);
         this.timers = new Timers(this, configManager, messagesConfig);
         this.gameEndHandler = new GameEndHandler(this, configManager, this.timers,messagesConfig);
@@ -113,10 +109,6 @@ public class Main extends JavaPlugin
         return this.timers;
     }
     public TNTThrower tntThrower(){return this.tntThrower;}
-
-    public PlayerStateManager getPlayerStateManager() {
-        return this.playerStateManager;
-    }
 
     public PlayerManager getPlayerManager() {
         return this.playerManager;

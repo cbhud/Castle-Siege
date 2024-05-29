@@ -310,7 +310,7 @@ public class Commands implements CommandExecutor {
 
                             // Apply kits to players asynchronously
                             Bukkit.getScheduler().runTask(plugin, () -> {
-                                if (plugin.getPlayerStateManager().getPlayerState(player) == PlayerStates.PLAYING) {
+                                if (plugin.getPlayerManager().getPlayerState(player) == PlayerStates.PLAYING) {
                                     Team playerTeam = plugin.getTeamManager().getTeam(player);
                                     KitType selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
 

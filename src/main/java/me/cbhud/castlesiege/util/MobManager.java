@@ -53,8 +53,7 @@ public class MobManager implements Listener {
         kingZombie.setHealth(maxHealth);
 
         // Add a golden helmet to the zombie
-        ItemStack goldenHelmet = new ItemStack(Material.GOLDEN_HELMET);
-        kingZombie.getEquipment().setHelmet(goldenHelmet);
+        kingZombie.getEquipment().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
     }
 
     private static Location getLocationFromConfig(ConfigurationSection config) {
@@ -102,20 +101,21 @@ public class MobManager implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
         if (event.getDamager() instanceof TNTPrimed) {
+
+            if (event.getEntity() instanceof Zombie) {
+                Zombie zombie = (Zombie) event.getEntity();
+                if (zombie.getCustomName() != null && zombie.getCustomName().contains("King")) {
+                    event.setCancelled(true);
+                }
+            }
+
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 if (plugin.getTeamManager().getTeam(player) == Team.Vikings) {
                     event.setCancelled(true);
                 }
             }
-            }
-
-        if (event.getEntity() instanceof Zombie && event.getEntity().getCustomName() != null && event.getEntity().getCustomName().contains("King")) {
-            Zombie zombie = (Zombie) event.getEntity();
-
-            if (event.getDamager() instanceof TNTPrimed) {
-                event.setCancelled(true);
-            }
+        }
 
             if (event.getDamager() instanceof Player) {
                 Player damager = (Player) event.getDamager();
@@ -139,5 +139,3 @@ public class MobManager implements Listener {
             }
         }
     }
-
-}
