@@ -20,7 +20,6 @@ public class MobManager implements Listener {
     private final TeamManager teamManager;
     private Zombie kingZombie;
     private Wolf wolf;
-
     private final ConfigManager configManager;
 
     public MobManager(Main plugin, TeamManager teamManager, ConfigManager configManager) {
@@ -115,6 +114,9 @@ public class MobManager implements Listener {
                     event.setCancelled(true);
                 }
             }
+
+            event.setDamage(4.0);
+
         }
 
             if (event.getDamager() instanceof Player) {
