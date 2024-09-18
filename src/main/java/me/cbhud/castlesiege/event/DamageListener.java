@@ -32,7 +32,8 @@ public class DamageListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
+        if(!(event.getEntity() instanceof Player)) return;
+
             Player damagedPlayer = (Player) event.getEntity();
 
             if (plugin.getGame().getState() == GameState.LOBBY || plugin.getGame().getState() == GameState.END) {
@@ -40,11 +41,11 @@ public class DamageListener implements Listener {
                 return;
             }
 
-            if (event instanceof EntityDamageByEntityEvent) {
+            if (!(event instanceof EntityDamageByEntityEvent)) {return;}
+
                 EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) event;
 
-
-                if (damageByEntityEvent.getDamager() instanceof Player || damageByEntityEvent.getDamager() instanceof Projectile) {
+                if (!(damageByEntityEvent.getDamager() instanceof Player || damageByEntityEvent.getDamager() instanceof Projectile)) {return;}
                     Player damager = null;
 
                     if (damageByEntityEvent.getDamager() instanceof Player) {
@@ -75,6 +76,3 @@ public class DamageListener implements Listener {
                     }
                 }
             }
-        }
-    }
-}

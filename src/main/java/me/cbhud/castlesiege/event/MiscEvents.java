@@ -79,111 +79,42 @@ public class MiscEvents implements Listener {
             event.setCancelled(true);
             switch (event.getCurrentItem().getType()) {
                 case IRON_AXE:
-                    KitType berserker = KitType.BERSERKER;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == berserker) {
-                        return;
-                    }
-                    if (berserker.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, berserker);
-                        player.sendMessage("§aYou have selected Berserker kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                            return;
-                    }
+                    updateKit(player, KitType.BERSERKER);
                     break;
                 case BOW:
-                    KitType skald = KitType.SKALD;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == skald) {
-                        return;
-                    }
-                    if (skald.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, skald);
-                        player.sendMessage("§aYou have selected Skald kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                        return;
-                    }
+                    updateKit(player, KitType.SKALD);
                     break;
                 case TNT:
-                    KitType beastmaster = KitType.BOMBARDIER;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == beastmaster) {
-                        return;
-                    }
-                    if (beastmaster.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, beastmaster);
-                        player.sendMessage("§aYou have selected Bombardier kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                        return;
-                    }
+                    updateKit(player, KitType.BOMBARDIER);
                     break;
                 case IRON_SWORD:
-                    KitType warrior = KitType.WARRIOR;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == warrior) {
-                        return;
-                    }
-                    if (warrior.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, warrior);
-                        player.sendMessage("§aYou have selected Warrior kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                        return;
-                    }
+                    updateKit(player, KitType.WARRIOR);
                     break;
                 case SHIELD:
-                    KitType knight = KitType.KNIGHT;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == knight) {
-                        return;
-                    }
-                    if (knight.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, knight);
-                        player.sendMessage("§aYou have selected Knight kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                        return;
-                    }
+                    updateKit(player, KitType.KNIGHT);
                     break;
                 case TRIDENT:
-                    KitType spearmen = KitType.SPEARMAN;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == spearmen) {
-                        return;
-                    }
-                    if (spearmen.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, spearmen);
-                        player.sendMessage("§aYou have selected Spearman kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                        return;
-                    }
+                    updateKit(player, KitType.SPEARMAN);
                     break;
                 case SPLASH_POTION:
-                    KitType wizard = KitType.WIZARD;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == wizard) {
-                        return;
-                    }
-                    if (wizard.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, wizard);
-                        player.sendMessage("§aYou have selected Wizard kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                        return;
-                    }
+                    updateKit(player, KitType.WIZARD);
                     break;
                 case CROSSBOW:
-                    KitType marksman = KitType.MARKSMAN;
-                    if (plugin.getPlayerKitManager().getSelectedKit(player) == marksman) {
-                        return;
-                    }
-                    if (marksman.getTeam() == plugin.getTeamManager().getTeam(player)) {
-                        plugin.getPlayerKitManager().selectKit(player, marksman);
-                        player.sendMessage("§aYou have selected Marksman kit.");
-                        plugin.getScoreboardManager().updateScoreboard(player);
-                    } else {
-                        return;
-                    }
+                    updateKit(player, KitType.MARKSMAN);
                     break;
             }
 
+        }
+    }
+
+    private void updateKit(Player player, KitType kitType) {
+        if (plugin.getPlayerKitManager().getSelectedKit(player).equals(kitType)) {
+            return;
+        }
+        if (kitType.getTeam().equals(plugin.getTeamManager().getTeam(player))) {
+            plugin.getPlayerKitManager().selectKit(player, kitType);
+            player.sendMessage("§aYou have selected the" + plugin.getPlayerKitManager().getSelectedKit(player).toString() + " kit.");
+            plugin.getScoreboardManager().updateScoreboard(player);
         }
     }
 
