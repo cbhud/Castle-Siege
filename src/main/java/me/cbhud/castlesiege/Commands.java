@@ -14,22 +14,17 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Commands implements CommandExecutor {
     private final Main plugin;
     private final TeamManager teamManager;
     private final MobManager mobManager;
-
-    private Location mobSpawnLocation;
-    private Map<Team, Location> spawnLocations;
     private MessagesConfiguration configMsg;
 
     public Commands(Main plugin, TeamManager teamManager, MobManager mobManager, MessagesConfiguration configMsg) {
@@ -37,52 +32,8 @@ public class Commands implements CommandExecutor {
         this.teamManager = teamManager;
         this.mobManager = mobManager;
         this.configMsg = configMsg;
-
-        loadConfigValues(); // Load configuration values during initialization
     }
 
-    private void loadConfigValues() {
-        FileConfiguration config = plugin.getConfig();
-
-        // Load mob spawn location
-        ConfigurationSection mobSpawnConfig = config.getConfigurationSection("mobSpawnLocation");
-        if (mobSpawnConfig != null) {
-            mobSpawnLocation = getLocationFromConfig(mobSpawnConfig);
-        } else {
-            plugin.getLogger().warning(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
-        }
-
-        // Load team spawn locations
-        spawnLocations = new HashMap<>();
-        Team[] teams = Team.values();
-        for (Team team : teams) {
-            String path = "spawnLocations." + team.toString().toLowerCase();
-            if (config.contains(path)) {
-                spawnLocations.put(team, getLocationFromConfig(config.getConfigurationSection(path)));
-            } else {
-                plugin.getLogger().warning(ChatColor.RED + "Spawn location not set for team: " + team);
-            }
-        }
-    }
-
-    private Location getLocationFromConfig(ConfigurationSection config) {
-        double x = config.getDouble("x");
-        double y = config.getDouble("y");
-        double z = config.getDouble("z");
-        float yaw = (float) config.getDouble("yaw");
-        float pitch = (float) config.getDouble("pitch");
-
-        // Get the world from the configuration
-        String worldName = config.getString("world");
-        if (worldName == null) {
-            // Handle case where world name is null
-            // getLogger().warning("World name is null. Make sure to set a valid world name.");
-            return null;
-        }
-
-        // Create and return the Location object
-        return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -117,7 +68,7 @@ public class Commands implements CommandExecutor {
 
     private boolean endGameCommand(CommandSender sender) {
         if (plugin.getGame().getState() == GameState.IN_GAME) {
-            if (sender.hasPermission("viking.admin")) {
+            if (sender.hasPermission("cs.admin")) {
                 removeCustomZombie();
                 plugin.getTimer().cancelTimer();
                 teleportPlayersToLobby();
@@ -194,7 +145,7 @@ public class Commands implements CommandExecutor {
         plugin.saveConfig();
         player.getWorld().setGameRule(org.bukkit.GameRule.DO_MOB_SPAWNING, false);
         player.sendMessage(ChatColor.GREEN + "Lobby location set!");
-        loadConfigValues();
+        plugin.getLocationManager().loadSpawnLocations();
 
         return true;
     }
@@ -213,7 +164,7 @@ public class Commands implements CommandExecutor {
             plugin.saveConfig();
 
             player.sendMessage(ChatColor.GREEN + "King's spawn location has been updated.");
-            loadConfigValues();
+            plugin.getLocationManager().loadSpawnLocations();
         } else {
             sender.sendMessage(ChatColor.RED + "Only players can use this command.");
         }
@@ -224,7 +175,8 @@ public class Commands implements CommandExecutor {
     private boolean startCommand(CommandSender sender) {
         if (plugin.getGame().getState() == GameState.LOBBY) {
             plugin.getScoreboardManager().loadTeamCount();
-            if (sender.hasPermission("viking.admin")) {
+            Location mobSpawnLocation = plugin.getLocationManager().getMobLocation();
+            if (sender instanceof ConsoleCommandSender || sender.hasPermission("cs.admin")) {
                 if (mobSpawnLocation != null) {
                     mobManager.spawnCustomMob(plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
                 } else {
@@ -239,6 +191,8 @@ public class Commands implements CommandExecutor {
                 plugin.getTimer().startTimer(timerMinutes);
 
                 for (String line : configMsg.getStartMsg()) {
+                    line = line.replace("{attackers}", plugin.getConfigManager().getConfig().getString("attackersTeamName"));
+                    line = line.replace("{defenders}", plugin.getConfigManager().getConfig().getString("defendersTeamName"));
                     Bukkit.broadcastMessage(line);
                 }
                 if (plugin.getType().getState() == Type.Hardcore){
@@ -268,9 +222,9 @@ public class Commands implements CommandExecutor {
             Team team = Team.valueOf(teamName1);
             setSpawnLocation(team, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully!");
-            loadConfigValues();
+            plugin.getLocationManager().loadSpawnLocations();
         } catch (IllegalArgumentException e) {
-            player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: Vikings, Franks");
+            player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: Attackers, Defenders");
         }
 
         return true;
@@ -297,7 +251,7 @@ public class Commands implements CommandExecutor {
             Team[] teams = Team.values();
 
             for (Team team : teams) {
-                Location teamSpawn = spawnLocations.get(team);
+                Location teamSpawn = plugin.getLocationManager().getSpawnLocationForTeam(team);
                 if (teamSpawn != null) {
                     // Teleport players in the team to their spawn location
                     for (Player player : Bukkit.getOnlinePlayers()) {

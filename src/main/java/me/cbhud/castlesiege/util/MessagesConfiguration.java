@@ -35,11 +35,11 @@ public class MessagesConfiguration {
         return getMessages("notenoughtostart");
     }
     public List<String> getFranksWinMsg() {
-        return getMessages("frankswinmsg");
+        return getMessages("defenderswinmsg");
     }
 
     public List<String> getVikingsWinMsg() {
-        return getMessages("vikingswinmsg");
+        return getMessages("attackerswinmsg");
     }
 
     public List<String> getHardcoreMsg() {

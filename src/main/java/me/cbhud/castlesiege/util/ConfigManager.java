@@ -1,5 +1,6 @@
 package me.cbhud.castlesiege.util;
 
+import me.cbhud.castlesiege.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -66,8 +67,32 @@ public class ConfigManager {
         return config.getInt("auto-start-players", 5);
     }
 
+    public int getKc() {
+        return config.getInt("coins-on-kill", 1);
+    }
+    public int getWc() {
+        return config.getInt("coins-on-win", 3);
+    }
+
+
     public int getTntCooldown() {
         return config.getInt("tntCooldown", 120);
+    }
+
+    public String getTeamName(Team team){
+        if (team == Team.Attackers){
+            return config.getString("attackersTeamName");
+        }else{
+            return config.getString("defendersTeamName");
+        }
+    }
+
+    public String getAttacker() {
+        return config.getString("attackersTeamName");
+    }
+
+    public String getDefender() {
+        return config.getString("defendersTeamName");
     }
 
 

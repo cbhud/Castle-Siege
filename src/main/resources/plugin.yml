@@ -1,7 +1,7 @@
 name: CastleSiege
 main: me.cbhud.castlesiege.Main
 author: cbhud
-version: 1.2.1
+version: 1.2.4
 api-version: 1.17
 commands:
   cs:
@@ -11,3 +11,8 @@ commands:
   stats:
     description: Check player stats
     usage: /stats [player]
+  coins:
+    description: Manage player coins.
+    usage: /coins <set|add|remove> <player> <amount>
+    permission: cs.admin
+    permission-message: You do not have permission to use this command.

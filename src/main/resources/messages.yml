@@ -1,23 +1,23 @@
 startmsg:
   - "&7&m--------------------------"
-  - "&bFranks &fmust defend the King."
-  - "&bFranks &fwin when countdown is over."
+  - "&b{defenders} &fmust defend the King."
+  - "&b{defenders} &fwin when countdown is over."
   - ""
-  - "&cVikings &fmust kill the King."
-  - "&cVikings &flose when countdown is over."
+  - "&c{attackers} &fmust kill the King."
+  - "&c{attackers} &flose when countdown is over."
   - ""
   - "&aThe game has started!"
   - "&7&m--------------------------"
 
-vikingswinmsg:
+attackerswinmsg:
   - "&7&m--------------------------"
-  - "&cVikings conquered the castle"
-  - "{killer} &cslaughtered &e&lKing Charles"
+  - "&c{attackers} conquered the castle"
+  - "&e{killer} &cslaughtered &e&lKing Charles"
   - "&7&m--------------------------"
 
-frankswinmsg:
+defenderswinmsg:
   - "&7&m--------------------------"
-  - "&aFranks defended the castle!"
+  - "&a{defenders} defended the castle!"
   - "&e&lKing Charles &fhas survived the siege!"
   - "&7&m--------------------------"
 

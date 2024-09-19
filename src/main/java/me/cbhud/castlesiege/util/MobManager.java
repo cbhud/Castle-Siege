@@ -10,8 +10,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+
 import org.bukkit.inventory.ItemStack;
 
 public class MobManager implements Listener {
@@ -19,18 +18,19 @@ public class MobManager implements Listener {
     private final Main plugin;
     private final TeamManager teamManager;
     private Zombie kingZombie;
-    private Wolf wolf;
     private final ConfigManager configManager;
+    private final double TNT_DAMAGE;
 
     public MobManager(Main plugin, TeamManager teamManager, ConfigManager configManager) {
         this.plugin = plugin;
         this.teamManager = teamManager;
         this.configManager = configManager;
+        TNT_DAMAGE = configManager.getConfig().getDouble("tntDamage", 4);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     public void spawnCustomMob(ConfigurationSection mobConfig) {
-        Location spawnLocation = getLocationFromConfig(mobConfig);
+        Location spawnLocation = plugin.getLocationManager().getLocationFromConfig(mobConfig);
 
         if (spawnLocation == null) {
             // Handle case where spawnLocation is null
@@ -53,22 +53,6 @@ public class MobManager implements Listener {
 
         // Add a golden helmet to the zombie
         kingZombie.getEquipment().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
-    }
-
-    private static Location getLocationFromConfig(ConfigurationSection config) {
-        double x = config.getDouble("x");
-        double y = config.getDouble("y");
-        double z = config.getDouble("z");
-        float yaw = (float) config.getDouble("yaw");
-        float pitch = (float) config.getDouble("pitch");
-
-        String worldName = config.getString("world");
-        if (worldName == null) {
-            return null;
-        }
-
-        // Create and return the Location object
-        return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
     }
 
 
@@ -110,12 +94,11 @@ public class MobManager implements Listener {
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                if (plugin.getTeamManager().getTeam(player) == Team.Vikings) {
-                    event.setCancelled(true);
+                if (plugin.getTeamManager().getTeam(player) != Team.Attackers) {
+                    event.setDamage(TNT_DAMAGE);
                 }
             }
 
-            event.setDamage(4.0);
 
         }
 
@@ -124,7 +107,7 @@ public class MobManager implements Listener {
 
                 Team damagerTeam = teamManager.getTeam(damager);
 
-                if (damagerTeam == Team.Franks || damagerTeam == null) {
+                if (damagerTeam == Team.Defenders || damagerTeam == null) {
                     event.setCancelled(true);
                 }
             } else if (event.getDamager() instanceof Projectile) {
@@ -134,7 +117,7 @@ public class MobManager implements Listener {
                     Player shooter = (Player) projectile.getShooter();
                     Team shooterTeam = teamManager.getTeam(shooter);
 
-                    if (shooterTeam == Team.Franks|| shooterTeam == null) {
+                    if (shooterTeam == Team.Defenders || shooterTeam == null) {
                         event.setCancelled(true);
                     }
                 }

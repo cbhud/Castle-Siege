@@ -1,8 +1,20 @@
 ##MAX PLAYERS IN TEAM
 maxPlayersPerTeam: 16
 
+##CHANGE TEAM NAMES
+attackersTeamName: Vikings
+defendersTeamName: Franks
+
+##AUTOSTART ADJUSTMENTS
+auto-start-players: 8
+auto-start-countdown: 60
+
 ## TIME BEFORE VIKINGS HAS TO KILL THE KING
 timerMinutes: 8
+
+##ADJUST COINS PER KILL AND WIN
+coins-on-win: 3
+coins-on-kill: 1
 
 ### ADJUST KING HEALTH NOTE IT SHOULD BE WITH ONE DECIMAL EXAMPLE : 80.0
 king-health: 80.0
@@ -10,6 +22,12 @@ king-health: 80.0
 ## ADJUST BOMBARDIER KIT TNT COOLDOWN TO YOUR NEEDS
 tntCooldown: 120
 
+## ADJUST TNT DAMAGE TO FRANKS
+tntDamage: 6.0
+
+
+#####################################
+##ADJUST SCOREBOARD
 scoreboard-title: 'Castle Siege'
 scoreboard-bottomline: 'serverip.net'
 
@@ -23,14 +41,10 @@ bottom-color: AQUA
 
 main-color: YELLOW
 secondary-color: WHITE
-
-auto-start-players: 8
-auto-start-countdown: 60
-
+######################################
 
 ##SET THIS INGAME VIA COMMANDS
-
-
+##YOU CAN SET SPAWNS IN-GAME /cs setlobby /cs teamspawn ATTACKERS/DEFENDERS /cs setmobspawn
 spawnLocations:
   vikings:
     world: world

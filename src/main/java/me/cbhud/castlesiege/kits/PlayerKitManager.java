@@ -1,5 +1,6 @@
 package me.cbhud.castlesiege.kits;
 
+import me.cbhud.castlesiege.Main;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -9,8 +10,11 @@ import java.util.Map;
 
 public class PlayerKitManager {
     private final Map<Player, KitType> selectedKits;
+    private Main plugin;
 
-    public PlayerKitManager() {
+    public PlayerKitManager(Main plugin) {
+
+        this.plugin = plugin;
         this.selectedKits = new HashMap<>();
     }
 
@@ -34,8 +38,14 @@ public class PlayerKitManager {
     }
 
 
-    public void selectKit(Player player, KitType kitType) {
+    public boolean selectKit(Player player, KitType kitType) {
+        if (plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), kitType.toString())){
         selectedKits.put(player, kitType);
+        plugin.getScoreboardManager().updateScoreboard(player);
+        return true;
+        }
+            return false;
+
     }
 
     public KitType getSelectedKit(Player player) {
@@ -48,6 +58,25 @@ public class PlayerKitManager {
 
         if (defaultKit != null) {
             selectKit(player, defaultKit);
+        }
+    }
+
+    public int getKitPrice(KitType kit) {
+        switch (kit) {
+            case BERSERKER:
+                return 40;
+            case BOMBARDIER:
+                return 30;
+            case WARRIOR:
+                return 80;
+            case KNIGHT:
+                return 90;
+            case SPEARMAN:
+                return 20;
+            case WIZARD:
+                return 45;
+            default:
+                return 0;
         }
     }
 

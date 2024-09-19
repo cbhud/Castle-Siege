@@ -23,8 +23,13 @@ public class TeamManager {
     public boolean joinTeam(Player player, Team team) {
         // Check if the team has reached the maximum number of players
         if (getPlayersInTeam(team) >= maxPlayersPerTeam) {
-            player.sendMessage("§cThe " + team + " team is full!");
-            return false;
+            if (team == Team.Attackers){
+                player.sendMessage("§cThe " + plugin.getConfigManager().getConfig().getString("attackersTeamName") + " team is full!");
+            return false;}
+            if (team == Team.Defenders){
+                player.sendMessage("§cThe " + plugin.getConfigManager().getConfig().getString("defendersTeamName") + " team is full!");
+                return false;}
+
         }
 
         // Get the current team of the player
@@ -37,6 +42,7 @@ public class TeamManager {
 
         // Add the player to the new team
         playerTeams.put(player.getUniqueId().toString(), team);
+        plugin.getPlayerKitManager().setDefaultKit(player, team);
 
         // Update the lobby scoreboard for the new team
         plugin.getScoreboardManager().updateLobbyScoreboardForTeam(team);

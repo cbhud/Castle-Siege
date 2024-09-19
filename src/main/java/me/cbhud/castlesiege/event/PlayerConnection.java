@@ -9,7 +9,6 @@ import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,40 +19,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class PlayerJoin implements Listener {
+public class PlayerConnection implements Listener {
     private final Main plugin;
     private final TeamManager teamManager;
     private final Timers autostartInstance;
     private final ConfigManager configManager;
-    private Location lobbyLocation;
-    private Location mobLocation;
 
-    public PlayerJoin(Main plugin, TeamManager teamManager, Timers autostartInstance, ConfigManager configManager) {
+    public PlayerConnection(Main plugin, TeamManager teamManager, Timers autostartInstance, ConfigManager configManager) {
         this.plugin = plugin;
         this.teamManager = teamManager;
         this.autostartInstance = autostartInstance;
         this.configManager = configManager;
-        loadLocations();
-    }
-
-    private void loadLocations() {
-        FileConfiguration config = plugin.getConfig();
-        if (config.contains("lobby.world")) {
-            lobbyLocation = getLocation(config, "lobby");
-        }
-        if (config.contains("mobSpawnLocation")) {
-            mobLocation = getLocation(config, "mobSpawnLocation");
-        }
-    }
-
-    private Location getLocation(FileConfiguration config, String key) {
-        String worldName = config.getString(key + ".world");
-        double x = config.getDouble(key + ".x");
-        double y = config.getDouble(key + ".y");
-        double z = config.getDouble(key + ".z");
-        float yaw = (float) config.getDouble(key + ".yaw");
-        float pitch = (float) config.getDouble(key + ".pitch");
-        return new Location(plugin.getServer().getWorld(worldName), x, y, z, yaw, pitch);
     }
 
     @EventHandler
@@ -65,7 +41,7 @@ public class PlayerJoin implements Listener {
         }
         if (plugin.getGame().getState() == GameState.LOBBY) {
             tryRandomTeamJoin(player);
-            teleport(player, lobbyLocation, "Lobby");
+            teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
             plugin.getPlayerManager().setPlayerAsLobby(player);
             int onlinePlayers = Bukkit.getOnlinePlayers().size();
             if (onlinePlayers >= configManager.getAutoStartPlayers()) {
@@ -78,12 +54,12 @@ public class PlayerJoin implements Listener {
             if (!tryRandomTeamJoin(player)) {
                 player.sendTitle(ChatColor.GRAY + "Both teams are full, ", ChatColor.GRAY + "wait until the game finishes in spectator.", 10, 70, 20);
                 plugin.getPlayerManager().setPlayerAsSpectator(player);
-                teleport(player, lobbyLocation, "Lobby");
+                teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
             }
         } else {
             player.sendTitle(ChatColor.GRAY + "You are spectating now!", ChatColor.GRAY + "Wait until the game finishes.", 10, 70, 20);
             plugin.getPlayerManager().setPlayerAsSpectator(player);
-            teleport(player, mobLocation, "Mob spawn location");
+            teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
         }
     }
 
@@ -96,7 +72,7 @@ public class PlayerJoin implements Listener {
                 plugin.getGameEndHandler().setWinner(null);
                 plugin.getGameEndHandler().handleGameEnd();
             } else if (plugin.getScoreboardManager().getVikings() < 1) {
-                plugin.getGameEndHandler().setWinner(Team.Franks);
+                plugin.getGameEndHandler().setWinner(Team.Defenders);
                 plugin.getGameEndHandler().handleGameEnd();
             }
         }

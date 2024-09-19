@@ -10,8 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,20 +22,10 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.UUID;
 
 public class PlayerDeathHandler implements Listener {
-
     private final Main plugin;
-    private Location teamVikingSpawn;
-    private Location teamFranksSpawn;
 
     public PlayerDeathHandler(Main plugin) {
         this.plugin = plugin;
-        loadSpawnLocations();
-    }
-
-    private void loadSpawnLocations() {
-        FileConfiguration config = plugin.getConfig();
-        teamVikingSpawn = getSpawnLocationForTeam(config, Team.Vikings);
-        teamFranksSpawn = getSpawnLocationForTeam(config, Team.Franks);
     }
 
     @EventHandler
@@ -51,7 +39,7 @@ public class PlayerDeathHandler implements Listener {
                 UUID killerId = (killer != null) ? killer.getUniqueId() : null;
                 plugin.getDbConnection().incrementDeaths(playerId);
                 if (killerId != null) {
-                    plugin.getDbConnection().incrementKills(killerId);
+                    plugin.getDbConnection().incrementKills(killerId, plugin.getConfigManager().getKc());
                 }
             });
 
@@ -61,7 +49,7 @@ public class PlayerDeathHandler implements Listener {
                 plugin.getScoreboardManager().decrementTeamPlayersCount(player);
                 player.sendTitle(ChatColor.RED + "You have died!", ChatColor.GRAY + "Better luck next time!", 10, 70, 20);
                 if (plugin.getScoreboardManager().getVikings() < 1) {
-                    plugin.getGameEndHandler().setWinner(Team.Franks);
+                    plugin.getGameEndHandler().setWinner(Team.Defenders);
                     plugin.getGameEndHandler().handleGameEnd();
                 }
                 if (killer != null) {
@@ -78,19 +66,12 @@ public class PlayerDeathHandler implements Listener {
             player.sendTitle(ChatColor.RED + "You died!", ChatColor.GRAY + "Respawning... 5 seconds", 10, 70, 20);
 
             Team team = plugin.getTeamManager().getTeam(player);
-            Location spawnLocation = getSpawnLocationForTeam(team);
 
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if (spawnLocation != null) {
                     player.spigot().respawn();
-                    player.teleport(spawnLocation);
+                    player.teleport(plugin.getLocationManager().getSpawnLocationForTeam(team));
                     plugin.getPlayerManager().setPlayerAsPlaying(player);
                     plugin.getPlayerKitManager().giveKit(player, plugin.getPlayerKitManager().getSelectedKit(player));
-                } else {
-                    // Handle the case where the spawn location is null (not found)
-                    // You may want to log a warning or take appropriate action
-                    plugin.getLogger().warning("Spawn location not found for team: " + team);
-                }
             }, 5 * 20); // 5 seconds
         }
 
@@ -102,32 +83,7 @@ public class PlayerDeathHandler implements Listener {
         }
     }
 
-    private Location getSpawnLocationForTeam(Team team) {
-        return team == Team.Vikings ? teamVikingSpawn : (team == Team.Franks ? teamFranksSpawn : null);
-    }
 
-    private Location getSpawnLocationForTeam(FileConfiguration config, Team team) {
-        String path = "spawnLocations." + team.toString().toLowerCase();
-        if (config.contains(path)) {
-            return getLocationFromConfig(config.getConfigurationSection(path));
-        } else {
-            plugin.getLogger().warning("Spawn location not set for team: " + team);
-            return null;
-        }
-    }
-
-    private Location getLocationFromConfig(ConfigurationSection config) {
-        double x = config.getDouble("x");
-        double y = config.getDouble("y");
-        double z = config.getDouble("z");
-        float yaw = (float) config.getDouble("yaw");
-        float pitch = (float) config.getDouble("pitch");
-        String worldName = config.getString("world");
-        if (worldName == null) {
-            return null;
-        }
-        return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
-    }
 
     // Adding KillEffects functionality
     private void applyKillEffects(Player player, KitType kitType) {
@@ -177,7 +133,7 @@ public class PlayerDeathHandler implements Listener {
         for (Entity entity : blastLocation.getWorld().getNearbyEntities(blastLocation, blastRadius, blastRadius, blastRadius)) {
             if (entity instanceof Player) {
                 Player nearbyPlayer = (Player) entity;
-                if (plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Vikings) {
+                if (plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Attackers) {
                     nearbyPlayer.damage(blastDamage, wizard);
                 }
             }

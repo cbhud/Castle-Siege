@@ -1,5 +1,8 @@
 package me.cbhud.castlesiege.gui;
 
+import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.team.Team;
+import me.cbhud.castlesiege.util.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,12 +45,17 @@ public class Manager implements InventoryHolder {
     // GUIs
     private final Inventory teamSelector;
     private final Inventory kitSelector;
+    private ConfigManager configManager;
+    private static String teamA;
+    private static String teamB;
 
-    public Manager() {
+    public Manager(ConfigManager configManager) {
         this.inv = Bukkit.createInventory(this, 9, ChatColor.YELLOW + "Select Team");
         this.teamSelector = new TeamSelector().getInventory();
         this.kitSelector = new KitSelector().getInventory();
-
+        this.configManager = configManager;
+        teamA = configManager.getAttacker();
+        teamB = configManager.getDefender();
         initItems();
     }
 
@@ -237,10 +245,11 @@ public class Manager implements InventoryHolder {
         support = item;
     }
 
+
     public static ItemStack createVikingTeamItem() {
         ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RED + "Vikings");
+        meta.setDisplayName(ChatColor.RED + teamA);
         meta.setLore(Collections.singletonList(ChatColor.YELLOW + "Assassin the king and conquer the castle"));
         item.setItemMeta(meta);
         return item;
@@ -249,18 +258,10 @@ public class Manager implements InventoryHolder {
     public static ItemStack createFranksTeamItem() {
         ItemStack item = new ItemStack(Material.CYAN_STAINED_GLASS_PANE, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.BLUE + "Franks");
-        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "Defend the castle and king from Vikings"));
+        meta.setDisplayName(ChatColor.BLUE + teamB);
+        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "Defend the castle and king"));
         item.setItemMeta(meta);
         return item;
-    }
-
-    public Inventory getTeamSelector() {
-        return teamSelector;
-    }
-
-    public Inventory getKitSelector() {
-        return kitSelector;
     }
 
     @Override

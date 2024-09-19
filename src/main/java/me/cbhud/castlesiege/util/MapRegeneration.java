@@ -36,7 +36,7 @@ public class MapRegeneration implements Listener {
             Location location = event.getBlock().getLocation();
             originalBlockStates.put(location, Material.OAK_FENCE);
             changedBlocks.put(location, Material.AIR);
-            if(plugin.getTeamManager().getTeam(player) == Team.Franks){
+            if(plugin.getTeamManager().getTeam(player) == Team.Defenders){
                 player.getInventory().addItem(new ItemStack(Material.OAK_FENCE, 1));
             }
 
@@ -58,7 +58,7 @@ public class MapRegeneration implements Listener {
 
         Player player = (Player) event.getPlayer();
 
-        if (plugin.getGame().getState() == GameState.IN_GAME && event.getBlock().getType() == Material.OAK_FENCE && plugin.getTeamManager().getTeam(player) ==  Team.Franks){
+        if (plugin.getGame().getState() == GameState.IN_GAME && event.getBlock().getType() == Material.OAK_FENCE && plugin.getTeamManager().getTeam(player) ==  Team.Defenders){
                 event.setCancelled(false);
                 Location location = event.getBlock().getLocation();
                 originalBlockStates.put(location, Material.AIR);

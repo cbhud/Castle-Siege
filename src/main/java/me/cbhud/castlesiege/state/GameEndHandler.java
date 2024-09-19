@@ -3,7 +3,6 @@ package me.cbhud.castlesiege.state;
 import me.cbhud.castlesiege.*;
 import me.cbhud.castlesiege.util.ConfigManager;
 import me.cbhud.castlesiege.util.MessagesConfiguration;
-import me.cbhud.castlesiege.util.TNTThrower;
 import me.cbhud.castlesiege.util.Timers;
 import org.bukkit.*;
 import org.bukkit.plugin.*;
@@ -65,7 +64,7 @@ public class GameEndHandler implements Listener
             else {
                 GameEndHandler.killername = "unknown";
             }
-            setWinner(Team.Vikings);
+            setWinner(Team.Attackers);
             this.plugin.getGameEndHandler().handleGameEnd();
         }
     }
@@ -76,7 +75,7 @@ public class GameEndHandler implements Listener
             if (winner != null) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (plugin.getTeamManager().getTeam(player) == winner) {
-                        plugin.getDbConnection().incrementWins(player.getUniqueId());
+                        plugin.getDbConnection().incrementWins(player.getUniqueId(), plugin.getConfigManager().getWc());
                     }
                 }
             }
@@ -126,31 +125,33 @@ public class GameEndHandler implements Listener
     private void broadcastWinnerMessage() {
         if (winner != null) {
             String winnerName = winner.toString(); // Assumes that your Team enum has a proper toString method
-            if ("VIKINGS".equalsIgnoreCase(winnerName)) {
+            if ("Attackers".equalsIgnoreCase(winnerName)) {
                 for (String line : msgConfig.getVikingsWinMsg()) {
                     line = line.replace("{killer}", getKillername());
+                    line = line.replace("{attackers}", configManager.getAttacker());
                     Bukkit.broadcastMessage(line);
                 }
 
                 // Play Ender Dragon growl sound for VIKINGS win
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.RED + "Vikings", ChatColor.YELLOW + "won the game", 10, 70, 20);
+                    player.sendTitle(ChatColor.RED + configManager.getConfig().getString("attackersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.MASTER, 1.0f, 0.9f);
                 }
             } else {
 
                 for (String line : msgConfig.getFranksWinMsg()) {
+                    line = line.replace("{defenders}", configManager.getDefender());
                     Bukkit.broadcastMessage(line);
                 }
 
                 // Play Note Block chime sound for FRANKS win
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.BLUE + "Franks", ChatColor.YELLOW + "won the game", 10, 70, 20);
+                    player.sendTitle(ChatColor.BLUE + configManager.getConfig().getString("defendersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1.0f, 0.9f);
                 }
             }
         } else {
-            Bukkit.broadcastMessage(ChatColor.RED + "Winner is noone both teams have disconnected.");
+            Bukkit.broadcastMessage(ChatColor.RED + "Winner is nobody, both teams have disconnected.");
         }
     }
 

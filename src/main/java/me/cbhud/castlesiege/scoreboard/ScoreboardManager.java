@@ -31,6 +31,14 @@ public class ScoreboardManager {
         this.scoreboards = new HashMap<>();
     }
 
+    public String getTeamName(Team team) {
+        if (team == Team.Attackers) {
+            return configManager.getConfig().getString("attackersTeamName");
+        } else {
+            return configManager.getConfig().getString("defendersTeamName");
+        }
+    }
+
     private int vikings;
     private int franks;
 
@@ -71,12 +79,14 @@ public class ScoreboardManager {
         board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
         Team team = teamManager.getTeam(player);
         board.updateLine(4, " ");
-        board.updateLine(5, mainColor +"Team: " +secondaryColor+ (team != null ? team.toString() : "No Team"));
+        board.updateLine(5, mainColor +"Team: " +secondaryColor+ (team != null ? getTeamName(team) : "No Team"));
         board.updateLine(6, " ");
         board.updateLine(7, mainColor +"Kit: " +secondaryColor+ (plugin.getPlayerKitManager().hasSelectedKit(player) ?
                 plugin.getPlayerKitManager().getSelectedKit(player).getDisplayName() : "Select kit"));
-        board.updateLine(8," ");
-        board.updateLine(9, bottomline);
+        board.updateLine(8, " ");
+        board.updateLine(9, mainColor +"Coins: " +secondaryColor+ plugin.getDbConnection().getPlayerCoins(player.getUniqueId()));
+        board.updateLine(10," ");
+        board.updateLine(11, bottomline);
     }
 
     private void setupInGameScoreboard(FastBoard board) {
@@ -104,7 +114,7 @@ public class ScoreboardManager {
         board.updateTitle(title);
         board.updateLines("");
         board.updateLine(0, " ");
-        board.updateLine(1, mainColor +"Winners: " + secondaryColor + plugin.getGameEndHandler().getWinner());
+        board.updateLine(1, mainColor +"Winners: " + secondaryColor + getTeamName(plugin.getGameEndHandler().getWinner()));
         board.updateLine(2, " ");
         board.updateLine(7, bottomline);
     }
@@ -125,10 +135,10 @@ public class ScoreboardManager {
 
     public void loadTeamCount() {
         vikings = (int) Bukkit.getOnlinePlayers().stream()
-                .filter(p -> teamManager.getTeam(p) == Team.Vikings)
+                .filter(p -> teamManager.getTeam(p) == Team.Attackers)
                 .count();
         franks = (int) Bukkit.getOnlinePlayers().stream()
-                .filter(p -> teamManager.getTeam(p) == Team.Franks)
+                .filter(p -> teamManager.getTeam(p) == Team.Defenders)
                 .count();
     }
 
@@ -167,11 +177,13 @@ public class ScoreboardManager {
         board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
         Team team = teamManager.getTeam(player);
         board.updateLine(4, " ");
-        board.updateLine(5, mainColor +"Team: " + secondaryColor + (team != null ? team.toString() : "No Team"));
+        board.updateLine(5, mainColor +"Team: " + secondaryColor + (team != null ? getTeamName(team) : "No Team"));
         board.updateLine(6, " ");
         board.updateLine(7, mainColor +"Kit: " + secondaryColor + (plugin.getPlayerKitManager().hasSelectedKit(player) ? plugin.getPlayerKitManager().getSelectedKit(player).getDisplayName() : "Select kit"));
-        board.updateLine(8, "");
-        board.updateLine(9, bottomline);
+        board.updateLine(8, " ");
+        board.updateLine(9, mainColor +"Coins: " +secondaryColor+ plugin.getDbConnection().getPlayerCoins(player.getUniqueId()));
+        board.updateLine(10," ");
+        board.updateLine(11, bottomline);
     }
 
     // Updated method to include the team parameter
@@ -196,12 +208,13 @@ public class ScoreboardManager {
         int secondsLeft = plugin.getTimer().getSecondsLeft();
         board.updateLine(1, mainColor +"Countdown: " + secondaryColor + formatTime(secondsLeft));
         Zombie king = mobManager.getKingZombie();
+        board.updateLine(2, " ");
         double kingHealth = mobManager.getZombieHealth(king);
         board.updateLine(3, mainColor +"King's Health: " + secondaryColor + (int) kingHealth);
-        board.updateLine(5, mainColor +"Vikings: " + secondaryColor + vikings);
-        board.updateLine(7, mainColor +"Franks: " + secondaryColor + franks);
-        board.updateLine(8, " ");
-        board.updateLine(9, bottomline);
+        board.updateLine(4, " ");
+        board.updateLine(5, mainColor + getTeamName(Team.Defenders) +": " + secondaryColor + franks);
+        board.updateLine(6, " ");
+        board.updateLine(7, mainColor + getTeamName(Team.Attackers) +": " + secondaryColor + vikings);
     }
 
     private void updateEndScoreboard(FastBoard board) {
@@ -215,7 +228,7 @@ public class ScoreboardManager {
         String title = titleColor + "§l" + configManager.getTitle();
         String bottomline = bottomColor + configManager.getBottomline();
         board.updateLine(0, " ");
-        board.updateLine(1, mainColor + "Winnners: " + secondaryColor + plugin.getGameEndHandler().getWinner());
+        board.updateLine(1, mainColor + "Winnners: " + secondaryColor + getTeamName(plugin.getGameEndHandler().getWinner()));
         board.updateLine(2, " ");
         board.updateLine(3, bottomline);
     }
@@ -228,11 +241,11 @@ public class ScoreboardManager {
         Team team = teamManager.getTeam(player);
         if (team != null) {
                 switch (team) {
-                    case Franks:
+                    case Defenders:
                         if(franks > 0){
                         franks--;}
                         break;
-                    case Vikings:
+                    case Attackers:
                         if(vikings > 0) {
                             vikings--;
                         }

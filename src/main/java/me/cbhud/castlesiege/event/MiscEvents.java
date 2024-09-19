@@ -45,10 +45,10 @@ public class MiscEvents implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        if (player.isOp() || player.hasPermission("viking.admin")) return;
+        if (player.isOp() || player.hasPermission("cs.admin")) return;
 
         if (plugin.getGame().getState() == GameState.IN_GAME &&
-                plugin.getTeamManager().getTeam(player) == Team.Franks &&
+                plugin.getTeamManager().getTeam(player) == Team.Defenders &&
                 event.getItem().getItemStack().getType() == Material.OAK_FENCE) {
             return;
         }
@@ -67,54 +67,93 @@ public class MiscEvents implements Listener {
             event.setCancelled(true);
             switch (event.getCurrentItem().getType()) {
                 case RED_STAINED_GLASS_PANE:
-                    plugin.getPlayerKitManager().setDefaultKit(player, Team.Vikings);
-                    plugin.getTeamManager().joinTeam(player, Team.Vikings);
+                    plugin.getTeamManager().joinTeam(player, Team.Attackers);
                     break;
                 case CYAN_STAINED_GLASS_PANE:
-                    plugin.getPlayerKitManager().setDefaultKit(player, Team.Franks);
-                    plugin.getTeamManager().joinTeam(player, Team.Franks);
+                    plugin.getTeamManager().joinTeam(player, Team.Defenders);
                     break;
             }
-        } else if (event.getClickedInventory().getHolder() instanceof KitSelector) {
+        }
+        // Handle kit selection and purchase
+        else if (event.getClickedInventory().getHolder() instanceof KitSelector) {
             event.setCancelled(true);
+
+            KitType selectedKit = null;
             switch (event.getCurrentItem().getType()) {
                 case IRON_AXE:
-                    updateKit(player, KitType.BERSERKER);
+                    selectedKit = KitType.BERSERKER;
                     break;
                 case BOW:
-                    updateKit(player, KitType.SKALD);
+                    selectedKit = KitType.SKALD;
                     break;
                 case TNT:
-                    updateKit(player, KitType.BOMBARDIER);
+                    selectedKit = KitType.BOMBARDIER;
                     break;
                 case IRON_SWORD:
-                    updateKit(player, KitType.WARRIOR);
+                    selectedKit = KitType.WARRIOR;
                     break;
                 case SHIELD:
-                    updateKit(player, KitType.KNIGHT);
+                    selectedKit = KitType.KNIGHT;
                     break;
                 case TRIDENT:
-                    updateKit(player, KitType.SPEARMAN);
+                    selectedKit = KitType.SPEARMAN;
                     break;
                 case SPLASH_POTION:
-                    updateKit(player, KitType.WIZARD);
+                    selectedKit = KitType.WIZARD;
                     break;
                 case CROSSBOW:
-                    updateKit(player, KitType.MARKSMAN);
+                    selectedKit = KitType.MARKSMAN;
                     break;
             }
 
+            if (selectedKit != null) {
+                // Right-click to attempt to buy the kit
+                if (event.isRightClick()) {
+                    int kitPrice = plugin.getPlayerKitManager().getKitPrice(selectedKit); // Get the kit price
+
+                    if (plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), selectedKit.name())){
+                        player.sendMessage("§aYou alreday own this kit!");
+                        return;
+                    }
+
+                    if (plugin.getDbConnection().removePlayerCoins(player.getUniqueId(), kitPrice)) {
+                        // Successfully purchased, update player kits table
+                        plugin.getDbConnection().unlockPlayerKit(player.getUniqueId(), selectedKit);
+                        player.sendMessage("§aYou have successfully purchased the " + selectedKit + " kit!");
+
+                    } else if(!plugin.getDbConnection().removePlayerCoins(player.getUniqueId(), kitPrice)) {
+                        player.sendMessage("§cYou do not have enough coins to purchase this kit. You need " + kitPrice + " coins to purchase this kit!");
+                    }
+                }
+                // Left-click to select the kit
+                else if (event.isLeftClick()) {
+                    boolean hasKit = plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), selectedKit.name());
+
+                    if (hasKit) {
+                        if (plugin.getTeamManager().getTeam(player) != selectedKit.getTeam()){
+                            player.sendMessage("§cYou can't select opposing team kit");
+                            return;
+                        }
+                        plugin.getPlayerKitManager().selectKit(player, selectedKit);
+                        player.sendMessage("§aYou have selected the " + selectedKit + " kit!");
+                    } else {
+                        player.sendMessage("§cYou do not have this kit unlocked. Right-click to purchase it.");
+                    }
+                }
+            }
         }
     }
 
     private void updateKit(Player player, KitType kitType) {
-        if (plugin.getPlayerKitManager().getSelectedKit(player).equals(kitType)) {
-            return;
-        }
-        if (kitType.getTeam().equals(plugin.getTeamManager().getTeam(player))) {
-            plugin.getPlayerKitManager().selectKit(player, kitType);
-            player.sendMessage("§aYou have selected the" + plugin.getPlayerKitManager().getSelectedKit(player).toString() + " kit.");
-            plugin.getScoreboardManager().updateScoreboard(player);
+        if (!plugin.getPlayerKitManager().getSelectedKit(player).equals(kitType)) {
+            if (kitType.getTeam().equals(plugin.getTeamManager().getTeam(player))) {
+                if (!plugin.getPlayerKitManager().selectKit(player, kitType)) {
+                    player.sendMessage("§cYou need to purchase " + kitType + " kit to use it!");
+                    return;
+                }
+                plugin.getPlayerKitManager().selectKit(player, kitType);
+                player.sendMessage("§aYou have selected the " + kitType + " kit.");
+            }
         }
     }
 

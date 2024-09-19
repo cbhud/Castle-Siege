@@ -33,6 +33,7 @@ public class Main extends JavaPlugin
     private TeamSelector teamSelector;
     private KitSelector kitSelector;
     private MobManager mobManager;
+    private LocationManager locationManager;
     private Manager manager;
     private PlayerKitManager playerKitManager;
     private DataManager dataManager;
@@ -53,22 +54,25 @@ public class Main extends JavaPlugin
 
         this.game = new Game(this);
         this.type = new TypeManager(this);
-        this.playerKitManager = new PlayerKitManager();
+        this.playerKitManager = new PlayerKitManager(this);
         this.teamManager = new TeamManager(this, this.getConfig());
         this.playerManager = new PlayerManager(this, teamManager);
         this.mobManager = new MobManager(this, this.teamManager, configManager);
+        this.locationManager = new LocationManager(this);
         this.timers = new Timers(this, configManager, messagesConfig);
         this.gameEndHandler = new GameEndHandler(this, configManager, this.timers,messagesConfig);
-        manager = new Manager();
+        this.saveDefaultConfig();
+        this.reloadConfig();
+        manager = new Manager(configManager);
         this.getCommand("stats").setExecutor(new StatsCommand(dataManager));
+        this.getCommand("coins").setExecutor(new CoinsCommand(this));
         this.getCommand("cs").setExecutor(new Commands(this, teamManager, mobManager, messagesConfig));
-        this.getServer().getPluginManager().registerEvents(new PlayerJoin(this, this.teamManager, this.timers, configManager), (Plugin)this);
+        this.getServer().getPluginManager().registerEvents(new PlayerConnection(this, this.teamManager, this.timers, configManager), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeathHandler(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new RightClickEffects(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new MiscEvents(this), (Plugin)this);
-        this.saveDefaultConfig();
-        this.reloadConfig();
+
         this.teamSelector = new TeamSelector();
         this.kitSelector = new KitSelector();
         this.scoreboardManager = new ScoreboardManager(this, this.teamManager, this.mobManager, configManager);
@@ -140,4 +144,6 @@ public class Main extends JavaPlugin
     public MapRegeneration getMapRegeneration() {
         return mapRegeneration;
     }
+
+    public LocationManager getLocationManager(){return  locationManager;}
 }

@@ -18,7 +18,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
-import java.util.UUID;
 
 public class RightClickEffects implements Listener {
 
@@ -42,7 +41,7 @@ public class RightClickEffects implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK){
             return;}
 
-        if (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR && plugin.getTeamManager().getTeam(player) == Team.Vikings && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe) || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK && plugin.getTeamManager().getTeam(player) == Team.Vikings && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe)) {
+        if (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR && plugin.getTeamManager().getTeam(player) == Team.Attackers && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe) || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK && plugin.getTeamManager().getTeam(player) == Team.Attackers && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe)) {
             try {
                 Item axe = player.getWorld().dropItem(player.getEyeLocation(), player.getInventory().getItemInMainHand());
                 axe.setVelocity(player.getEyeLocation().getDirection().multiply(1.75));
@@ -118,7 +117,7 @@ public class RightClickEffects implements Listener {
         if (item.getItemMeta().equals(Manager.attack.getItemMeta())) {
             for (Player nearbyPlayer : player.getWorld().getPlayers()) {
                 if (nearbyPlayer.getLocation().distance(player.getLocation()) <= 10 &&
-                        plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Vikings) {
+                        plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Attackers) {
                     applyRandomEffect(nearbyPlayer);
                     player.sendMessage(ChatColor.RED + "You cast spell on your opponents");
                 }
@@ -129,7 +128,7 @@ public class RightClickEffects implements Listener {
         if (item.getItemMeta().equals(Manager.support.getItemMeta())) {
             for (Player nearbyPlayer : player.getWorld().getPlayers()) {
                 if (nearbyPlayer.getLocation().distance(player.getLocation()) <= 10 &&
-                        plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Franks) {
+                        plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Defenders) {
                     applyRandomSupportEffect(nearbyPlayer);
                     player.sendMessage(ChatColor.GREEN + "You cast spell on your teammates helping them");
                 }
