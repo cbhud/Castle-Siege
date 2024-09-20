@@ -53,6 +53,7 @@ public class Timers {
                 cancelCountdown(); // Cancel the repeating task after starting the game
                 Bukkit.broadcastMessage(ChatColor.GREEN + "Starting the game!");
                 String command = "cs start";
+                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 Bukkit.dispatchCommand(console, command);
             }
         }, 0L, 20L); // 20 ticks per second
