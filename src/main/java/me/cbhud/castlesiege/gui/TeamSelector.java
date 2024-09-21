@@ -46,12 +46,17 @@ public class TeamSelector {
         Player player = (Player) event.getWhoClicked();
         if (event.getClickedInventory() == null || event.getCurrentItem() == null) return;
 
+        event.setCancelled(true);
+
         if (event.isRightClick()) {
-            plugin.getTeamManager().joinTeam(player, team); // Method to handle the team joining logic
+            plugin.getTeamManager().joinTeam(player, team);
+            gui.close(player);// Method to handle the team joining logic
         }
         // Left-click to select the kit
         else if (event.isLeftClick()) {
             plugin.getTeamManager().joinTeam(player, team); // Method to handle the team joining logic
+            gui.close(player);// Method to handle the team joining logic
+
         }
 
     }

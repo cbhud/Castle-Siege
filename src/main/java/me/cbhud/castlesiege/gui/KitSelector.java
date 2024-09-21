@@ -93,6 +93,7 @@ public class KitSelector {
         // Left-click to select the kit
         else if (event.isLeftClick()) {
             selectKit(player, selectedKit);
+            gui.close(player);// Method to handle the team joining logic
         }
     }
 
