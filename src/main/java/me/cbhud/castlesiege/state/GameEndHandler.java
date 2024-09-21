@@ -1,7 +1,6 @@
 package me.cbhud.castlesiege.state;
 
 import me.cbhud.castlesiege.*;
-import me.cbhud.castlesiege.util.MobManager;
 import org.bukkit.*;
 import org.bukkit.plugin.*;
 import org.bukkit.event.entity.*;
@@ -144,7 +143,7 @@ public class GameEndHandler implements Listener
                 }
             }
         } else {
-            Bukkit.broadcastMessage(ChatColor.RED + "Winner is nobody, both teams have disconnected.");
+            Bukkit.broadcastMessage(ChatColor.RED + "Game cancelled, both teams have disconnected.");
         }
     }
 

@@ -13,10 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 public class PlayerConnection implements Listener {
     private final CastleSiege plugin;
 
@@ -33,9 +29,8 @@ public class PlayerConnection implements Listener {
             plugin.getDbConnection().createProfileIfNotExists(player.getUniqueId(), player.getName());
         }
         if (plugin.getGame().getState() == GameState.LOBBY) {
-            tryRandomTeamJoin(player);
-            teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
             plugin.getPlayerManager().setPlayerAsLobby(player);
+            teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
             int onlinePlayers = Bukkit.getOnlinePlayers().size();
             if (onlinePlayers >= plugin.getConfigManager().getAutoStartPlayers()) {
                 plugin.getTimer().checkAutoStart(onlinePlayers);
@@ -43,11 +38,6 @@ public class PlayerConnection implements Listener {
                 Bukkit.broadcastMessage(plugin.getConfigManager().getMainColor() + "The game requires " + ChatColor.WHITE + (plugin.getConfigManager().getAutoStartPlayers() - onlinePlayers) + plugin.getConfigManager().getMainColor() + " more player to start.");
             } else {
                 Bukkit.broadcastMessage(plugin.getConfigManager().getMainColor() + "The game requires " + ChatColor.WHITE + (plugin.getConfigManager().getAutoStartPlayers() - onlinePlayers) + plugin.getConfigManager().getMainColor() + " more players to start.");
-            }
-            if (!tryRandomTeamJoin(player)) {
-                player.sendTitle(ChatColor.GRAY + "Both teams are full, ", ChatColor.GRAY + "wait until the game finishes in spectator.", 10, 70, 20);
-                plugin.getPlayerManager().setPlayerAsSpectator(player);
-                teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
             }
         } else {
             player.sendTitle(ChatColor.GRAY + "You are spectating now!", ChatColor.GRAY + "Wait until the game finishes.", 10, 70, 20);
@@ -61,7 +51,7 @@ public class PlayerConnection implements Listener {
         Player player = event.getPlayer();
         if (plugin.getGame().getState() == GameState.IN_GAME) {
             plugin.getScoreboardManager().decrementTeamPlayersCount(player);
-            if (plugin.getScoreboardManager().getVikings() < 1 && plugin.getScoreboardManager().getFranks() < 1) {
+            if (Bukkit.getOnlinePlayers().isEmpty()) {
                 plugin.getGameEndHandler().setWinner(null);
                 plugin.getGameEndHandler().handleGameEnd();
             } else if (plugin.getScoreboardManager().getVikings() < 1) {
@@ -76,17 +66,6 @@ public class PlayerConnection implements Listener {
         }
     }
 
-    public boolean tryRandomTeamJoin(Player player) {
-        List<Team> teams = Arrays.asList(Team.values());
-        Collections.shuffle(teams);
-        for (Team team : teams) {
-            if (plugin.getTeamManager().getPlayersInTeam(team) < plugin.getTeamManager().getMaxPlayersPerTeam()) {
-                plugin.getTeamManager().joinTeam(player, team);
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void teleport(Player player, Location location, String locationName) {
         if (location != null) {

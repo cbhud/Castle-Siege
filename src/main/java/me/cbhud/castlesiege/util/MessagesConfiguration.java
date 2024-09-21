@@ -46,9 +46,18 @@ public class MessagesConfiguration {
         return getMessages("hardcoremsg");
     }
 
+    public List<String> getHardCoreEnabledMsg() {
+        return getMessages("hardcoreEnabled");
+    }
+
     public List<String> getForceStopMsg() {
         return getMessages("forcestopmsg");
     }
+
+    public List<String> getCooldown() {
+        return getMessages("tntcooldown");
+    }
+
 
     private List<String> getMessages(String key) {
         List<String> messages = config.getStringList(key);

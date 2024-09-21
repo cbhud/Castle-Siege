@@ -5,7 +5,9 @@ import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
 import me.cbhud.castlesiege.team.Team;
 import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -51,7 +53,15 @@ public class PlayerManager {
             player.setGameMode(GameMode.SURVIVAL);
         }
         if (plugin.getTeamManager().getTeam(player) == null) {
-            tryRandomTeamJoin(player);
+
+            if (!plugin.getTeamManager().tryRandomTeamJoin(player)) {
+                player.sendTitle(ChatColor.GRAY + "Both teams are full, ", ChatColor.GRAY + "wait until the game finishes in spectator.", 10, 70, 20);
+                plugin.getPlayerManager().setPlayerAsSpectator(player);
+                teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
+                return;
+            }
+
+            plugin.getTeamManager().tryRandomTeamJoin(player);
         }
 
         new BukkitRunnable() {
@@ -87,17 +97,14 @@ public class PlayerManager {
         }.runTask(plugin);
     }
 
-    private boolean tryRandomTeamJoin(Player player) {
-        Team[] teams = Team.values();
-        List<Team> teamList = Arrays.asList(teams);
-        Collections.shuffle(teamList);
-
-        for (Team team : teamList) {
-            if (plugin.getTeamManager().getPlayersInTeam(team) < plugin.getTeamManager().getMaxPlayersPerTeam()) {
-                plugin.getTeamManager().joinTeam(player, team);
-                return true;
-            }
+    private void teleport(Player player, Location location, String locationName) {
+        if (location != null) {
+            player.teleport(location);
+        } else {
+            player.sendMessage(ChatColor.RED + locationName + " location is not set.");
+            player.sendMessage(ChatColor.RED + "Please configure it properly.");
         }
-        return false;
     }
+
+
 }

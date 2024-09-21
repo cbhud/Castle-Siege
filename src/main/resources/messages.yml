@@ -21,12 +21,18 @@ defenderswinmsg:
   - "&e&lKing Charles &fhas survived the siege!"
   - "&7&m--------------------------"
 
-hardcodemsg:
+hardcoremsg:
   - "&cHardcore &emode has been" ## it is automatically gonna say if its enabled or disabled you dont need that part
+
+hardcoreEnabled:
+  - "&7(&e!!!&7)&4Hardcore is enabled if you die, you won't respawn"
 
 forcestopmsg:
   - "&cThe game has been force-stopped by an administrator!"
 
 notenoughtostart:
   - "&cThere are not enough players to start the game!"
+
+tntcooldown:
+  - "&cYou can't throw TNT yet. Please wait for &e{cooldown} &cseconds"
 

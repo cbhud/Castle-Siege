@@ -75,6 +75,16 @@ public class MobManager implements Listener {
         return null;
     }
 
+    public void removeCustomZombie() {
+        for (org.bukkit.World world : Bukkit.getWorlds()) {
+            for (LivingEntity entity : world.getLivingEntities()) {
+                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().equals("§6§lKing Charles") ) {
+                    entity.remove();
+                }
+            }
+        }
+    }
+
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 

@@ -6,9 +6,6 @@ import me.cbhud.castlesiege.playerstate.PlayerStates;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.state.Type;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.team.TeamManager;
-import me.cbhud.castlesiege.util.MessagesConfiguration;
-import me.cbhud.castlesiege.util.MobManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,10 +14,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zombie;
 
 public class Commands implements CommandExecutor {
     private final CastleSiege plugin;
@@ -64,7 +58,7 @@ public class Commands implements CommandExecutor {
     private boolean endGameCommand(CommandSender sender) {
         if (plugin.getGame().getState() == GameState.IN_GAME) {
             if (sender.hasPermission("cs.admin")) {
-                removeCustomZombie();
+                plugin.getMobManager().removeCustomZombie();
                 plugin.getTimer().cancelTimer();
                 teleportPlayersToLobby();
                 plugin.getGame().setState(GameState.LOBBY);
@@ -81,16 +75,6 @@ public class Commands implements CommandExecutor {
         return true;
     }
 
-    private void removeCustomZombie() {
-        for (org.bukkit.World world : Bukkit.getWorlds()) {
-            for (LivingEntity entity : world.getLivingEntities()) {
-                if (entity instanceof Zombie && entity.getCustomName() != null &&
-                        entity.getCustomName().equals("§6§lKing Charles") || entity instanceof Wolf && entity.getCustomName() != null && entity.getCustomName().contains("Wolf")) {
-                    entity.remove();
-                }
-            }
-        }
-    }
 
     private void teleportPlayersToLobby() {
         // Submitting the lobby teleportation task asynchronously
@@ -168,10 +152,13 @@ public class Commands implements CommandExecutor {
     }
 
     private boolean startCommand(CommandSender sender) {
-        if (plugin.getGame().getState() == GameState.LOBBY) {
-            plugin.getScoreboardManager().loadTeamCount();
+        if (sender instanceof ConsoleCommandSender || sender.hasPermission("cs.admin")) {
+            if (plugin.getGame().getState() != GameState.LOBBY) {
+            sender.sendMessage(ChatColor.RED + "The game is not in LOBBY STATE. You cannot start it now.");
+            return true;
+        }
+
             Location mobSpawnLocation = plugin.getLocationManager().getMobLocation();
-            if (sender instanceof ConsoleCommandSender || sender.hasPermission("cs.admin")) {
                 if (mobSpawnLocation != null) {
                     plugin.getMobManager().spawnCustomMob(plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
                 } else {
@@ -179,11 +166,13 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
 
-                plugin.getGame().setState(GameState.IN_GAME);
+            plugin.getScoreboardManager().loadTeamCount();
+
+
+            plugin.getGame().setState(GameState.IN_GAME);
                 teleportTeamsToSpawnsAndApplyKits();
 
-                int timerMinutes = plugin.getConfig().getInt("timerMinutes", 10);
-                plugin.getTimer().startTimer(timerMinutes);
+                plugin.getTimer().startTimer(plugin.getConfig().getInt("timerMinutes", 10));
 
                 for (String line : plugin.getMessagesConfig().getStartMsg()) {
                     line = line.replace("{attackers}", plugin.getConfigManager().getConfig().getString("attackersTeamName"));
@@ -191,16 +180,13 @@ public class Commands implements CommandExecutor {
                     Bukkit.broadcastMessage(line);
                 }
                 if (plugin.getType().getState() == Type.Hardcore){
-                Bukkit.broadcastMessage(ChatColor.YELLOW + "(" + ChatColor.RED + "!!!" +ChatColor.YELLOW + ")" + ChatColor.RED + "HARDCORE mode is enabled if you die you will not respawn!");
+                for (String line : plugin.getMessagesConfig().getHardCoreEnabledMsg()){
+                    Bukkit.broadcastMessage(line);
+                    }
                 }
-
-            } else {
-                sender.sendMessage("You do not have permission to use this command.");
-            }
-        } else {
-            sender.sendMessage(ChatColor.RED + "The game is not in LOBBY STATE. You cannot start it now.");
-        }
-
+            }else {
+            sender.sendMessage(ChatColor.RED + "You don't have permission for this command!");
+                }
         return true;
     }
 
@@ -215,7 +201,7 @@ public class Commands implements CommandExecutor {
         try {
             String teamName1 = teamName.substring(0,1).toUpperCase() + teamName.substring(1).toLowerCase();
             Team team = Team.valueOf(teamName1);
-            setSpawnLocation(team, player.getLocation());
+            plugin.getLocationManager().setTeamSpawnLocation(team, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully!");
             plugin.getLocationManager().loadSpawnLocations();
         } catch (IllegalArgumentException e) {
@@ -225,26 +211,12 @@ public class Commands implements CommandExecutor {
         return true;
     }
 
-    private void setSpawnLocation(Team team, Location location) {
-        FileConfiguration config = plugin.getConfig();
-        String path = "spawnLocations." + team.toString().toLowerCase();
 
-        // Save spawn location to config
-        config.set(path + ".world", location.getWorld().getName());
-        config.set(path + ".x", location.getX());
-        config.set(path + ".y", location.getY());
-        config.set(path + ".z", location.getZ());
-        config.set(path + ".yaw", location.getYaw());
-        config.set(path + ".pitch", location.getPitch());
-
-        plugin.saveConfig();
-    }
 
     private void teleportTeamsToSpawnsAndApplyKits() {
         // Submitting the teleportation and kit application task asynchronously
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Team[] teams = Team.values();
-
             for (Team team : teams) {
                 Location teamSpawn = plugin.getLocationManager().getSpawnLocationForTeam(team);
                 if (teamSpawn != null) {
@@ -254,33 +226,17 @@ public class Commands implements CommandExecutor {
                             // Use teamSpawn directly instead of retrieving it from the configuration each time
                             plugin.getPlayerManager().setPlayerAsPlaying(player);
 
-                            // Teleport the player asynchronously
                             Bukkit.getScheduler().runTask(plugin, () -> player.teleport(teamSpawn));
 
                             // Apply kits to players asynchronously
                             Bukkit.getScheduler().runTask(plugin, () -> {
                                 if (plugin.getPlayerManager().getPlayerState(player) == PlayerStates.PLAYING) {
-                                    Team playerTeam = plugin.getTeamManager().getTeam(player);
                                     KitType selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
-
-                                    if (selectedKit != null && selectedKit.getTeam() == playerTeam) {
-                                        // Player has a selected kit matching their team, give the kit
-                                        plugin.getPlayerKitManager().giveKit(player, selectedKit);
-                                    } else {
-                                        if (selectedKit == null) {
-                                            // Player hasn't selected a kit, give them the default kit for their team
-                                            KitType defaultKit = KitType.getDefaultKit(playerTeam);
-                                            if (defaultKit != null) {
-                                                plugin.getPlayerKitManager().selectKit(player, defaultKit);
-                                                plugin.getPlayerKitManager().giveKit(player, defaultKit);
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    player.sendMessage("You haven't selected a kit!");
+                                    plugin.getPlayerKitManager().giveKit(player, selectedKit);
                                 }
                             });
                         }
+
                     }
                 }
             }
@@ -288,9 +244,12 @@ public class Commands implements CommandExecutor {
     }
 
 
+
+
     private boolean typeCommand(CommandSender sender) {
+
         if (plugin.getGame().getState() == GameState.LOBBY) {
-            if (sender.hasPermission("viking.admin")) {
+            if (sender.hasPermission("cs.admin")) {
 
                 if (plugin.getType().getState() == Type.Normal) {
                     plugin.getType().setState(Type.Hardcore);

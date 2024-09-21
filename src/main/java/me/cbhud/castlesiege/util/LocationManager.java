@@ -80,6 +80,21 @@ public class LocationManager {
         return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
     }
 
+    public void setTeamSpawnLocation(Team team, Location location) {
+        FileConfiguration config = plugin.getConfig();
+        String path = "spawnLocations." + team.toString().toLowerCase();
+
+        // Save spawn location to config
+        config.set(path + ".world", location.getWorld().getName());
+        config.set(path + ".x", location.getX());
+        config.set(path + ".y", location.getY());
+        config.set(path + ".z", location.getZ());
+        config.set(path + ".yaw", location.getYaw());
+        config.set(path + ".pitch", location.getPitch());
+
+        plugin.saveConfig();
+    }
+
 
 
 }

@@ -62,8 +62,7 @@ public class DamageListener implements Listener {
                         }
                         ItemMeta damagerItemMeta = damager.getInventory().getItemInMainHand().getItemMeta();
                         if (damagerItemMeta != null && damagerItemMeta.equals(Manager.sword.getItemMeta()) && plugin.getPlayerKitManager().getSelectedKit(damager) == KitType.WIZARD) {
-                            int n = rand.nextInt(15) + 1;
-                            if (n == 6){
+                            if (rand.nextInt(15) + 1 == 6){
                                 damagedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 0));
                             }
                         }

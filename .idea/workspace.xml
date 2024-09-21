@@ -5,8 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18ab981d-4b41-4794-b282-ada7126ace5a" name="Changes" comment="1.2.7 Code improvments">
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/KitSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/KitSelector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/TeamSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/TeamSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/Commands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/DamageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/DamageListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerDeathHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerDeathHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/playerstate/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/playerstate/PlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/state/GameEndHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/state/GameEndHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/team/TeamManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/team/TeamManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/LocationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/LocationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MessagesConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MessagesConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MobManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MobManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/TNTThrower.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/TNTThrower.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726882225022</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="1.2.7 Code improvments">
+      <option name="closed" value="true" />
+      <created>1726882586837</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1726882586837</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="UnknownFeatures">

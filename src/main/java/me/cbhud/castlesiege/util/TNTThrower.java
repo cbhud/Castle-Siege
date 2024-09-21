@@ -52,7 +52,10 @@ public class TNTThrower implements Listener {
                 // Player is on cooldown
                 long remainingCooldown = COOLDOWN_DURATION - (currentTime - cooldowns.get(playerId));
                 int remainingCooldownSeconds = (int) (remainingCooldown / 1000);
-                player.sendMessage(ChatColor.RED + "You can't throw TNT yet. Please wait for " + ChatColor.YELLOW + remainingCooldownSeconds + ChatColor.RED + " seconds.");
+                for (String line : plugin.getMessagesConfig().getCooldown()){
+                    line.replace("{cooldown}", "" + remainingCooldownSeconds);
+                    player.sendMessage(line);
+                }
             }
         }
     }

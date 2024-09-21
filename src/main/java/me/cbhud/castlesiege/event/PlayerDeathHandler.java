@@ -8,9 +8,7 @@ import me.cbhud.castlesiege.state.Type;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,9 +40,8 @@ public class PlayerDeathHandler implements Listener {
                     plugin.getDbConnection().incrementKills(killerId, plugin.getConfigManager().getKc());
                 }
             });
-
+            event.getDrops().clear();
             if (plugin.getType().getState() == Type.Hardcore) {
-                event.getDrops().clear();
                 plugin.getPlayerManager().setPlayerAsSpectator(player);
                 plugin.getScoreboardManager().decrementTeamPlayersCount(player);
                 player.sendTitle(ChatColor.RED + "You have died!", ChatColor.GRAY + "Better luck next time!", 10, 70, 20);
@@ -61,7 +58,6 @@ public class PlayerDeathHandler implements Listener {
                 return;
             }
 
-            event.getDrops().clear();
             plugin.getPlayerManager().setPlayerAsSpectator(player);
             player.sendTitle(ChatColor.RED + "You died!", ChatColor.GRAY + "Respawning... 5 seconds", 10, 70, 20);
 
@@ -111,9 +107,6 @@ public class PlayerDeathHandler implements Listener {
             case WARRIOR:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
                 break;
-            case WIZARD:
-                triggerArcaneBlast(player);
-                break;
             case BOMBARDIER:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100, 1));
@@ -123,25 +116,6 @@ public class PlayerDeathHandler implements Listener {
 
 
 
-    private void triggerArcaneBlast(Player wizard) {
-        int blastRadius = 10; // Adjust as needed
-        double blastDamage = 3.0; // Adjust as needed
-
-        Location blastLocation = wizard.getLocation();
-
-        // Damage nearby enemies within the blast radius who are on Team Vikings
-        for (Entity entity : blastLocation.getWorld().getNearbyEntities(blastLocation, blastRadius, blastRadius, blastRadius)) {
-            if (entity instanceof Player) {
-                Player nearbyPlayer = (Player) entity;
-                if (plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Attackers) {
-                    nearbyPlayer.damage(blastDamage, wizard);
-                }
-            }
-        }
-
-        // Inform the wizard about the successful blast
-        wizard.sendMessage("You unleash an arcane blast, damaging nearby enemies with explosion!");
-    }
 
 
 
