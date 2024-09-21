@@ -1,6 +1,6 @@
 package me.cbhud.castlesiege.util;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class LocationManager {
 
-    private final Main plugin;
+    private final CastleSiege plugin;
     private Location teamVikingSpawn;
     private Location teamFranksSpawn;
     private Location lobbyLocation;
@@ -24,7 +24,7 @@ public class LocationManager {
     }
 
 
-    public LocationManager(Main plugin){
+    public LocationManager(CastleSiege plugin){
         this.plugin = plugin;
         loadSpawnLocations();
     }

@@ -1,6 +1,6 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.commands;
 
-import me.cbhud.castlesiege.util.DataManager;
+import me.cbhud.castlesiege.CastleSiege;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,10 +12,10 @@ import java.sql.SQLException;
 
 public class StatsCommand implements CommandExecutor {
 
-    private final DataManager dataManager;
+    private final CastleSiege plugin;
 
-    public StatsCommand(DataManager dataManager) {
-        this.dataManager = dataManager;
+    public StatsCommand(CastleSiege plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -48,13 +48,13 @@ public class StatsCommand implements CommandExecutor {
         try {
             // Prepare the SQL query
             String sql = "SELECT wins, kills, deaths, king_kills, coins FROM player_stats WHERE username=? LIMIT 1"; // Add LIMIT 1 to ensure only one result is returned
-            synchronized (dataManager.getConnection()) {
-                statement = dataManager.getConnection().prepareStatement(sql);
+            synchronized (plugin.getDbConnection().getConnection()) {
+                statement = plugin.getDbConnection().getConnection().prepareStatement(sql);
             }
             statement.setString(1, username);
 
             // Execute the query
-            synchronized (dataManager.getConnection()) {
+            synchronized (plugin.getDbConnection().getConnection()) {
                 resultSet = statement.executeQuery();
             }
 

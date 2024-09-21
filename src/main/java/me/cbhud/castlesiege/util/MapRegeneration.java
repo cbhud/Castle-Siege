@@ -1,6 +1,6 @@
 package me.cbhud.castlesiege.util;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Location;
@@ -19,9 +19,9 @@ public class MapRegeneration implements Listener {
 
     private final Map<Location, Material> originalBlockStates;
     private final Map<Location, Material> changedBlocks;
-    private final Main plugin;
+    private final CastleSiege plugin;
 
-    public MapRegeneration(Main plugin) {
+    public MapRegeneration(CastleSiege plugin) {
         originalBlockStates = new HashMap<>();
         changedBlocks = new HashMap<>();
         this.plugin = plugin;

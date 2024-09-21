@@ -1,11 +1,11 @@
 package me.cbhud.castlesiege.state;
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 
 public class TypeManager{
-        private final Main plugin; // Add this field
+        private final CastleSiege plugin; // Add this field
         private Type currentState;
 
-        public TypeManager(Main plugin) {
+        public TypeManager(CastleSiege plugin) {
             this.plugin = plugin; // Initialize the field
             currentState = Type.Normal;
         }

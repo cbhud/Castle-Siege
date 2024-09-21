@@ -1,12 +1,9 @@
 package me.cbhud.castlesiege.scoreboard;
 
 import fr.mrmicky.fastboard.FastBoard;
-import me.cbhud.castlesiege.util.ConfigManager;
-import me.cbhud.castlesiege.Main;
-import me.cbhud.castlesiege.util.MobManager;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,27 +12,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreboardManager {
-    private final Main plugin;
-    private final TeamManager teamManager;
-    private final MobManager mobManager;
-    private final ConfigManager configManager;
+    private final CastleSiege plugin;
+
     public final Map<Player, FastBoard> scoreboards;
 
 
 
-    public ScoreboardManager(Main plugin, TeamManager teamManager, MobManager mobManager, ConfigManager configManager) {
+    public ScoreboardManager(CastleSiege plugin) {
         this.plugin = plugin;
-        this.teamManager = teamManager;
-        this.mobManager = mobManager;
-        this.configManager = configManager;
         this.scoreboards = new HashMap<>();
     }
 
     public String getTeamName(Team team) {
         if (team == Team.Attackers) {
-            return configManager.getConfig().getString("attackersTeamName");
+            return plugin.getConfigManager().getConfig().getString("attackersTeamName");
         } else {
-            return configManager.getConfig().getString("defendersTeamName");
+            return plugin.getConfigManager().getConfig().getString("defendersTeamName");
         }
     }
 
@@ -65,19 +57,19 @@ public class ScoreboardManager {
     }
 
     private void setupLobbyScoreboard(FastBoard board, Player player) {
-        ChatColor mainColor = configManager.getMainColor();
-        ChatColor secondaryColor = configManager.getSecondaryColor();
-        ChatColor bottomColor = configManager.getBottomColor();
-        ChatColor titleColor = configManager.getTitleColor();
+        ChatColor mainColor = plugin.getConfigManager().getMainColor();
+        ChatColor secondaryColor = plugin.getConfigManager().getSecondaryColor();
+        ChatColor bottomColor = plugin.getConfigManager().getBottomColor();
+        ChatColor titleColor = plugin.getConfigManager().getTitleColor();
 
-        String title = titleColor + "§l" + configManager.getTitle();
-        String bottomline = bottomColor + configManager.getBottomline();
+        String title = titleColor + "§l" + plugin.getConfigManager().getTitle();
+        String bottomline = bottomColor + plugin.getConfigManager().getBottomline();
         board.updateTitle(title);
         board.updateLine(0, " ");
         board.updateLine(1, mainColor +"Online: " +secondaryColor+ Bukkit.getOnlinePlayers().size());
         board.updateLine(2, " ");
         board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
-        Team team = teamManager.getTeam(player);
+        Team team = plugin.getTeamManager().getTeam(player);
         board.updateLine(4, " ");
         board.updateLine(5, mainColor +"Team: " +secondaryColor+ (team != null ? getTeamName(team) : "No Team"));
         board.updateLine(6, " ");
@@ -90,27 +82,27 @@ public class ScoreboardManager {
     }
 
     private void setupInGameScoreboard(FastBoard board) {
-        ChatColor mainColor = configManager.getMainColor();
-        ChatColor secondaryColor = configManager.getSecondaryColor();
-        ChatColor bottomColor = configManager.getBottomColor();
+        ChatColor mainColor = plugin.getConfigManager().getMainColor();
+        ChatColor secondaryColor = plugin.getConfigManager().getSecondaryColor();
+        ChatColor bottomColor = plugin.getConfigManager().getBottomColor();
 
-        ChatColor titleColor = configManager.getTitleColor();
+        ChatColor titleColor = plugin.getConfigManager().getTitleColor();
 
-        String title = titleColor + "§l" + configManager.getTitle();
-        String bottomline = bottomColor + configManager.getBottomline();
+        String title = titleColor + "§l" + plugin.getConfigManager().getTitle();
+        String bottomline = bottomColor + plugin.getConfigManager().getBottomline();
         board.updateTitle(title);
         board.updateLine(0, " ");
         updateInGameScoreboard(board); // Updating the in-game scoreboard initially
     }
 
     private void setupEndScoreboard(FastBoard board) {
-        ChatColor mainColor = configManager.getMainColor();
-        ChatColor secondaryColor = configManager.getSecondaryColor();
-        ChatColor bottomColor = configManager.getBottomColor();
+        ChatColor mainColor = plugin.getConfigManager().getMainColor();
+        ChatColor secondaryColor = plugin.getConfigManager().getSecondaryColor();
+        ChatColor bottomColor = plugin.getConfigManager().getBottomColor();
 
-        ChatColor titleColor = configManager.getTitleColor();
-        String title = titleColor + "§l" + configManager.getTitle();
-        String bottomline = bottomColor + configManager.getBottomline();
+        ChatColor titleColor = plugin.getConfigManager().getTitleColor();
+        String title = titleColor + "§l" + plugin.getConfigManager().getTitle();
+        String bottomline = bottomColor + plugin.getConfigManager().getBottomline();
         board.updateTitle(title);
         board.updateLines("");
         board.updateLine(0, " ");
@@ -135,10 +127,10 @@ public class ScoreboardManager {
 
     public void loadTeamCount() {
         vikings = (int) Bukkit.getOnlinePlayers().stream()
-                .filter(p -> teamManager.getTeam(p) == Team.Attackers)
+                .filter(p -> plugin.getTeamManager().getTeam(p) == Team.Attackers)
                 .count();
         franks = (int) Bukkit.getOnlinePlayers().stream()
-                .filter(p -> teamManager.getTeam(p) == Team.Defenders)
+                .filter(p -> plugin.getTeamManager().getTeam(p) == Team.Defenders)
                 .count();
     }
 
@@ -163,19 +155,19 @@ public class ScoreboardManager {
     }
 
     private void updateLobbyScoreboard(FastBoard board, Player player) {
-        ChatColor mainColor = configManager.getMainColor();
-        ChatColor secondaryColor = configManager.getSecondaryColor();
-        ChatColor bottomColor = configManager.getBottomColor();
+        ChatColor mainColor = plugin.getConfigManager().getMainColor();
+        ChatColor secondaryColor = plugin.getConfigManager().getSecondaryColor();
+        ChatColor bottomColor = plugin.getConfigManager().getBottomColor();
 
-        ChatColor titleColor = configManager.getTitleColor();
+        ChatColor titleColor = plugin.getConfigManager().getTitleColor();
 
-        String title = titleColor + "§l" + configManager.getTitle();
-        String bottomline = bottomColor + configManager.getBottomline();
+        String title = titleColor + "§l" + plugin.getConfigManager().getTitle();
+        String bottomline = bottomColor + plugin.getConfigManager().getBottomline();
         board.updateLines("", "", "");
         board.updateLine(1, mainColor +"Online: " + secondaryColor + Bukkit.getOnlinePlayers().size());
         board.updateLine(2, " ");
         board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
-        Team team = teamManager.getTeam(player);
+        Team team = plugin.getTeamManager().getTeam(player);
         board.updateLine(4, " ");
         board.updateLine(5, mainColor +"Team: " + secondaryColor + (team != null ? getTeamName(team) : "No Team"));
         board.updateLine(6, " ");
@@ -197,19 +189,19 @@ public class ScoreboardManager {
     }
 
     public void updateInGameScoreboard(FastBoard board) {
-        ChatColor mainColor = configManager.getMainColor();
-        ChatColor secondaryColor = configManager.getSecondaryColor();
-        ChatColor bottomColor = configManager.getBottomColor();
+        ChatColor mainColor = plugin.getConfigManager().getMainColor();
+        ChatColor secondaryColor = plugin.getConfigManager().getSecondaryColor();
+        ChatColor bottomColor = plugin.getConfigManager().getBottomColor();
 
-        ChatColor titleColor = configManager.getTitleColor();
+        ChatColor titleColor = plugin.getConfigManager().getTitleColor();
 
-        String title = titleColor + "§l" + configManager.getTitle();
-        String bottomline = bottomColor + configManager.getBottomline();
+        String title = titleColor + "§l" + plugin.getConfigManager().getTitle();
+        String bottomline = bottomColor + plugin.getConfigManager().getBottomline();
         int secondsLeft = plugin.getTimer().getSecondsLeft();
         board.updateLine(1, mainColor +"Countdown: " + secondaryColor + formatTime(secondsLeft));
-        Zombie king = mobManager.getKingZombie();
+        Zombie king = plugin.getMobManager().getKingZombie();
         board.updateLine(2, " ");
-        double kingHealth = mobManager.getZombieHealth(king);
+        double kingHealth = plugin.getMobManager().getZombieHealth(king);
         board.updateLine(3, mainColor +"King's Health: " + secondaryColor + (int) kingHealth);
         board.updateLine(4, " ");
         board.updateLine(5, mainColor + getTeamName(Team.Defenders) +": " + secondaryColor + franks);
@@ -218,15 +210,15 @@ public class ScoreboardManager {
     }
 
     private void updateEndScoreboard(FastBoard board) {
-        ChatColor mainColor = configManager.getMainColor();
-        ChatColor secondaryColor = configManager.getSecondaryColor();
-        ChatColor bottomColor = configManager.getBottomColor();
+        ChatColor mainColor = plugin.getConfigManager().getMainColor();
+        ChatColor secondaryColor = plugin.getConfigManager().getSecondaryColor();
+        ChatColor bottomColor = plugin.getConfigManager().getBottomColor();
 
-        ChatColor titleColor = configManager.getTitleColor();
+        ChatColor titleColor = plugin.getConfigManager().getTitleColor();
 
         board.updateLines();
-        String title = titleColor + "§l" + configManager.getTitle();
-        String bottomline = bottomColor + configManager.getBottomline();
+        String title = titleColor + "§l" + plugin.getConfigManager().getTitle();
+        String bottomline = bottomColor + plugin.getConfigManager().getBottomline();
         board.updateLine(0, " ");
         board.updateLine(1, mainColor + "Winnners: " + secondaryColor + getTeamName(plugin.getGameEndHandler().getWinner()));
         board.updateLine(2, " ");
@@ -238,7 +230,7 @@ public class ScoreboardManager {
     }
 
     public void decrementTeamPlayersCount(Player player) {
-        Team team = teamManager.getTeam(player);
+        Team team = plugin.getTeamManager().getTeam(player);
         if (team != null) {
                 switch (team) {
                     case Defenders:

@@ -1,7 +1,7 @@
 package me.cbhud.castlesiege.util;
 
 import fr.mrmicky.fastboard.FastBoard;
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -12,25 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Timers {
-    private final Main plugin;
-    private final ConfigManager configManager;
+    private final CastleSiege plugin;
     private final int playersToStart;
     private final int initialCountdownSeconds;
     private int countdownSeconds;
     private int taskId;
     private final List<Integer> taskIds = new ArrayList<>();
-    private final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
     private BukkitRunnable timerTask;
-    private Team winner;
-    private MessagesConfiguration msgConfig;
 
-    public Timers(Main plugin, ConfigManager configManager, MessagesConfiguration msgConfig) {
+    public Timers(CastleSiege plugin) {
         this.plugin = plugin;
-        this.configManager = configManager;
-        this.playersToStart = configManager.getConfig().getInt("auto-start-players");
-        this.initialCountdownSeconds = configManager.getConfig().getInt("auto-start-countdown", 60);
+        this.playersToStart = plugin.getConfigManager().getConfig().getInt("auto-start-players");
+        this.initialCountdownSeconds = plugin.getConfigManager().getConfig().getInt("auto-start-countdown", 60);
         this.countdownSeconds = initialCountdownSeconds;
-        this.msgConfig = msgConfig;
     }
 
     public void checkAutoStart(int currentPlayers) {
@@ -46,7 +40,7 @@ public class Timers {
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if (countdownSeconds > 0) {
                 if (countdownSeconds == initialCountdownSeconds || countdownSeconds == 45 || countdownSeconds == 30 || countdownSeconds == 15 || countdownSeconds == 10 || countdownSeconds <= 5) {
-                    Bukkit.broadcastMessage(configManager.getMainColor() + "Game is starting in " + ChatColor.WHITE + countdownSeconds + configManager.getMainColor() + " seconds!");
+                    Bukkit.broadcastMessage(plugin.getConfigManager().getMainColor() + "Game is starting in " + ChatColor.WHITE + countdownSeconds + plugin.getConfigManager().getMainColor() + " seconds!");
                 }
                 countdownSeconds--;
             } else {
@@ -71,7 +65,7 @@ public class Timers {
             plugin.getGameEndHandler().handleGameEnd();
             cancelTimer();
         } else {
-            for (String line : msgConfig.getNotStartMsg()) {
+            for (String line : plugin.getMessagesConfig().getNotStartMsg()) {
                 Bukkit.broadcastMessage(line);
             }
         }
@@ -122,15 +116,4 @@ public class Timers {
         return countdownSeconds;
     }
 
-    public GameState getGameState() {
-        return plugin.getGame().getState();
-    }
-
-    public Team getWinner() {
-        return winner;
-    }
-
-    public BukkitRunnable getTimerTask() {
-        return timerTask;
-    }
 }

@@ -1,11 +1,9 @@
 package me.cbhud.castlesiege.event;
 
-import me.cbhud.castlesiege.util.Timers;
-import me.cbhud.castlesiege.util.ConfigManager;
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
+
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,16 +18,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class PlayerConnection implements Listener {
-    private final Main plugin;
-    private final TeamManager teamManager;
-    private final Timers autostartInstance;
-    private final ConfigManager configManager;
+    private final CastleSiege plugin;
 
-    public PlayerConnection(Main plugin, TeamManager teamManager, Timers autostartInstance, ConfigManager configManager) {
+
+    public PlayerConnection(CastleSiege plugin) {
         this.plugin = plugin;
-        this.teamManager = teamManager;
-        this.autostartInstance = autostartInstance;
-        this.configManager = configManager;
     }
 
     @EventHandler
@@ -44,12 +37,12 @@ public class PlayerConnection implements Listener {
             teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
             plugin.getPlayerManager().setPlayerAsLobby(player);
             int onlinePlayers = Bukkit.getOnlinePlayers().size();
-            if (onlinePlayers >= configManager.getAutoStartPlayers()) {
-                autostartInstance.checkAutoStart(onlinePlayers);
-            } else if (configManager.getAutoStartPlayers() - onlinePlayers == 1) {
-                Bukkit.broadcastMessage(configManager.getMainColor() + "The game requires " + ChatColor.WHITE + (configManager.getAutoStartPlayers() - onlinePlayers) + configManager.getMainColor() + " more player to start.");
+            if (onlinePlayers >= plugin.getConfigManager().getAutoStartPlayers()) {
+                plugin.getTimer().checkAutoStart(onlinePlayers);
+            } else if (plugin.getConfigManager().getAutoStartPlayers() - onlinePlayers == 1) {
+                Bukkit.broadcastMessage(plugin.getConfigManager().getMainColor() + "The game requires " + ChatColor.WHITE + (plugin.getConfigManager().getAutoStartPlayers() - onlinePlayers) + plugin.getConfigManager().getMainColor() + " more player to start.");
             } else {
-                Bukkit.broadcastMessage(configManager.getMainColor() + "The game requires " + ChatColor.WHITE + (configManager.getAutoStartPlayers() - onlinePlayers) + configManager.getMainColor() + " more players to start.");
+                Bukkit.broadcastMessage(plugin.getConfigManager().getMainColor() + "The game requires " + ChatColor.WHITE + (plugin.getConfigManager().getAutoStartPlayers() - onlinePlayers) + plugin.getConfigManager().getMainColor() + " more players to start.");
             }
             if (!tryRandomTeamJoin(player)) {
                 player.sendTitle(ChatColor.GRAY + "Both teams are full, ", ChatColor.GRAY + "wait until the game finishes in spectator.", 10, 70, 20);
@@ -79,7 +72,7 @@ public class PlayerConnection implements Listener {
         plugin.getScoreboardManager().removeScoreboard(player);
         plugin.getTeamManager().removeTeam(player);
         if (plugin.getGame().getState() == GameState.LOBBY) {
-            Bukkit.getScheduler().runTask(plugin, () -> autostartInstance.checkAutoStart(Bukkit.getOnlinePlayers().size()));
+            Bukkit.getScheduler().runTask(plugin, () -> plugin.getTimer().checkAutoStart(Bukkit.getOnlinePlayers().size()));
         }
     }
 
@@ -87,8 +80,8 @@ public class PlayerConnection implements Listener {
         List<Team> teams = Arrays.asList(Team.values());
         Collections.shuffle(teams);
         for (Team team : teams) {
-            if (teamManager.getPlayersInTeam(team) < teamManager.getMaxPlayersPerTeam()) {
-                teamManager.joinTeam(player, team);
+            if (plugin.getTeamManager().getPlayersInTeam(team) < plugin.getTeamManager().getMaxPlayersPerTeam()) {
+                plugin.getTeamManager().joinTeam(player, team);
                 return true;
             }
         }

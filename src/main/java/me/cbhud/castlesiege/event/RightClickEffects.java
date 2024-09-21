@@ -1,6 +1,6 @@
 package me.cbhud.castlesiege.event;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
@@ -21,11 +21,11 @@ import java.util.Random;
 
 public class RightClickEffects implements Listener {
 
-    private final Main plugin;
+    private final CastleSiege plugin;
     private final Random rand = new Random();
     private static final int EFFECT_DURATION = 100;
 
-    public RightClickEffects(Main plugin) {
+    public RightClickEffects(CastleSiege plugin) {
         this.plugin = plugin;
     }
 
@@ -80,12 +80,12 @@ public class RightClickEffects implements Listener {
 
     private boolean useSpecialItem(Player player, ItemStack item) {
         if (item.getType() == Material.CLOCK && plugin.getGame().getState() == GameState.LOBBY) {
-            player.openInventory(plugin.getTeamSelector().getInventory());
+            plugin.getTeamSelector().open(player);
             return true;
         }
 
         if (item.getType() == Material.NETHER_STAR && plugin.getGame().getState() == GameState.LOBBY) {
-            player.openInventory(plugin.getKitSelector().getInventory());
+            plugin.getKitSelector().open(player);
             return true;
         }
 

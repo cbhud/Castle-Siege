@@ -1,6 +1,6 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.commands;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.util.DataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,10 +13,10 @@ import java.util.UUID;
 
 public class CoinsCommand implements CommandExecutor {
 
-    private final Main plugin;
+    private final CastleSiege plugin;
     private final DataManager dataManager;
 
-    public CoinsCommand(Main plugin) {
+    public CoinsCommand(CastleSiege plugin) {
         this.plugin = plugin;
         this.dataManager = plugin.getDbConnection();
     }
@@ -76,12 +76,14 @@ public class CoinsCommand implements CommandExecutor {
                 break;
 
             case "remove":
-                if (dataManager.removePlayerCoins(targetUUID, amount)) {
-                    player.sendMessage(ChatColor.GREEN + "You have removed " + amount + " coins from " + targetPlayerName + ".");
-                    targetPlayer.sendMessage(ChatColor.RED + "You have lost " + amount + " coins, removed by " + player.getName() + ".");
-                } else {
-                    player.sendMessage(ChatColor.RED + "Failed to remove coins. " + targetPlayerName + " does not have enough coins.");
-                }
+                dataManager.removePlayerCoins(targetUUID, amount, success -> {
+                    if (success) {
+                        player.sendMessage(ChatColor.GREEN + "You have removed " + amount + " coins from " + targetPlayerName + ".");
+                        targetPlayer.sendMessage(ChatColor.RED + "You have lost " + amount + " coins, removed by " + player.getName() + ".");
+                    } else {
+                        player.sendMessage(ChatColor.RED + "Failed to remove coins. " + targetPlayerName + " does not have enough coins.");
+                    }
+                });
                 break;
 
             default:

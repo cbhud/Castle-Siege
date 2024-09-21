@@ -1,6 +1,6 @@
 package me.cbhud.castlesiege.util;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,14 +22,12 @@ import java.util.UUID;
 public class TNTThrower implements Listener {
 
     private static final double TNT_VELOCITY = 1.5;
-    private Main plugin;
-    private ConfigManager configManager;
+    private CastleSiege plugin;
     private final Map<UUID, Long> cooldowns = new HashMap<>();
     private long COOLDOWN_DURATION;
-    public TNTThrower(Main plugin, ConfigManager configManager) {
+    public TNTThrower(CastleSiege plugin) {
         this.plugin = plugin;
-        this.configManager = configManager;
-        this.COOLDOWN_DURATION = configManager.getConfig().getInt("tntCooldown", 120) * 1000;
+        this.COOLDOWN_DURATION = plugin.getConfigManager().getConfig().getInt("tntCooldown", 120) * 1000;
     }
 
     @EventHandler

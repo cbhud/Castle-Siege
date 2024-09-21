@@ -1,6 +1,6 @@
 package me.cbhud.castlesiege.event;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
 import me.cbhud.castlesiege.kits.KitType;
 import me.cbhud.castlesiege.state.GameState;
@@ -22,9 +22,9 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.UUID;
 
 public class PlayerDeathHandler implements Listener {
-    private final Main plugin;
+    private final CastleSiege plugin;
 
-    public PlayerDeathHandler(Main plugin) {
+    public PlayerDeathHandler(CastleSiege plugin) {
         this.plugin = plugin;
     }
 

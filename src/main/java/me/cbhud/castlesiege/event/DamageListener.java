@@ -1,15 +1,13 @@
 package me.cbhud.castlesiege.event;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
 import me.cbhud.castlesiege.kits.KitType;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.entity.Player;
 import java.util.Random;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -19,15 +17,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class DamageListener implements Listener {
-    private final Main plugin;
+    private final CastleSiege plugin;
 
     Random rand = new Random();
-    private final TeamManager teamManager;
-
-    public DamageListener(Main plugin) {
-
+    public DamageListener(CastleSiege plugin) {
         this.plugin = plugin;
-        this.teamManager = plugin.getTeamManager();
     }
 
     @EventHandler
@@ -59,8 +53,8 @@ public class DamageListener implements Listener {
 
                     if (damager != null) {
                         // Check if the damaged player and the damager are in the same team
-                        Team damagedPlayerTeam = teamManager.getTeam(damagedPlayer);
-                        Team damagerTeam = teamManager.getTeam(damager);
+                        Team damagedPlayerTeam = plugin.getTeamManager().getTeam(damagedPlayer);
+                        Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
                         if (damagedPlayerTeam != null && damagedPlayerTeam.equals(damagerTeam)) {
                             // Players in the same team, cancel the damage event

@@ -1,9 +1,7 @@
 package me.cbhud.castlesiege.state;
 
 import me.cbhud.castlesiege.*;
-import me.cbhud.castlesiege.util.ConfigManager;
-import me.cbhud.castlesiege.util.MessagesConfiguration;
-import me.cbhud.castlesiege.util.Timers;
+import me.cbhud.castlesiege.util.MobManager;
 import org.bukkit.*;
 import org.bukkit.plugin.*;
 import org.bukkit.event.entity.*;
@@ -14,20 +12,15 @@ import org.bukkit.configuration.file.*;
 
 public class GameEndHandler implements Listener
 {
-    private final Main plugin;
-    private final ConfigManager configManager;
-    private final Timers autostart;
-    static String killername;
+    private final CastleSiege plugin;
     private Team winner;
-    private MessagesConfiguration msgConfig;
+    static String killername;
 
 
-    public GameEndHandler(final Main plugin, final ConfigManager configManager, final Timers autostart, MessagesConfiguration msgConfig) {
+    public GameEndHandler(final CastleSiege plugin, Team winner) {
         this.plugin = plugin;
-        this.configManager = configManager;
+        this.winner = winner;
         plugin.getServer().getPluginManager().registerEvents((Listener)this, (Plugin)plugin);
-        this.autostart = autostart;
-        this.msgConfig = msgConfig;
     }
 
     public void handleGameEnd() {
@@ -41,28 +34,28 @@ public class GameEndHandler implements Listener
         }, 200L);
         Bukkit.getScheduler().runTaskLater((Plugin)this.plugin, () -> {
             this.plugin.getMapRegeneration().regenerateChangedBlocks();
-            if (Bukkit.getOnlinePlayers().size() >= this.configManager.getAutoStartPlayers()) {
-                this.autostart.checkAutoStart(Bukkit.getOnlinePlayers().size());
+            if (Bukkit.getOnlinePlayers().size() >= this.plugin.getConfigManager().getAutoStartPlayers()) {
+                this.plugin.getTimer().checkAutoStart(Bukkit.getOnlinePlayers().size());
             }
         }, 300L);
     }
 
     public static String getKillername() {
-        return GameEndHandler.killername;
+        return killername;
     }
 
     @EventHandler
     public void onZombieDeath(final EntityDeathEvent event) {
         final Player player = event.getEntity().getKiller();
-        if (this.plugin.getGame().getState() != GameState.END && event.getEntity() instanceof Zombie && event.getEntity().getCustomName() != null && event.getEntity().getCustomName().contains("King") && this.plugin.getGame().getState() == GameState.IN_GAME) {
+        if (this.plugin.getGame().getState() != GameState.END && event.getEntity().getCustomName() != null && event.getEntity().getCustomName().contains("King") && this.plugin.getGame().getState() == GameState.IN_GAME) {
             event.getDrops().clear();
             this.plugin.getTimer().cancelTimer();
             if (event.getEntity().getKiller() instanceof Player) {
-                GameEndHandler.killername = player.getName();
+                killername = player.getName();
                 plugin.getDbConnection().incrementKingKills(event.getEntity().getKiller().getUniqueId());
             }
             else {
-                GameEndHandler.killername = "unknown";
+                killername = "unknown";
             }
             setWinner(Team.Attackers);
             this.plugin.getGameEndHandler().handleGameEnd();
@@ -126,27 +119,27 @@ public class GameEndHandler implements Listener
         if (winner != null) {
             String winnerName = winner.toString(); // Assumes that your Team enum has a proper toString method
             if ("Attackers".equalsIgnoreCase(winnerName)) {
-                for (String line : msgConfig.getVikingsWinMsg()) {
+                for (String line : plugin.getMessagesConfig().getVikingsWinMsg()) {
                     line = line.replace("{killer}", getKillername());
-                    line = line.replace("{attackers}", configManager.getAttacker());
+                    line = line.replace("{attackers}", plugin.getConfigManager().getAttacker());
                     Bukkit.broadcastMessage(line);
                 }
 
                 // Play Ender Dragon growl sound for VIKINGS win
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.RED + configManager.getConfig().getString("attackersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
+                    player.sendTitle(ChatColor.RED + plugin.getConfigManager().getConfig().getString("attackersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.MASTER, 1.0f, 0.9f);
                 }
             } else {
 
-                for (String line : msgConfig.getFranksWinMsg()) {
-                    line = line.replace("{defenders}", configManager.getDefender());
+                for (String line : plugin.getMessagesConfig().getFranksWinMsg()) {
+                    line = line.replace("{defenders}", plugin.getConfigManager().getDefender());
                     Bukkit.broadcastMessage(line);
                 }
 
                 // Play Note Block chime sound for FRANKS win
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.BLUE + configManager.getConfig().getString("defendersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
+                    player.sendTitle(ChatColor.BLUE + plugin.getConfigManager().getConfig().getString("defendersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1.0f, 0.9f);
                 }
             }

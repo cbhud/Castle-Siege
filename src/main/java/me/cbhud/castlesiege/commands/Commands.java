@@ -1,5 +1,6 @@
-package me.cbhud.castlesiege;
+package me.cbhud.castlesiege.commands;
 
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.kits.KitType;
 import me.cbhud.castlesiege.playerstate.PlayerStates;
 import me.cbhud.castlesiege.state.GameState;
@@ -22,16 +23,10 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 
 public class Commands implements CommandExecutor {
-    private final Main plugin;
-    private final TeamManager teamManager;
-    private final MobManager mobManager;
-    private MessagesConfiguration configMsg;
+    private final CastleSiege plugin;
 
-    public Commands(Main plugin, TeamManager teamManager, MobManager mobManager, MessagesConfiguration configMsg) {
+    public Commands(CastleSiege plugin) {
         this.plugin = plugin;
-        this.teamManager = teamManager;
-        this.mobManager = mobManager;
-        this.configMsg = configMsg;
     }
 
 
@@ -75,7 +70,7 @@ public class Commands implements CommandExecutor {
                 plugin.getGame().setState(GameState.LOBBY);
                 this.plugin.getMapRegeneration().regenerateChangedBlocks();
                 plugin.tntThrower().clearCooldowns();
-                Bukkit.broadcastMessage(configMsg.getForceStopMsg().toString());
+                Bukkit.broadcastMessage(plugin.getMessagesConfig().getForceStopMsg().toString());
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             }
@@ -178,7 +173,7 @@ public class Commands implements CommandExecutor {
             Location mobSpawnLocation = plugin.getLocationManager().getMobLocation();
             if (sender instanceof ConsoleCommandSender || sender.hasPermission("cs.admin")) {
                 if (mobSpawnLocation != null) {
-                    mobManager.spawnCustomMob(plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
+                    plugin.getMobManager().spawnCustomMob(plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
                 } else {
                     Bukkit.broadcastMessage(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
                     return true;
@@ -190,7 +185,7 @@ public class Commands implements CommandExecutor {
                 int timerMinutes = plugin.getConfig().getInt("timerMinutes", 10);
                 plugin.getTimer().startTimer(timerMinutes);
 
-                for (String line : configMsg.getStartMsg()) {
+                for (String line : plugin.getMessagesConfig().getStartMsg()) {
                     line = line.replace("{attackers}", plugin.getConfigManager().getConfig().getString("attackersTeamName"));
                     line = line.replace("{defenders}", plugin.getConfigManager().getConfig().getString("defendersTeamName"));
                     Bukkit.broadcastMessage(line);
@@ -255,7 +250,7 @@ public class Commands implements CommandExecutor {
                 if (teamSpawn != null) {
                     // Teleport players in the team to their spawn location
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (teamManager.getTeam(player) == team) {
+                        if (plugin.getTeamManager().getTeam(player) == team) {
                             // Use teamSpawn directly instead of retrieving it from the configuration each time
                             plugin.getPlayerManager().setPlayerAsPlaying(player);
 
@@ -299,10 +294,10 @@ public class Commands implements CommandExecutor {
 
                 if (plugin.getType().getState() == Type.Normal) {
                     plugin.getType().setState(Type.Hardcore);
-                    Bukkit.broadcastMessage(configMsg.getHardcoreMsg().toString() + " §aenabled!");
+                    Bukkit.broadcastMessage(plugin.getMessagesConfig().getHardcoreMsg().toString() + " §aenabled!");
                 }else{
                     plugin.getType().setState(Type.Normal);
-                    Bukkit.broadcastMessage(configMsg.getHardcoreMsg().toString() + " §cdisabled!");
+                    Bukkit.broadcastMessage(plugin.getMessagesConfig().getHardcoreMsg().toString() + " §cdisabled!");
                 }
                 plugin.getScoreboardManager().updateScoreboardForAll();
             }

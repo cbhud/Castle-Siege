@@ -1,8 +1,7 @@
 package me.cbhud.castlesiege.util;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.team.TeamManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,17 +14,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class MobManager implements Listener {
 
-    private final Main plugin;
-    private final TeamManager teamManager;
+    private final CastleSiege plugin;
     private Zombie kingZombie;
-    private final ConfigManager configManager;
     private final double TNT_DAMAGE;
 
-    public MobManager(Main plugin, TeamManager teamManager, ConfigManager configManager) {
+    public MobManager(CastleSiege plugin) {
         this.plugin = plugin;
-        this.teamManager = teamManager;
-        this.configManager = configManager;
-        TNT_DAMAGE = configManager.getConfig().getDouble("tntDamage", 4);
+        TNT_DAMAGE = plugin.getConfigManager().getConfig().getDouble("tntDamage", 4);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -47,7 +42,7 @@ public class MobManager implements Listener {
         kingZombie.setRemoveWhenFarAway(false); // Zombie does not despawn when far away
         kingZombie.setAdult();
 
-        double maxHealth = configManager.getKingHealth();
+        double maxHealth = plugin.getConfigManager().getKingHealth();
         kingZombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
         kingZombie.setHealth(maxHealth);
 
@@ -105,7 +100,7 @@ public class MobManager implements Listener {
             if (event.getDamager() instanceof Player) {
                 Player damager = (Player) event.getDamager();
 
-                Team damagerTeam = teamManager.getTeam(damager);
+                Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
                 if (damagerTeam == Team.Defenders || damagerTeam == null) {
                     event.setCancelled(true);
@@ -115,7 +110,7 @@ public class MobManager implements Listener {
 
                 if (projectile.getShooter() instanceof Player) {
                     Player shooter = (Player) projectile.getShooter();
-                    Team shooterTeam = teamManager.getTeam(shooter);
+                    Team shooterTeam = plugin.getTeamManager().getTeam(shooter);
 
                     if (shooterTeam == Team.Defenders || shooterTeam == null) {
                         event.setCancelled(true);

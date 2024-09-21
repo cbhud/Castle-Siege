@@ -1,10 +1,12 @@
 package me.cbhud.castlesiege.playerstate;
 
-import me.cbhud.castlesiege.Main;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.team.TeamManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -18,13 +20,11 @@ import static me.cbhud.castlesiege.playerstate.PlayerStates.*;
 
 public class PlayerManager {
 
-    private final Main plugin;
-    private final TeamManager teamManager;
+    private final CastleSiege plugin;
     private final Map<Player, PlayerStates> playerStates;
 
-    public PlayerManager(Main plugin, TeamManager teamManager) {
+    public PlayerManager(CastleSiege plugin) {
         this.plugin = plugin;
-        this.teamManager = teamManager;
         this.playerStates = new HashMap<>();
     }
 
@@ -50,7 +50,7 @@ public class PlayerManager {
         if (player.getGameMode() != GameMode.SURVIVAL) {
             player.setGameMode(GameMode.SURVIVAL);
         }
-        if (teamManager.getTeam(player) == null) {
+        if (plugin.getTeamManager().getTeam(player) == null) {
             tryRandomTeamJoin(player);
         }
 
@@ -66,8 +66,15 @@ public class PlayerManager {
         player.setLevel(0);
         player.getActivePotionEffects().clear();
 
-        player.getInventory().setItem(3, Manager.clock);
-        player.getInventory().setItem(5, Manager.star);
+        player.getInventory().setItem(3, ItemBuilder.from(Material.CLOCK)
+                .name(Component.text("§eSelect Team"))
+                .lore(Component.text("§7Right-click to select team"))
+                .build());
+
+        player.getInventory().setItem(5, ItemBuilder.from(Material.NETHER_STAR)
+                .name(Component.text("§eSelect Kit"))
+                .lore(Component.text("§7Right-click to select the kit"))
+                .build());
     }
 
     public void setPlayerAsSpectator(Player player) {
@@ -86,8 +93,8 @@ public class PlayerManager {
         Collections.shuffle(teamList);
 
         for (Team team : teamList) {
-            if (teamManager.getPlayersInTeam(team) < teamManager.getMaxPlayersPerTeam()) {
-                teamManager.joinTeam(player, team);
+            if (plugin.getTeamManager().getPlayersInTeam(team) < plugin.getTeamManager().getMaxPlayersPerTeam()) {
+                plugin.getTeamManager().joinTeam(player, team);
                 return true;
             }
         }

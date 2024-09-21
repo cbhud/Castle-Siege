@@ -1,19 +1,19 @@
 package me.cbhud.castlesiege.util;
+import me.cbhud.castlesiege.CastleSiege;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import me.cbhud.castlesiege.Main;
 
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MessagesConfiguration {
-    private final Main plugin;
+    private final CastleSiege plugin;
     private FileConfiguration config;
     private File configFile;
 
-    public MessagesConfiguration(Main plugin) {
+    public MessagesConfiguration(CastleSiege plugin) {
         this.plugin = plugin;
     }
 

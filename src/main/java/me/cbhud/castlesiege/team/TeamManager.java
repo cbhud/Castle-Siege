@@ -1,6 +1,6 @@
 package me.cbhud.castlesiege.team;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TeamManager {
-    private final Main plugin;
+    private final CastleSiege plugin;
     private final Map<String, Team> playerTeams; // Map to store player UUIDs and their corresponding teams
     private final int maxPlayersPerTeam;
 
-    public TeamManager(Main plugin, FileConfiguration config) {
+    public TeamManager(CastleSiege plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.playerTeams = new HashMap<>();
 
@@ -32,19 +32,13 @@ public class TeamManager {
 
         }
 
-        // Get the current team of the player
-        Team currentTeam = getTeam(player);
 
-        // Remove the player from the current team's scoreboard
-        if (currentTeam != null) {
-            plugin.getScoreboardManager().updateLobbyScoreboardForTeam(currentTeam);
+        if (getTeam(player) == team){
+            return false;
         }
-
-        // Add the player to the new team
         playerTeams.put(player.getUniqueId().toString(), team);
+        player.sendMessage("§aYou have joined the " + plugin.getConfigManager().getTeamName(team) + " team");
         plugin.getPlayerKitManager().setDefaultKit(player, team);
-
-        // Update the lobby scoreboard for the new team
         plugin.getScoreboardManager().updateLobbyScoreboardForTeam(team);
 
         return true;

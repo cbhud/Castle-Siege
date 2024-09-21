@@ -1,6 +1,6 @@
 package me.cbhud.castlesiege.kits;
 
-import me.cbhud.castlesiege.Main;
+import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class PlayerKitManager {
     private final Map<Player, KitType> selectedKits;
-    private Main plugin;
+    private CastleSiege plugin;
 
-    public PlayerKitManager(Main plugin) {
+    public PlayerKitManager(CastleSiege plugin) {
 
         this.plugin = plugin;
         this.selectedKits = new HashMap<>();
@@ -39,13 +39,19 @@ public class PlayerKitManager {
 
 
     public boolean selectKit(Player player, KitType kitType) {
+        if (kitType.getTeam() != plugin.getTeamManager().getTeam(player)){
+            player.sendMessage("§cYou cannot select the kit from the opposing team!");
+            return false;
+        }
         if (plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), kitType.toString())){
         selectedKits.put(player, kitType);
         plugin.getScoreboardManager().updateScoreboard(player);
-        return true;
-        }
+            player.sendMessage("§aYou have selected the " + kitType + " kit!");
+            return true;
+        }else {
+            player.sendMessage("§cYou do not have this kit unlocked. Right-click to purchase it.");
             return false;
-
+        }
     }
 
     public KitType getSelectedKit(Player player) {

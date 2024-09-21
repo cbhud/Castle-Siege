@@ -8,6 +8,9 @@
 
 package me.cbhud.castlesiege;
 
+import me.cbhud.castlesiege.commands.CoinsCommand;
+import me.cbhud.castlesiege.commands.Commands;
+import me.cbhud.castlesiege.commands.StatsCommand;
 import me.cbhud.castlesiege.util.*;
 import org.bukkit.plugin.java.*;
 import me.cbhud.castlesiege.playerstate.*;
@@ -20,7 +23,7 @@ import me.cbhud.castlesiege.event.*;
 import me.cbhud.castlesiege.state.*;
 
 
-public class Main extends JavaPlugin
+public class CastleSiege extends JavaPlugin
 {
     private Game game;
     private TypeManager type;
@@ -35,6 +38,7 @@ public class Main extends JavaPlugin
     private MobManager mobManager;
     private LocationManager locationManager;
     private Manager manager;
+    private Team team;
     private PlayerKitManager playerKitManager;
     private DataManager dataManager;
 
@@ -56,30 +60,30 @@ public class Main extends JavaPlugin
         this.type = new TypeManager(this);
         this.playerKitManager = new PlayerKitManager(this);
         this.teamManager = new TeamManager(this, this.getConfig());
-        this.playerManager = new PlayerManager(this, teamManager);
-        this.mobManager = new MobManager(this, this.teamManager, configManager);
+        this.playerManager = new PlayerManager(this);
+        this.mobManager = new MobManager(this);
         this.locationManager = new LocationManager(this);
-        this.timers = new Timers(this, configManager, messagesConfig);
-        this.gameEndHandler = new GameEndHandler(this, configManager, this.timers,messagesConfig);
+        this.timers = new Timers(this);
+        this.gameEndHandler = new GameEndHandler(this, team);
         this.saveDefaultConfig();
         this.reloadConfig();
-        manager = new Manager(configManager);
-        this.getCommand("stats").setExecutor(new StatsCommand(dataManager));
+        manager = new Manager();
+        this.getCommand("stats").setExecutor(new StatsCommand(this));
         this.getCommand("coins").setExecutor(new CoinsCommand(this));
-        this.getCommand("cs").setExecutor(new Commands(this, teamManager, mobManager, messagesConfig));
-        this.getServer().getPluginManager().registerEvents(new PlayerConnection(this, this.teamManager, this.timers, configManager), (Plugin)this);
+        this.getCommand("cs").setExecutor(new Commands(this));
+        this.getServer().getPluginManager().registerEvents(new PlayerConnection(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeathHandler(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new RightClickEffects(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new MiscEvents(this), (Plugin)this);
 
-        this.teamSelector = new TeamSelector();
-        this.kitSelector = new KitSelector();
-        this.scoreboardManager = new ScoreboardManager(this, this.teamManager, this.mobManager, configManager);
+        this.teamSelector = new TeamSelector(this);
+        this.kitSelector = new KitSelector(this);
+        this.scoreboardManager = new ScoreboardManager(this);
         this.game.setState(GameState.LOBBY);
         mapRegeneration = new MapRegeneration(this);
         getServer().getPluginManager().registerEvents(mapRegeneration, this);
-        tntThrower = new TNTThrower(this, this.configManager);
+        tntThrower = new TNTThrower(this);
         getServer().getPluginManager().registerEvents(tntThrower, this);
         this.getServer().getConsoleSender().sendMessage("CastleSiege has been enabled!");
     }
@@ -146,4 +150,5 @@ public class Main extends JavaPlugin
     }
 
     public LocationManager getLocationManager(){return  locationManager;}
+    public MessagesConfiguration getMessagesConfig(){return messagesConfig;}
 }

@@ -1,32 +1,62 @@
 package me.cbhud.castlesiege.gui;
 
-import org.bukkit.Bukkit;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import me.cbhud.castlesiege.team.Team;
+import me.cbhud.castlesiege.CastleSiege; // Assuming you need access to the plugin instance
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
+public class TeamSelector {
 
-public class TeamSelector implements InventoryHolder {
+    private final Gui gui;
+    private final CastleSiege plugin;
 
-    private final Inventory inv;
+    public TeamSelector(CastleSiege plugin) {
+        this.plugin = plugin;
+        gui = Gui.gui()
+                .title(Component.text("§eSelect Team"))
+                .rows(1)
+                .create();
 
-    public TeamSelector() {
-        inv = Bukkit.createInventory(this, 9, ChatColor.YELLOW + "Select Team");
         init();
     }
 
     private void init() {
-        // Use items from the Manager class to create GUI items
-        ItemStack item = Manager.createVikingTeamItem();
-        ItemStack item2 = Manager.createFranksTeamItem();
+        GuiItem vikingTeamItem = ItemBuilder.from(Material.RED_STAINED_GLASS_PANE)
+                .name(Component.text(ChatColor.RED + plugin.getConfigManager().getAttacker()))
+                .lore(Component.text("§7Assassinate the king and conquer the castle"))
+                .asGuiItem(event -> handleTeamSelection(event, Team.Attackers));
 
-        inv.setItem(5, item);
-        inv.setItem(3, item2);
+        GuiItem franksTeamItem = ItemBuilder.from(Material.CYAN_STAINED_GLASS_PANE)
+                .name(Component.text(ChatColor.AQUA + plugin.getConfigManager().getDefender()))
+                .lore(Component.text("§7Defend the castle and king"))
+                .asGuiItem(event -> handleTeamSelection(event, Team.Defenders));
+
+        gui.setItem(3, franksTeamItem);
+        gui.setItem(5, vikingTeamItem);
     }
 
-    @Override
-    public Inventory getInventory() {
-        return inv;
+    private void handleTeamSelection(InventoryClickEvent event, Team team) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        Player player = (Player) event.getWhoClicked();
+        if (event.getClickedInventory() == null || event.getCurrentItem() == null) return;
+
+        if (event.isRightClick()) {
+            plugin.getTeamManager().joinTeam(player, team); // Method to handle the team joining logic
+        }
+        // Left-click to select the kit
+        else if (event.isLeftClick()) {
+            plugin.getTeamManager().joinTeam(player, team); // Method to handle the team joining logic
+        }
+
+    }
+
+    public void open(Player player) {
+        gui.open(player);
     }
 }
