@@ -24,7 +24,7 @@ public class GameEndHandler implements Listener
 
     public void handleGameEnd() {
         this.plugin.getGame().setState(GameState.END);
-        this.removeCustomZombies();
+        plugin.getMobManager().removeCustomZombie();
         setPlayerWins();
         plugin.tntThrower().clearCooldowns();
         Bukkit.getScheduler().runTaskLater((Plugin)this.plugin, () -> {
@@ -57,7 +57,7 @@ public class GameEndHandler implements Listener
                 killername = "unknown";
             }
             setWinner(Team.Attackers);
-            this.plugin.getGameEndHandler().handleGameEnd();
+            handleGameEnd();
         }
     }
 
@@ -74,15 +74,6 @@ public class GameEndHandler implements Listener
         });
     }
 
-    private void removeCustomZombies() {
-        for (final World world : Bukkit.getWorlds()) {
-            for (final LivingEntity entity : world.getLivingEntities()) {
-                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().contains("King") || entity instanceof Wolf && entity.getCustomName() != null && entity.getCustomName().contains("Wolf")) {
-                    entity.remove();
-                }
-            }
-        }
-    }
 
     private void teleportPlayersToLobby() {
         final FileConfiguration config = this.plugin.getConfig();

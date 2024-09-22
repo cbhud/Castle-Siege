@@ -1,7 +1,6 @@
 package me.cbhud.castlesiege.util;
 
 import me.cbhud.castlesiege.CastleSiege;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -53,7 +52,7 @@ public class TNTThrower implements Listener {
                 long remainingCooldown = COOLDOWN_DURATION - (currentTime - cooldowns.get(playerId));
                 int remainingCooldownSeconds = (int) (remainingCooldown / 1000);
                 for (String line : plugin.getMessagesConfig().getCooldown()){
-                    line.replace("{cooldown}", "" + remainingCooldownSeconds);
+                    line = line.replace("{cooldown}","" + remainingCooldownSeconds);
                     player.sendMessage(line);
                 }
             }

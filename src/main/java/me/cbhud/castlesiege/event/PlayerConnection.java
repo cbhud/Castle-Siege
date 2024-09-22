@@ -4,6 +4,7 @@ import me.cbhud.castlesiege.CastleSiege;
 
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
+import me.cbhud.castlesiege.util.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,9 +16,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerConnection implements Listener {
     private final CastleSiege plugin;
+    private Timers timers;
 
 
-    public PlayerConnection(CastleSiege plugin) {
+    public PlayerConnection(CastleSiege plugin, Timers timers) {
         this.plugin = plugin;
     }
 
@@ -51,7 +53,7 @@ public class PlayerConnection implements Listener {
         Player player = event.getPlayer();
         if (plugin.getGame().getState() == GameState.IN_GAME) {
             plugin.getScoreboardManager().decrementTeamPlayersCount(player);
-            if (Bukkit.getOnlinePlayers().isEmpty()) {
+            if (Bukkit.getOnlinePlayers().size() < 1) {
                 plugin.getGameEndHandler().setWinner(null);
                 plugin.getGameEndHandler().handleGameEnd();
             } else if (plugin.getScoreboardManager().getVikings() < 1) {

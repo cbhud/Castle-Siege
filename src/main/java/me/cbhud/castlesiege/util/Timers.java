@@ -17,6 +17,7 @@ public class Timers {
     private final int initialCountdownSeconds;
     private int countdownSeconds;
     private int taskId;
+    private int countdownTimer;
     private final List<Integer> taskIds = new ArrayList<>();
     private BukkitRunnable timerTask;
 
@@ -76,13 +77,13 @@ public class Timers {
     }
 
     public void startTimer(int minutes) {
-        countdownSeconds = minutes * 60;
+        countdownTimer = minutes * 60;
 
         timerTask = new BukkitRunnable() {
             @Override
             public void run() {
-                if (countdownSeconds > 0) {
-                    countdownSeconds--;
+                if (countdownTimer > 0) {
+                    countdownTimer--;
                     if (plugin.getGame().getState() == GameState.IN_GAME) {
                         Bukkit.getOnlinePlayers().forEach(player -> {
                             FastBoard board = plugin.getScoreboardManager().scoreboards.get(player);
@@ -113,7 +114,7 @@ public class Timers {
     }
 
     public int getSecondsLeft() {
-        return countdownSeconds;
+        return countdownTimer;
     }
 
 }

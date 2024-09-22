@@ -87,22 +87,18 @@ public class DataManager {
     }
 
     public void disconnect() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+
                 if (connection != null) {
                     try {
                         connection.close();
                     } catch (SQLException e) {
-                        Bukkit.getScheduler().runTask(plugin, () -> {
                             plugin.getLogger().severe("Error closing database connection: " + e.getMessage());
                             e.printStackTrace();
-                        });
+                        }
                     }
                 }
-            }
-        }.runTaskAsynchronously(plugin);
-    }
+
+
 
     public boolean hasData(UUID uuid) {
         try (PreparedStatement statement = connection.prepareStatement(
