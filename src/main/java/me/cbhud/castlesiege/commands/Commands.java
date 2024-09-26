@@ -1,7 +1,7 @@
 package me.cbhud.castlesiege.commands;
 
 import me.cbhud.castlesiege.CastleSiege;
-import me.cbhud.castlesiege.kits.KitType;
+import me.cbhud.castlesiege.kits.KitManager;
 import me.cbhud.castlesiege.playerstate.PlayerStates;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.state.Type;
@@ -165,7 +165,6 @@ public class Commands implements CommandExecutor {
                     Bukkit.broadcastMessage(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
                     return true;
                 }
-
             plugin.getScoreboardManager().loadTeamCount();
 
 
@@ -231,7 +230,7 @@ public class Commands implements CommandExecutor {
                             // Apply kits to players asynchronously
                             Bukkit.getScheduler().runTask(plugin, () -> {
                                 if (plugin.getPlayerManager().getPlayerState(player) == PlayerStates.PLAYING) {
-                                    KitType selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
+                                    KitManager.KitData selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
                                     plugin.getPlayerKitManager().giveKit(player, selectedKit);
                                 }
                             });

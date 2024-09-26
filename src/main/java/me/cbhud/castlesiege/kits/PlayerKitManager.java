@@ -6,94 +6,127 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PlayerKitManager {
-    private final Map<Player, KitType> selectedKits;
-    private CastleSiege plugin;
+    private final Map<Player, KitManager.KitData> selectedKits; // Track each player's selected kit
+    private final CastleSiege plugin;
 
     public PlayerKitManager(CastleSiege plugin) {
-
         this.plugin = plugin;
         this.selectedKits = new HashMap<>();
     }
 
-    public void giveKit(Player player, KitType kitType) {
+    public boolean hasSelectedKit(Player player){
+        if (selectedKits.containsKey(player)){
+            return true;
+        }
+        return false;
+    }
 
-        player.getInventory().clear();
+    public void giveKit(Player player, KitManager.KitData kit) {
+        player.getInventory().clear(); // Clear the player's inventory first
 
-        for (ItemStack item : kitType.getItems()){
+        for (ItemStack item : kit.getItems()) {
             player.getInventory().addItem(item);
         }
 
-        if (kitType.hasArmor()){
-            equipArmor(player, kitType.getArmorItems());
-        }
-
-        selectedKits.put(player, kitType);
+        equipArmor(player, kit.getItems());
+        selectedKits.put(player, kit); // Store selected kit for the player
     }
 
-    public boolean hasSelectedKit(Player player) {
-        return selectedKits.containsKey(player);
-    }
-
-
-    public boolean selectKit(Player player, KitType kitType) {
-        if (kitType.getTeam() != plugin.getTeamManager().getTeam(player)){
-            player.sendMessage("§cYou cannot select the kit from the opposing team!");
+    public boolean selectKit(Player player, String kitName) {
+        KitManager.KitData kit = plugin.getKitManager().getKitByName(kitName); // Get kit by name
+        if (kit == null) {
+            player.sendMessage("§cKit not found.");
             return false;
         }
-        if (plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), kitType.toString())){
-        selectedKits.put(player, kitType);
-        plugin.getScoreboardManager().updateScoreboard(player);
-            player.sendMessage("§aYou have selected the " + kitType + " kit!");
+
+        if (kit.getTeam() != plugin.getTeamManager().getTeam(player)) {
+            player.sendMessage("§cYou cannot select a kit from the opposing team!");
+            return false;
+        }
+
+        if (plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), kit.getName())) {
+            selectedKits.put(player, kit);
+            plugin.getScoreboardManager().updateScoreboard(player);
+            player.sendMessage("§aYou have selected the " + kit.getName() + " kit!");
             return true;
-        }else {
+        } else {
             player.sendMessage("§cYou do not have this kit unlocked. Right-click to purchase it.");
             return false;
         }
     }
 
-    public KitType getSelectedKit(Player player) {
+    public KitManager.KitData getSelectedKit(Player player) {
         return selectedKits.get(player);
     }
 
-    public void setDefaultKit(Player player, Team team) {
-        // Choose your default kit or provide some logic to determine it
-        KitType defaultKit = KitType.getDefaultKit(team);
+    public int getKitPrice(KitManager.KitData kit) {
+        return kit.getPrice();
+    }
 
-        if (defaultKit != null) {
-            selectKit(player, defaultKit);
+    private void equipArmor(Player player, List<ItemStack> items) {
+        ItemStack helmet = null, chestplate = null, leggings = null, boots = null;
+
+        for (ItemStack item : items) {
+            switch (item.getType()) {
+                case LEATHER_HELMET: case CHAINMAIL_HELMET: case IRON_HELMET: case DIAMOND_HELMET: case NETHERITE_HELMET:
+                    helmet = item; break;
+                case LEATHER_CHESTPLATE: case CHAINMAIL_CHESTPLATE: case IRON_CHESTPLATE: case DIAMOND_CHESTPLATE: case NETHERITE_CHESTPLATE:
+                    chestplate = item; break;
+                case LEATHER_LEGGINGS: case CHAINMAIL_LEGGINGS: case IRON_LEGGINGS: case DIAMOND_LEGGINGS: case NETHERITE_LEGGINGS:
+                    leggings = item; break;
+                case LEATHER_BOOTS: case CHAINMAIL_BOOTS: case IRON_BOOTS: case DIAMOND_BOOTS: case NETHERITE_BOOTS:
+                    boots = item; break;
+                default: break;
+            }
+        }
+
+        // Equip and remove from the player's inventory
+        if (helmet != null) {
+            player.getInventory().setHelmet(helmet);
+            player.getInventory().remove(helmet); // Remove from player's inventory
+        }
+        if (chestplate != null) {
+            player.getInventory().setChestplate(chestplate);
+            player.getInventory().remove(chestplate); // Remove from player's inventory
+        }
+        if (leggings != null) {
+            player.getInventory().setLeggings(leggings);
+            player.getInventory().remove(leggings); // Remove from player's inventory
+        }
+        if (boots != null) {
+            player.getInventory().setBoots(boots);
+            player.getInventory().remove(boots); // Remove from player's inventory
         }
     }
 
-    public int getKitPrice(KitType kit) {
-        switch (kit) {
-            case BERSERKER:
-                return 40;
-            case BOMBARDIER:
-                return 30;
-            case WARRIOR:
-                return 80;
-            case KNIGHT:
-                return 90;
-            case SPEARMAN:
-                return 20;
-            case WIZARD:
-                return 45;
-            default:
-                return 0;
+
+    public void setDefaultKit(Player player) {
+        Team playerTeam = plugin.getTeamManager().getTeam(player); // Get the player's team
+        String defaultKitName;
+
+        // Determine the default kit based on the player's team
+        if (playerTeam == Team.Attackers) {
+            defaultKitName = "Skald"; // Default kit for Attackers
+        } else if (playerTeam == Team.Defenders) {
+            defaultKitName = "Marksman"; // Default kit for Defenders
+        } else {
+            player.sendMessage("§cYou are not part of a valid team.");
+            return;
         }
+
+        KitManager.KitData kit = plugin.getKitManager().getKitByName(defaultKitName);
+        if (kit == null) {
+            player.sendMessage("§cDefault kit not found.");
+            return;
+        }
+
+        // Automatically select the kit for the player
+        selectedKits.put(player, kit);
     }
 
-
-    private void equipArmor(Player player, ItemStack[] armorItems) {
-        if (armorItems.length == 4) {
-            player.getInventory().setHelmet(armorItems[0]);
-            player.getInventory().setChestplate(armorItems[1]);
-            player.getInventory().setLeggings(armorItems[2]);
-            player.getInventory().setBoots(armorItems[3]);
-        }
-    }
 
 }

@@ -2,7 +2,6 @@ package me.cbhud.castlesiege.event;
 
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
-import me.cbhud.castlesiege.kits.KitType;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.entity.Player;
@@ -61,7 +60,7 @@ public class DamageListener implements Listener {
                             event.setCancelled(true);
                         }
                         ItemMeta damagerItemMeta = damager.getInventory().getItemInMainHand().getItemMeta();
-                        if (damagerItemMeta != null && damagerItemMeta.equals(Manager.sword.getItemMeta()) && plugin.getPlayerKitManager().getSelectedKit(damager) == KitType.WIZARD) {
+                        if (damagerItemMeta != null && damagerItemMeta.equals(Manager.sword.getItemMeta())) {
                             if (rand.nextInt(15) + 1 == 6){
                                 damagedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 0));
                             }

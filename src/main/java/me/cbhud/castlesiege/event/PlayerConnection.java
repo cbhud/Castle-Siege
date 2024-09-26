@@ -16,10 +16,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerConnection implements Listener {
     private final CastleSiege plugin;
-    private Timers timers;
 
-
-    public PlayerConnection(CastleSiege plugin, Timers timers) {
+    public PlayerConnection(CastleSiege plugin) {
         this.plugin = plugin;
     }
 

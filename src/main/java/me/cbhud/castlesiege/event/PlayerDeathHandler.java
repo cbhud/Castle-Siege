@@ -2,7 +2,7 @@ package me.cbhud.castlesiege.event;
 
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
-import me.cbhud.castlesiege.kits.KitType;
+import me.cbhud.castlesiege.kits.KitManager;
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.state.Type;
 import me.cbhud.castlesiege.team.Team;
@@ -50,7 +50,7 @@ public class PlayerDeathHandler implements Listener {
                     plugin.getGameEndHandler().handleGameEnd();
                 }
                 if (killer != null) {
-                    KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
+                    KitManager.KitData killerKit = plugin.getPlayerKitManager().getSelectedKit(player);
                     if (killerKit != null) {
                         applyKillEffects(killer, killerKit);
                     }
@@ -72,7 +72,7 @@ public class PlayerDeathHandler implements Listener {
         }
 
         if (killer != null) {
-            KitType killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
+            KitManager.KitData killerKit = plugin.getPlayerKitManager().getSelectedKit(killer);
             if (killerKit != null) {
                 applyKillEffects(killer, killerKit);
             }
@@ -82,32 +82,32 @@ public class PlayerDeathHandler implements Listener {
 
 
     // Adding KillEffects functionality
-    private void applyKillEffects(Player player, KitType kitType) {
-        switch (kitType) {
-            case MARKSMAN:
+    private void applyKillEffects(Player player, KitManager.KitData kitType) {
+        switch (kitType.getName()) {
+            case "MARKSMAN":
                 player.getInventory().addItem(new ItemStack(Material.SPECTRAL_ARROW));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 break;
-            case SPEARMAN:
+            case "SPEARMAN":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 break;
-            case KNIGHT:
+            case "KNIGHT":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
                 break;
-            case BERSERKER:
+            case "BERSERKER":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 100, 0));
                 player.addPotionEffect((new PotionEffect(PotionEffectType.REGENERATION, 100, 1)));
                 break;
-            case SKALD:
+            case "SKALD":
                 player.getInventory().addItem(Manager.harm);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 100, 1));
                 break;
-            case WARRIOR:
+            case "WARRIOR":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
                 break;
-            case BOMBARDIER:
+            case "BOMBARDIER":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100, 1));
                 break;

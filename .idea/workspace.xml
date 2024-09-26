@@ -6,18 +6,27 @@
   <component name="ChangeListManager">
     <list default="true" id="18ab981d-4b41-4794-b282-ada7126ace5a" name="Changes" comment="1.2.7 Code improvments">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/CastleSiege.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/CastleSiege.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/CoinsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/CoinsCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/Commands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/StatsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/commands/StatsCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/DamageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/DamageListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerDeathHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/event/PlayerDeathHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/playerstate/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/playerstate/PlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/KitSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/KitSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/gui/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/kits/KitType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/kits/PlayerKitManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/kits/PlayerKitManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/scoreboard/ScoreboardManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/scoreboard/ScoreboardManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/state/GameEndHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/state/GameEndHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/team/TeamManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/team/TeamManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/DataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/DataManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/LocationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/LocationManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MessagesConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MessagesConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MobManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/MobManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/TNTThrower.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/TNTThrower.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/Timers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/cbhud/castlesiege/util/Timers.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +75,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Maven.Practice [compile].executor&quot;: &quot;Run&quot;,
     &quot;Maven.Practice [dependency:tree].executor&quot;: &quot;Run&quot;,
     &quot;Maven.Practice [package].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,

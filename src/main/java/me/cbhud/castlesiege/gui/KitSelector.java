@@ -4,11 +4,12 @@ import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import me.cbhud.castlesiege.CastleSiege;
-import me.cbhud.castlesiege.kits.KitType;
+import me.cbhud.castlesiege.kits.KitManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+
 public class KitSelector {
 
     private final Gui gui;
@@ -25,46 +26,74 @@ public class KitSelector {
     }
 
     private void init() {
+        // Manually creating items for each kit
+        KitManager kitManager = plugin.getKitManager(); // Access KitManager to retrieve kits
+
         GuiItem berserkerItem = ItemBuilder.from(Material.IRON_AXE)
                 .name(Component.text("§cBerserker"))
-                .lore(Component.text("§7Great warrior with throwable axe"), Component.text("§6Price: 50 coins"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.BERSERKER));
+                .lore(Component.text("§7Great warrior with throwable axe"),
+                        Component.text("§6Price: 50 coins"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Berserker")));
 
         GuiItem bombardierItem = ItemBuilder.from(Material.TNT)
                 .name(Component.text("§cBombardier"))
-                .lore(Component.text("§7Destroyer of enemies' fences"), Component.text("§6Price: 30 coins"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.BOMBARDIER));
+                .lore(Component.text("§7Destroyer of enemies' fences"),
+                        Component.text("§6Price: 30 coins"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Bombardier")));
 
         GuiItem skaldItem = ItemBuilder.from(Material.BOW)
                 .name(Component.text("§cSkald"))
-                .lore(Component.text("§7Sharp shooter with poisonous arrows"), Component.text("§6Price: Free"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.SKALD));
+                .lore(Component.text("§7Sharp shooter with poisonous arrows"),
+                        Component.text("§6Price: Free"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Skald")));
 
         GuiItem warriorItem = ItemBuilder.from(Material.IRON_SWORD)
                 .name(Component.text("§cWarrior"))
-                .lore(Component.text("§7Legendary warrior with Ragnarok ability"), Component.text("§6Price: 80 coins"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.WARRIOR));
+                .lore(Component.text("§7Legendary warrior with Ragnarok ability"),
+                        Component.text("§6Price: 80 coins"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Warrior")));
 
         GuiItem marksmanItem = ItemBuilder.from(Material.CROSSBOW)
                 .name(Component.text("§bMarksman"))
-                .lore(Component.text("§7Most precise shooter with special crossbow"), Component.text("§6Price: Free"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.MARKSMAN));
+                .lore(Component.text("§7Most precise shooter with special crossbow"),
+                        Component.text("§6Price: Free"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Marksman")));
 
         GuiItem spearmanItem = ItemBuilder.from(Material.TRIDENT)
                 .name(Component.text("§bSpearman"))
-                .lore(Component.text("§7Armed with a spear"), Component.text("§6Price: 20 coins"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.SPEARMAN));
+                .lore(Component.text("§7Armed with a spear"),
+                        Component.text("§6Price: 20 coins"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Spearman")));
 
         GuiItem wizardItem = ItemBuilder.from(Material.SPLASH_POTION)
                 .name(Component.text("§bWizard"))
-                .lore(Component.text("§7Empower your magic with wizard kit"), Component.text("§6Price: 45 coins"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.WIZARD));
+                .lore(Component.text("§7Empower your magic with wizard kit"),
+                        Component.text("§6Price: 45 coins"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Wizard")));
 
         GuiItem knightItem = ItemBuilder.from(Material.SHIELD)
                 .name(Component.text("§bKnight"))
-                .lore(Component.text("§7Honored soldier who served the king"), Component.text("§6Price: 90 coins"), Component.text("§7Left-click to select"), Component.text("§7Right-click to select"))
-                .asGuiItem(event -> handleKitSelection(event, KitType.KNIGHT));
+                .lore(Component.text("§7Honored soldier who served the king"),
+                        Component.text("§6Price: 90 coins"),
+                        Component.text("§7Left-click to select"),
+                        Component.text("§7Right-click to purchase"))
+                .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Knight")));
 
+        // Add items to the GUI
         gui.setItem(14, berserkerItem);
         gui.setItem(15, bombardierItem);
         gui.setItem(16, skaldItem);
@@ -79,7 +108,7 @@ public class KitSelector {
         gui.open(player);
     }
 
-    private void handleKitSelection(InventoryClickEvent event, KitType selectedKit) {
+    private void handleKitSelection(InventoryClickEvent event, KitManager.KitData selectedKit) {
         if (!(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
         if (event.getClickedInventory() == null || event.getCurrentItem() == null) return;
@@ -93,14 +122,14 @@ public class KitSelector {
         // Left-click to select the kit
         else if (event.isLeftClick()) {
             selectKit(player, selectedKit);
-            gui.close(player);// Method to handle the team joining logic
+            gui.close(player); // Close the GUI after selection
         }
     }
 
-    private void attemptToPurchaseKit(Player player, KitType kit) {
+    private void attemptToPurchaseKit(Player player, KitManager.KitData kit) {
         int kitPrice = plugin.getPlayerKitManager().getKitPrice(kit);
 
-        if (plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), kit.name())) {
+        if (plugin.getDbConnection().checkPlayerKit(player.getUniqueId(), kit.getName())) {
             player.sendMessage("§aYou already own this kit!");
             return;
         }
@@ -108,15 +137,14 @@ public class KitSelector {
         plugin.getDbConnection().removePlayerCoins(player.getUniqueId(), kitPrice, success -> {
             if (success) {
                 plugin.getDbConnection().unlockPlayerKit(player.getUniqueId(), kit);
-                player.sendMessage("§aYou have successfully purchased the " + kit + " kit!");
+                player.sendMessage("§aYou have successfully purchased the " + kit.getName() + " kit!");
             } else {
                 player.sendMessage("§cYou do not have enough coins to purchase this kit. You need " + kitPrice + " coins!");
             }
         });
     }
 
-    private void selectKit(Player player, KitType selectedKit) {
-            plugin.getPlayerKitManager().selectKit(player, selectedKit);
+    private void selectKit(Player player, KitManager.KitData selectedKit) {
+        plugin.getPlayerKitManager().selectKit(player, selectedKit.getName());
     }
-
 }

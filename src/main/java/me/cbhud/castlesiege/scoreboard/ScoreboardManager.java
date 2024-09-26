@@ -74,7 +74,7 @@ public class ScoreboardManager {
         board.updateLine(5, mainColor +"Team: " +secondaryColor+ (team != null ? getTeamName(team) : "No Team"));
         board.updateLine(6, " ");
         board.updateLine(7, mainColor +"Kit: " +secondaryColor+ (plugin.getPlayerKitManager().hasSelectedKit(player) ?
-                plugin.getPlayerKitManager().getSelectedKit(player).getDisplayName() : "Select kit"));
+                plugin.getPlayerKitManager().getSelectedKit(player).getName() : "Select kit"));
         board.updateLine(8, " ");
         board.updateLine(9, mainColor +"Coins: " +secondaryColor+ plugin.getDbConnection().getPlayerCoins(player.getUniqueId()));
         board.updateLine(10," ");
@@ -171,7 +171,7 @@ public class ScoreboardManager {
         board.updateLine(4, " ");
         board.updateLine(5, mainColor +"Team: " + secondaryColor + (team != null ? getTeamName(team) : "No Team"));
         board.updateLine(6, " ");
-        board.updateLine(7, mainColor +"Kit: " + secondaryColor + (plugin.getPlayerKitManager().hasSelectedKit(player) ? plugin.getPlayerKitManager().getSelectedKit(player).getDisplayName() : "Select kit"));
+        board.updateLine(7, mainColor +"Kit: " + secondaryColor + (plugin.getPlayerKitManager().hasSelectedKit(player) ? plugin.getPlayerKitManager().getSelectedKit(player).getName() : "Select kit"));
         board.updateLine(8, " ");
         board.updateLine(9, mainColor +"Coins: " +secondaryColor+ plugin.getDbConnection().getPlayerCoins(player.getUniqueId()));
         board.updateLine(10," ");

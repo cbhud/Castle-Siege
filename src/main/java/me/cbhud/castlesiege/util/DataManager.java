@@ -1,7 +1,7 @@
 package me.cbhud.castlesiege.util;
 
 import me.cbhud.castlesiege.CastleSiege;
-import me.cbhud.castlesiege.kits.KitType;
+import me.cbhud.castlesiege.kits.KitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.h2.jdbcx.JdbcDataSource;
@@ -288,12 +288,12 @@ public class DataManager {
         return false;
     }
 
-    public void unlockPlayerKit(UUID uuid, KitType kit) {
+    public void unlockPlayerKit(UUID uuid, KitManager.KitData kitType) {
         new BukkitRunnable() {
             @Override
             public void run() {
                 try (PreparedStatement statement = connection.prepareStatement(
-                        "UPDATE player_kits SET " + kit.toString() + " = TRUE WHERE uuid = ?")) {
+                        "UPDATE player_kits SET " + kitType.getName() + " = TRUE WHERE uuid = ?")) {
                     statement.setString(1, uuid.toString());
                     statement.executeUpdate();
                 } catch (SQLException e) {

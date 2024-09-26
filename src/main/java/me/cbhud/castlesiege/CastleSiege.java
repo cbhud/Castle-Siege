@@ -39,6 +39,7 @@ public class CastleSiege extends JavaPlugin
     private LocationManager locationManager;
     private Manager manager;
     private Team team;
+    private KitManager kitManager;
     private PlayerKitManager playerKitManager;
     private DataManager dataManager;
 
@@ -58,6 +59,8 @@ public class CastleSiege extends JavaPlugin
 
         this.game = new Game(this);
         this.type = new TypeManager(this);
+        manager = new Manager();
+        kitManager = new KitManager(this);
         this.playerKitManager = new PlayerKitManager(this);
         this.teamManager = new TeamManager(this, this.getConfig());
         this.playerManager = new PlayerManager(this);
@@ -67,7 +70,6 @@ public class CastleSiege extends JavaPlugin
         this.gameEndHandler = new GameEndHandler(this, team);
         this.saveDefaultConfig();
         this.reloadConfig();
-        manager = new Manager();
         this.getCommand("stats").setExecutor(new StatsCommand(this));
         this.getCommand("coins").setExecutor(new CoinsCommand(this));
         this.getCommand("cs").setExecutor(new Commands(this));
@@ -129,7 +131,7 @@ public class CastleSiege extends JavaPlugin
     public ScoreboardManager getScoreboardManager() {
         return this.scoreboardManager;
     }
-
+public KitManager getKitManager(){return  this.kitManager;}
     public TeamSelector getTeamSelector() {
         return this.teamSelector;
     }

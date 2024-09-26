@@ -31,7 +31,7 @@ public class TeamManager {
         }
         playerTeams.put(player.getUniqueId().toString(), team);
         player.sendMessage("§aYou have joined the " + plugin.getConfigManager().getTeamName(team) + " team");
-        plugin.getPlayerKitManager().setDefaultKit(player, team);
+        plugin.getPlayerKitManager().setDefaultKit(player);
         plugin.getScoreboardManager().updateLobbyScoreboardForTeam(team);
 
         return true;

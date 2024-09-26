@@ -3,12 +3,12 @@ package me.cbhud.castlesiege.gui;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 public class Manager {
 
     public static ItemStack axe;
-    public static ItemStack combataxe;
     public static ItemStack stew;
     public static ItemStack rage;
     public static ItemStack ragnarok;
@@ -17,6 +17,7 @@ public class Manager {
     public static ItemStack sword;
     public static ItemStack attack;
     public static ItemStack support;
+    public static ItemStack spear;
 
     public Manager() {
         initItems();
@@ -24,7 +25,7 @@ public class Manager {
 
     private void initItems() {
         createAxe();
-        createCombatAxe();
+        createSpear();
         createStew();
         createRage();
         createRagnarok();
@@ -42,10 +43,11 @@ public class Manager {
                 .build();
     }
 
-    private void createCombatAxe() {
-        combataxe = ItemBuilder.from(Material.IRON_AXE)
-                .name(Component.text("§eCombat Axe"))
-                .lore(Component.text("§7Berserker's combat axe"))
+    private void createSpear() {
+        spear = ItemBuilder.from(Material.TRIDENT)
+                .name(Component.text("§cThrowable Axe"))
+                .lore(Component.text("§7Right-click to throw"))
+                .enchant(Enchantment.LOYALTY, 1)
                 .build();
     }
 
