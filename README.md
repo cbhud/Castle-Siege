@@ -1,66 +1,173 @@
-Castle Siege Plugin Documentation
-Overview
 
-The Castle Siege plugin is a multiplayer PvP game where players form teams to defend or attack a castle. Each team has unique roles, abilities, and strategies. The plugin includes features such as customizable kits, map regeneration, and a reward system based on coins and stats.
-Features
+# Castle Siege Plugin Documentation
 
-    King Role: One player is designated as the King, and the team's objective is to protect or eliminate them.
-    Teams: Multiple teams with customizable sizes.
-    Kits & Abilities: Players can choose from various kits, each with its own abilities.
-    Coins: Earned during gameplay and used to unlock kits, abilities, and cosmetics.
-    Stats: Track player performance with built-in stats and leaderboards.
-    Map Regeneration: Automatically regenerates the battlefield after each round.
+## Introduction
 
-Installation
+**Castle Siege** is a thrilling Minecraft minigame plugin inspired by Mineplex. Engage in intense battles as Attackers or Defenders, where your objective is either to protect the King or assassinate him. With multiple kits, abilities, and strategic elements, this game is packed with fun for all players.
 
-    Download the Castle Siege plugin from SpigotMC.
-    Place the .jar file into your server's plugins folder.
-    Restart the server to generate the configuration files.
+----------
 
-Configuration
+## Features Overview
 
-    Open the config.yml located in the plugins/CastleSiege/ folder.
-    Modify the settings:
-        Teams: Define team names, colors, and sizes.
-        Kits: Configure available kits and abilities.
-        Map Settings: Set map regeneration rules and timers.
+-   **Teams**: Two sides – Defenders and Attackers.
+-   **8 Kits**: Four unique kits per team, each with custom abilities.
+-   **Modes**: Normal (respawn allowed) or Hardcore (no respawns).
+-   **Abilities**: Special items for kits with various effects.
+-   **Coins**: Earned through gameplay to unlock new kits.
+-   **Kill Rewards**: Get boosts like Speed or Regeneration on kills.
+-   **Throwable Weapons**: Berserker’s throwable axes and Bombardier’s TNT to damage players or destroy obstacles.
+-   **Map Regeneration**: Automatically rebuilds destroyed fences after each game.
+-   **Statistics Tracking**: Tracks kills, deaths, and wins for each player.
+-   **Fully Configurable**: Modify teams, kits, coins, messages, and more.
+-   **Autostart**: Game can automatically begin when enough players join.
+-   **Free Map**: Pre-made map available for download and use.
 
-Commands
+----------
 
-    /castlesiege start – Starts a new game.
-    /castlesiege stop – Stops the current game.
-    /castlesiege reload – Reloads the plugin configuration.
-    /castlesiege team [name] – Assign players to teams.
+## Installation Guide
 
-Permissions
+### Requirements:
 
-    castlesiege.admin: Full access to plugin commands.
-    castlesiege.play: Allows players to join and play Castle Siege.
+-   Minecraft server running **Spigot** or **Paper** (version 1.17+).
+-   Java **17** or later.
+-   **Maven** for compiling the plugin (optional for development).
 
-Gameplay Mechanics
+### Steps:
 
-    Players are divided into teams, with one player designated as the King.
-    The objective is to eliminate the opposing team's King while protecting your own.
-    Players can use coins earned in-game to unlock better kits and abilities.
-    After each round, the map regenerates, resetting the battlefield.
+1.  Download the latest Castle Siege JAR from the [releases](https://www.spigotmc.org/resources/castle-siege.115123/) page.
+2.  Place the JAR file into your server’s `plugins/` folder.
+3.  Restart the server to enable the plugin.
+4.  Configure the plugin using the provided configuration files.
 
-Coin System
+----------
 
-    Players earn coins by completing objectives such as kills, assists, and victories.
-    Coins can be spent on cosmetic upgrades, better kits, and abilities in future matches.
+## Configuration
 
-Map Regeneration
+### Main Configuration File (`config.yml`)
 
-    After each round, the plugin automatically regenerates the map to its original state.
-    Customize the map regeneration timer and rules in the configuration files.
+Adjust key settings such as team names, game duration, kit prices, king health, and coin rewards.
 
-Frequently Asked Questions
+-   **maxPlayersPerTeam**: Maximum players per team (default: 16).
+-   **auto-start-players**: Minimum players required to start the game automatically.
+-   **king-health**: Health points for the King (default: 80.0).
+-   **coins-on-kill / coins-on-win**: Set coin rewards for kills and victories.
 
-Q: How do I set up custom kits?
-A: Kits can be defined in the kits.yml file, where you specify the items, abilities, and permissions for each kit.
+### Kit Configuration (`kits.yml`)
 
-Q: How do I enable map regeneration?
-A: Map regeneration is enabled by default but can be customized or disabled in the config.yml file.
-Support
+The **kits.yml** file allows you to customize kits, item prices, and abilities. For now, it's recommended to only adjust kit items and prices without altering kit names or teams.
 
-For further assistance, visit the SpigotMC resource page.
+### Map Regeneration
+
+Attackers can destroy **Oak Fences**, and Defenders can rebuild them. Fences automatically regenerate after the game.
+
+----------
+
+## Commands
+
+### Permissions:
+-   `cs.admin`: Full access to admin commands.
+### Admin Commands:
+
+-   `/cs setlobby`: Set the lobby location.
+-   `/cs setspawn <team>`: Set spawn locations for Attackers or Defenders.
+-   `/cs setmobspawn`: Set the King's spawn point.
+-   `/cs start`: Start the game manually.
+-   `/cs endgame`: End the game without a winner.
+-   `/cs type`: Toggle between Normal and Hardcore modes.
+
+-   `/coins <set | add | remove> <player> <amount>`: Manage player coins.
+
+### Player Commands:
+
+-   `USE SELECTOR`:  Join a specific team or select a kit.
+-   `/stats [player]`: View player statistics.
+
+----------
+
+## Game Modes
+
+### Normal Mode:
+
+Players respawn 5 seconds after death. It’s suitable for more casual gameplay where players can keep battling after death.
+
+### Hardcore Mode:
+
+Players do not respawn after death, raising the stakes for each move.
+
+Use `/cs type` to switch between **Normal** and **Hardcore**.
+
+----------
+
+## Kits and Abilities
+
+### Attackers:
+
+1.  **Skald**:
+    
+    -   Weapons: Stone Sword, Bow (32 arrows), Healing Stew (2x)
+    -   Ability: **Skald Sight** (Jump Boost, Speed, Night Vision)
+    -   Kill Effects: Harm Arrow, Regeneration, Absorption
+2.  **Bombardier**:
+    
+    -   Weapons: Stone Sword, Throwable TNT, Chain Armor, Healing Stew
+    -   Ability: **Throwable TNT** (destroys fences)
+    -   Kill Effects: Speed, Jump Boost
+3.  **Berserker**:
+    
+    -   Weapons: Iron Axe, Throwable Axe, Chain Armor, Healing Stew
+    -   Ability: **Rage** (Speed, Resistance, Strength)
+    -   Kill Effects: Absorption, Regeneration
+4.  **Warrior**:
+    
+    -   Weapons: Iron Sword, Iron Armor, Healing Stew
+    -   Ability: **Ragnarok** (Strength 1, Speed 1)
+    -   Kill Effects: Resistance
+
+### Defenders:
+
+1.  **Marksman**:
+    
+    -   Weapons: Stone Sword, Crossbow (32 arrows), Chain Armor, Healing Stew
+    -   Kill Effects: Spectral Arrow, Speed
+2.  **Spearman**:
+    
+    -   Weapons: Iron Sword, Loyalty Spear, Chain Armor, Healing Stew
+    -   Kill Effects: Speed
+3.  **Wizard**:
+    
+    -   Weapons: Mystic Sword (chance to cast poison), Attack Wand (cast poison, slowness, or blindness), Support Wand (boost teammates)
+    -   Kill Effects: Blast enemies within 10 blocks for 3 hearts of damage
+4.  **Knight**:
+    
+    -   Weapons: Iron Sword, Iron Armor, Healing Stew
+    -   Kill Effects: Speed, Resistance
+
+----------
+
+## Coin System
+
+Players earn coins for kills and wins, which can be used to purchase and unlock kits. The number of coins rewarded can be configured in `config.yml`:
+
+-   **coins-on-kill**: Coins earned per kill.
+-   **coins-on-win**: Coins earned for winning the game.
+
+----------
+
+## Map Regeneration System
+
+Attackers can destroy **Oak Fences**, while Defenders can rebuild them during the game. After the game ends, all destroyed or placed fences are automatically regenerated.
+
+----------
+
+## Free Map
+
+A pre-built map is available for download:
+
+-   [Map Download Link](https://www.mediafire.com/file/7b348d4d9f2ugxo/world.rar/file)
+-   Coordinates: `-751, 116, 607`
+
+----------
+
+## Future Updates
+
+The plugin will receive monthly updates with bug fixes, new features, and balance improvements. For feedback or bug reports, contact me via Discord: cbhud.
