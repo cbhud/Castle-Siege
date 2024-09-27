@@ -26,8 +26,7 @@ public class KitSelector {
     }
 
     private void init() {
-        // Manually creating items for each kit
-        KitManager kitManager = plugin.getKitManager(); // Access KitManager to retrieve kits
+        KitManager kitManager = plugin.getKitManager();
 
         GuiItem berserkerItem = ItemBuilder.from(Material.IRON_AXE)
                 .name(Component.text("§cBerserker"))
@@ -113,16 +112,14 @@ public class KitSelector {
         Player player = (Player) event.getWhoClicked();
         if (event.getClickedInventory() == null || event.getCurrentItem() == null) return;
 
-        event.setCancelled(true); // Cancel the event upfront
+        event.setCancelled(true);
 
-        // Right-click to attempt to buy the kit
         if (event.isRightClick()) {
             attemptToPurchaseKit(player, selectedKit);
         }
-        // Left-click to select the kit
         else if (event.isLeftClick()) {
             selectKit(player, selectedKit);
-            gui.close(player); // Close the GUI after selection
+            gui.close(player);
         }
     }
 

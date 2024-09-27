@@ -8,19 +8,17 @@ import java.util.*;
 
 public class TeamManager {
     private final CastleSiege plugin;
-    private final Map<String, Team> playerTeams; // Map to store player UUIDs and their corresponding teams
+    private final Map<String, Team> playerTeams;
     private final int maxPlayersPerTeam;
 
     public TeamManager(CastleSiege plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.playerTeams = new HashMap<>();
 
-        // Read the maxPlayersPerTeam value from the config, default to 5 if not present
         this.maxPlayersPerTeam = config.getInt("maxPlayersPerTeam", 16);
     }
 
     public boolean joinTeam(Player player, Team team) {
-        // Check if the team has reached the maximum number of players
         if (getPlayersInTeam(team) >= maxPlayersPerTeam) {
              player.sendMessage("§cThe " + plugin.getConfigManager().getTeamName(team) + " team is full!");
         }
@@ -38,7 +36,6 @@ public class TeamManager {
     }
 
     public Team getTeam(Player player) {
-        // Get the team for a player
         return playerTeams.get(player.getUniqueId().toString());
     }
 
@@ -51,7 +48,6 @@ public class TeamManager {
     }
 
     public int getPlayersInTeam(Team team) {
-        // Count the number of players in the specified team
         return (int) playerTeams.values().stream().filter(t -> t == team).count();
     }
 

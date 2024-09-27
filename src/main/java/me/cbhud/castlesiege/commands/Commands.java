@@ -13,7 +13,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
@@ -60,11 +59,13 @@ public class Commands implements CommandExecutor {
             if (sender.hasPermission("cs.admin")) {
                 plugin.getMobManager().removeCustomZombie();
                 plugin.getTimer().cancelTimer();
-                teleportPlayersToLobby();
+                plugin.getLocationManager().teleportPlayersToLobby();
                 plugin.getGame().setState(GameState.LOBBY);
                 this.plugin.getMapRegeneration().regenerateChangedBlocks();
                 plugin.tntThrower().clearCooldowns();
-                Bukkit.broadcastMessage(plugin.getMessagesConfig().getForceStopMsg().toString());
+                for (String line : plugin.getMessagesConfig().getForceStopMsg()){
+                Bukkit.broadcastMessage(line);
+                }
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             }
@@ -75,36 +76,6 @@ public class Commands implements CommandExecutor {
         return true;
     }
 
-
-    private void teleportPlayersToLobby() {
-        // Submitting the lobby teleportation task asynchronously
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            FileConfiguration config = plugin.getConfig();
-
-            if (config.contains("lobby.world")) {
-                String worldName = config.getString("lobby.world");
-                double x = config.getDouble("lobby.x");
-                double y = config.getDouble("lobby.y");
-                double z = config.getDouble("lobby.z");
-                float yaw = (float) config.getDouble("lobby.yaw");
-                float pitch = (float) config.getDouble("lobby.pitch");
-
-                Location lobbyLocation = new Location(plugin.getServer().getWorld(worldName), x, y, z, yaw, pitch);
-
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    // Teleport players to the lobby asynchronously
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        player.teleport(lobbyLocation);
-                        plugin.getPlayerManager().setPlayerAsLobby(player);
-                    });
-                }
-            } else {
-                Bukkit.getLogger().warning("World is null!");
-            }
-        });
-    }
-
-
     private boolean lobbyCommand(CommandSender sender) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("Only players can use this command.");
@@ -113,7 +84,6 @@ public class Commands implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        // Save the player's current location as the lobby location
         plugin.getConfig().set("lobby.world", player.getWorld().getName());
         plugin.getConfig().set("lobby.x", player.getLocation().getX());
         plugin.getConfig().set("lobby.y", player.getLocation().getY());
@@ -133,7 +103,6 @@ public class Commands implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            // Save individual components of the spawn location to the configuration file
             plugin.getConfig().set("mobSpawnLocation.x", player.getLocation().getX());
             plugin.getConfig().set("mobSpawnLocation.y", player.getLocation().getY());
             plugin.getConfig().set("mobSpawnLocation.z", player.getLocation().getZ());
@@ -158,9 +127,8 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
-            Location mobSpawnLocation = plugin.getLocationManager().getMobLocation();
-                if (mobSpawnLocation != null) {
-                    plugin.getMobManager().spawnCustomMob(plugin.getConfig().getConfigurationSection("mobSpawnLocation"));
+                if (plugin.getLocationManager().getMobLocation() != null) {
+                    plugin.getMobManager().spawnCustomMob();
                 } else {
                     Bukkit.broadcastMessage(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
                     return true;
@@ -174,8 +142,8 @@ public class Commands implements CommandExecutor {
                 plugin.getTimer().startTimer(plugin.getConfig().getInt("timerMinutes", 10));
 
                 for (String line : plugin.getMessagesConfig().getStartMsg()) {
-                    line = line.replace("{attackers}", plugin.getConfigManager().getConfig().getString("attackersTeamName"));
-                    line = line.replace("{defenders}", plugin.getConfigManager().getConfig().getString("defendersTeamName"));
+                    line = line.replace("{attackers}", plugin.getConfigManager().getAttacker());
+                    line = line.replace("{defenders}", plugin.getConfigManager().getDefender());
                     Bukkit.broadcastMessage(line);
                 }
                 if (plugin.getType().getState() == Type.Hardcore){
@@ -190,7 +158,7 @@ public class Commands implements CommandExecutor {
     }
 
     private boolean teamSpawnCommand(CommandSender sender, String teamName) {
-        if (!(sender instanceof Player) || !sender.hasPermission("viking.admin")) {
+        if (!(sender instanceof Player) || !sender.hasPermission("cs.admin")) {
             sender.sendMessage("Only players can use this command.");
             return true;
         }
@@ -204,7 +172,7 @@ public class Commands implements CommandExecutor {
             player.sendMessage(ChatColor.GREEN + "Spawn location for " + team + " set successfully!");
             plugin.getLocationManager().loadSpawnLocations();
         } catch (IllegalArgumentException e) {
-            player.sendMessage(ChatColor.RED + "Invalid team name. Available teams: Attackers, Defenders");
+            player.sendMessage(ChatColor.RED + "Invalid TEAM. Please USE: Attackers or Defenders");
         }
 
         return true;
@@ -213,21 +181,17 @@ public class Commands implements CommandExecutor {
 
 
     private void teleportTeamsToSpawnsAndApplyKits() {
-        // Submitting the teleportation and kit application task asynchronously
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Team[] teams = Team.values();
             for (Team team : teams) {
                 Location teamSpawn = plugin.getLocationManager().getSpawnLocationForTeam(team);
                 if (teamSpawn != null) {
-                    // Teleport players in the team to their spawn location
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         if (plugin.getTeamManager().getTeam(player) == team) {
-                            // Use teamSpawn directly instead of retrieving it from the configuration each time
                             plugin.getPlayerManager().setPlayerAsPlaying(player);
 
                             Bukkit.getScheduler().runTask(plugin, () -> player.teleport(teamSpawn));
 
-                            // Apply kits to players asynchronously
                             Bukkit.getScheduler().runTask(plugin, () -> {
                                 if (plugin.getPlayerManager().getPlayerState(player) == PlayerStates.PLAYING) {
                                     KitManager.KitData selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);

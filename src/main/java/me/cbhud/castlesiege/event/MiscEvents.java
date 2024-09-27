@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -18,6 +19,26 @@ public class MiscEvents implements Listener {
 
     public MiscEvents(CastleSiege plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onZombieDeath(final EntityDeathEvent event) {
+        final Player player = event.getEntity().getKiller();
+        if (this.plugin.getGame().getState() != GameState.END && event.getEntity().getCustomName() != null && event.getEntity().getCustomName().contains("King") && this.plugin.getGame().getState() == GameState.IN_GAME) {
+            event.getDrops().clear();
+            this.plugin.getTimer().cancelTimer();
+            if (event.getEntity().getKiller() instanceof Player) {
+                plugin.getGameEndHandler().setKiller(player.getName());
+                plugin.getDbConnection().incrementKingKills(event.getEntity().getKiller().getUniqueId());
+            }
+            else {
+
+                plugin.getGameEndHandler().setKiller("unknown");
+
+            }
+            plugin.getGameEndHandler().setWinner(Team.Attackers);
+            plugin.getGameEndHandler().handleGameEnd();
+        }
     }
 
     @EventHandler

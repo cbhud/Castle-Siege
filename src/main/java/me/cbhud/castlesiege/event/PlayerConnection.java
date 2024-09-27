@@ -4,7 +4,6 @@ import me.cbhud.castlesiege.CastleSiege;
 
 import me.cbhud.castlesiege.state.GameState;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.util.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,10 +23,10 @@ public class PlayerConnection implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        plugin.getScoreboardManager().setupScoreboard(player);
         if(!plugin.getDbConnection().hasData(player.getUniqueId())){
             plugin.getDbConnection().createProfileIfNotExists(player.getUniqueId(), player.getName());
         }
+        plugin.getScoreboardManager().setupScoreboard(player);
         if (plugin.getGame().getState() == GameState.LOBBY) {
             plugin.getPlayerManager().setPlayerAsLobby(player);
             teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
@@ -49,6 +48,8 @@ public class PlayerConnection implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        plugin.getScoreboardManager().removeScoreboard(player);
+        plugin.getTeamManager().removeTeam(player);
         if (plugin.getGame().getState() == GameState.IN_GAME) {
             plugin.getScoreboardManager().decrementTeamPlayersCount(player);
             if (Bukkit.getOnlinePlayers().size() < 1) {
@@ -59,8 +60,7 @@ public class PlayerConnection implements Listener {
                 plugin.getGameEndHandler().handleGameEnd();
             }
         }
-        plugin.getScoreboardManager().removeScoreboard(player);
-        plugin.getTeamManager().removeTeam(player);
+
         if (plugin.getGame().getState() == GameState.LOBBY) {
             Bukkit.getScheduler().runTask(plugin, () -> plugin.getTimer().checkAutoStart(Bukkit.getOnlinePlayers().size()));
         }

@@ -42,7 +42,7 @@ public class MapRegeneration implements Listener {
 
                 event.getBlock().setType(Material.AIR);
 
-        } else event.setCancelled(!player.hasPermission("viking.admin") || !player.isOp()); // Allow breaking any blocks
+        } else event.setCancelled(!player.hasPermission("cs.admin") || !player.isOp());
 
     }
 
@@ -63,7 +63,7 @@ public class MapRegeneration implements Listener {
                 Location location = event.getBlock().getLocation();
                 originalBlockStates.put(location, Material.AIR);
                 changedBlocks.put(location, Material.OAK_FENCE);
-        }else event.setCancelled(!player.isOp() || !player.hasPermission("viking.admin")); // Allow breaking any blocks
+        }else event.setCancelled(!player.isOp() || !player.hasPermission("cs.admin"));
     }
 
     public void regenerateChangedBlocks() {

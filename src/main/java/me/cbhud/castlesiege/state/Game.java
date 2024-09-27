@@ -3,13 +3,12 @@ import me.cbhud.castlesiege.CastleSiege;
 
 
 public class Game {
-    private final CastleSiege plugin; // Add this field
+    private final CastleSiege plugin;
     private GameState currentState;
 
     public Game(CastleSiege plugin) {
-        this.plugin = plugin; // Initialize the field
+        this.plugin = plugin;
 
-        // Set the initial state to LOBBY
         currentState = GameState.LOBBY;
     }
 

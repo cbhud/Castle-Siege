@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerKitManager {
-    private final Map<Player, KitManager.KitData> selectedKits; // Track each player's selected kit
+    private final Map<Player, KitManager.KitData> selectedKits;
     private final CastleSiege plugin;
 
     public PlayerKitManager(CastleSiege plugin) {
@@ -26,18 +26,18 @@ public class PlayerKitManager {
     }
 
     public void giveKit(Player player, KitManager.KitData kit) {
-        player.getInventory().clear(); // Clear the player's inventory first
+        player.getInventory().clear();
 
         for (ItemStack item : kit.getItems()) {
             player.getInventory().addItem(item);
         }
 
         equipArmor(player, kit.getItems());
-        selectedKits.put(player, kit); // Store selected kit for the player
+        selectedKits.put(player, kit);
     }
 
     public boolean selectKit(Player player, String kitName) {
-        KitManager.KitData kit = plugin.getKitManager().getKitByName(kitName); // Get kit by name
+        KitManager.KitData kit = plugin.getKitManager().getKitByName(kitName);
         if (kit == null) {
             player.sendMessage("§cKit not found.");
             return false;
@@ -84,35 +84,33 @@ public class PlayerKitManager {
             }
         }
 
-        // Equip and remove from the player's inventory
         if (helmet != null) {
             player.getInventory().setHelmet(helmet);
-            player.getInventory().remove(helmet); // Remove from player's inventory
+            player.getInventory().remove(helmet);
         }
         if (chestplate != null) {
             player.getInventory().setChestplate(chestplate);
-            player.getInventory().remove(chestplate); // Remove from player's inventory
+            player.getInventory().remove(chestplate);
         }
         if (leggings != null) {
             player.getInventory().setLeggings(leggings);
-            player.getInventory().remove(leggings); // Remove from player's inventory
+            player.getInventory().remove(leggings);
         }
         if (boots != null) {
             player.getInventory().setBoots(boots);
-            player.getInventory().remove(boots); // Remove from player's inventory
+            player.getInventory().remove(boots);
         }
     }
 
 
     public void setDefaultKit(Player player) {
-        Team playerTeam = plugin.getTeamManager().getTeam(player); // Get the player's team
+        Team playerTeam = plugin.getTeamManager().getTeam(player);
         String defaultKitName;
 
-        // Determine the default kit based on the player's team
         if (playerTeam == Team.Attackers) {
-            defaultKitName = "Skald"; // Default kit for Attackers
+            defaultKitName = "Skald";
         } else if (playerTeam == Team.Defenders) {
-            defaultKitName = "Marksman"; // Default kit for Defenders
+            defaultKitName = "Marksman";
         } else {
             player.sendMessage("§cYou are not part of a valid team.");
             return;
@@ -124,7 +122,6 @@ public class PlayerKitManager {
             return;
         }
 
-        // Automatically select the kit for the player
         selectedKits.put(player, kit);
     }
 

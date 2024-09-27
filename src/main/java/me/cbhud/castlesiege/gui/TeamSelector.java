@@ -4,7 +4,7 @@ import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import me.cbhud.castlesiege.team.Team;
-import me.cbhud.castlesiege.CastleSiege; // Assuming you need access to the plugin instance
+import me.cbhud.castlesiege.CastleSiege;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -50,12 +50,11 @@ public class TeamSelector {
 
         if (event.isRightClick()) {
             plugin.getTeamManager().joinTeam(player, team);
-            gui.close(player);// Method to handle the team joining logic
+            gui.close(player);
         }
-        // Left-click to select the kit
         else if (event.isLeftClick()) {
-            plugin.getTeamManager().joinTeam(player, team); // Method to handle the team joining logic
-            gui.close(player);// Method to handle the team joining logic
+            plugin.getTeamManager().joinTeam(player, team);
+            gui.close(player);
 
         }
 

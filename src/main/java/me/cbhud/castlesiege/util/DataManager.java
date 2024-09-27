@@ -23,14 +23,11 @@ public class DataManager {
             @Override
             public void run() {
                 try {
-                    // Create an H2 data source
                     JdbcDataSource dataSource = new JdbcDataSource();
                     dataSource.setURL("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data");
 
-                    // Connect to H2 database
                     connection = dataSource.getConnection();
 
-                    // Create the tables if they don't exist
                     createTables();
 
                 } catch (SQLException e) {
@@ -48,7 +45,6 @@ public class DataManager {
             @Override
             public void run() {
                 try (Statement statement = connection.createStatement()) {
-                    // Create player_stats table
                     String createPlayerStatsTableSQL = "CREATE TABLE IF NOT EXISTS player_stats (" +
                             "uuid VARCHAR(36) PRIMARY KEY," +
                             "username VARCHAR(16) NOT NULL," +
@@ -60,7 +56,6 @@ public class DataManager {
                             ")";
                     statement.executeUpdate(createPlayerStatsTableSQL);
 
-                    // Create player_kits table
                     String createPlayerKitsTableSQL = "CREATE TABLE IF NOT EXISTS player_kits (" +
                             "uuid VARCHAR(36) PRIMARY KEY," +
                             "MARKSMAN BOOLEAN NOT NULL," +
@@ -230,7 +225,7 @@ public class DataManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0; // Return 0 if there was an error or the player does not exist
+        return 0;
     }
 
     public void removePlayerCoins(UUID uuid, int coinsToRemove, Consumer<Boolean> callback) {
@@ -250,7 +245,6 @@ public class DataManager {
                     e.printStackTrace();
                 }
 
-                // Run the callback with the result on the main thread
                 boolean finalSuccess = success;
                 Bukkit.getScheduler().runTask(plugin, () -> callback.accept(finalSuccess));
             }
@@ -264,7 +258,7 @@ public class DataManager {
         for (String kit : validKits) {
             if (kit.equalsIgnoreCase(kitName)) {
                 isValidKit = true;
-                kitName = kit; // Normalize the case
+                kitName = kit;
                 break;
             }
         }

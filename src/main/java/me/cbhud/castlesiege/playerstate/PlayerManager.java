@@ -2,8 +2,6 @@ package me.cbhud.castlesiege.playerstate;
 
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import me.cbhud.castlesiege.CastleSiege;
-import me.cbhud.castlesiege.gui.Manager;
-import me.cbhud.castlesiege.team.Team;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -12,10 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Arrays;
-import java.util.Collections;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static me.cbhud.castlesiege.playerstate.PlayerStates.*;

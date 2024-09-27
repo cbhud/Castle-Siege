@@ -1,11 +1,3 @@
-/*  TO-DO List
-*   1. Nove ideje 
-*
-*
-*
-* */
-
-
 package me.cbhud.castlesiege;
 
 import me.cbhud.castlesiege.commands.CoinsCommand;

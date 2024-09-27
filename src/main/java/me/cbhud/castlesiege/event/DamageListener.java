@@ -51,12 +51,10 @@ public class DamageListener implements Listener {
                     }
 
                     if (damager != null) {
-                        // Check if the damaged player and the damager are in the same team
                         Team damagedPlayerTeam = plugin.getTeamManager().getTeam(damagedPlayer);
                         Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
                         if (damagedPlayerTeam != null && damagedPlayerTeam.equals(damagerTeam)) {
-                            // Players in the same team, cancel the damage event
                             event.setCancelled(true);
                         }
                         ItemMeta damagerItemMeta = damager.getInventory().getItemInMainHand().getItemMeta();

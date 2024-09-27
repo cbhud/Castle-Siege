@@ -17,18 +17,18 @@ import java.util.List;
 
 public class KitManager {
     private final CastleSiege plugin;
-    private List<KitData> kits; // Holds all the kits
+    private List<KitData> kits;
 
     public KitManager(CastleSiege plugin) {
         this.plugin = plugin;
-        createKitsFileIfNotExists(); // Ensure kits.yml exists
+        createKitsFileIfNotExists();
         kits = new ArrayList<>();
         kits = loadKits();
     }
 
     // Load kits from kits.yml
     public List<KitData> loadKits() {
-        if (!kits.isEmpty()) return kits; // Avoid reloading if kits are already loaded
+        if (!kits.isEmpty()) return kits;
 
         File kitsFile = new File(plugin.getDataFolder(), "kits.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(kitsFile);
@@ -47,15 +47,12 @@ public class KitManager {
                 Material material = Material.getMaterial(itemData[0].toUpperCase());
 
                 if (material == null) {
-                    // Extract the custom item name correctly
-                    String customItemName = itemData.length > 1 ? itemData[1] : itemData[0]; // Use itemData[1] as the custom item name
+                    String customItemName = itemData.length > 1 ? itemData[1] : itemData[0];
                     ItemStack customItem = createCustomItem(customItemName);
 
-                    // Check if the custom item is not null before adding to the list
                     if (customItem != null && customItem.getType() != Material.AIR) {
                         items.add(customItem);
                     } else {
-                        // Optionally handle the case where the custom item could not be created
                         System.out.println("Failed to create custom item: " + customItemName);
                     }
                 } else {
@@ -71,35 +68,34 @@ public class KitManager {
     }
 
     private ItemStack createCustomItem(String customItemName) {
-        // Define logic to create custom items, e.g., "Stew", "Spear", etc.
         switch (customItemName.toLowerCase()) {
             case "stew":
-                return new ItemStack(Manager.stew); // Assuming Manager.stew exists
+                return new ItemStack(Manager.stew);
             case "spear":
-            return new ItemStack(Manager.spear); // Assuming Manager.stew exists
+            return new ItemStack(Manager.spear);
             case "axe":
-            return new ItemStack(Manager.axe); // Assuming Manager.stew exists
+            return new ItemStack(Manager.axe);
 
             case "rage":
-            return new ItemStack(Manager.rage); // Assuming Manager.stew exists
+            return new ItemStack(Manager.rage);
 
             case "ragnarok":
-            return new ItemStack(Manager.ragnarok); // Assuming Manager.stew exists
+            return new ItemStack(Manager.ragnarok);
 
             case "sight":
-            return new ItemStack(Manager.sight); // Assuming Manager.stew exists
+            return new ItemStack(Manager.sight);
 
             case "sword":
-            return new ItemStack(Manager.sword); // Assuming Manager.stew exists
+            return new ItemStack(Manager.sword);
 
             case "attack":
-            return new ItemStack(Manager.attack); // Assuming Manager.stew exists
+            return new ItemStack(Manager.attack);
 
             case "support":
-            return new ItemStack(Manager.support); // Assuming Manager.stew exists
+            return new ItemStack(Manager.support);
 
             default:
-                return new ItemStack(Material.STONE); // Default item if not found
+                return new ItemStack(Material.STONE);
         }
     }
 
@@ -122,7 +118,6 @@ public class KitManager {
         }
     }
 
-    // Get a specific kit by name
     public KitData getKitByName(String kitName) {
         for (KitData kit : kits) {
             if (kit.getName().equalsIgnoreCase(kitName)) {
@@ -132,7 +127,6 @@ public class KitManager {
         return null;
     }
 
-    // Inner class to hold kit data
     public static class KitData {
         private final String name;
         private final List<ItemStack> items;

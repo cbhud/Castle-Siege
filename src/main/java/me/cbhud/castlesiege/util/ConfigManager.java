@@ -104,4 +104,9 @@ public class ConfigManager {
         return config.getDouble("king-health", 80.0);
     }
 
+    public String getKingName() {
+        return config.getString("king-name", "Charles");
+    }
+
+
 }

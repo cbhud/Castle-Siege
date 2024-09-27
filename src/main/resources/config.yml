@@ -18,6 +18,7 @@ coins-on-kill: 1
 
 ### ADJUST KING HEALTH NOTE IT SHOULD BE WITH ONE DECIMAL EXAMPLE : 80.0
 king-health: 80.0
+king-name: Marcus
 
 ## ADJUST BOMBARDIER KIT TNT COOLDOWN TO YOUR NEEDS
 tntCooldown: 120

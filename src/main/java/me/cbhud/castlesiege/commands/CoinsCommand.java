@@ -1,7 +1,6 @@
 package me.cbhud.castlesiege.commands;
 
 import me.cbhud.castlesiege.CastleSiege;
-import me.cbhud.castlesiege.util.DataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,11 +13,9 @@ import java.util.UUID;
 public class CoinsCommand implements CommandExecutor {
 
     private final CastleSiege plugin;
-    private final DataManager dataManager;
 
     public CoinsCommand(CastleSiege plugin) {
         this.plugin = plugin;
-        this.dataManager = plugin.getDbConnection();
     }
 
     @Override
@@ -30,13 +27,11 @@ public class CoinsCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        // Check if the player has the required permissions
         if (!player.isOp() && !player.hasPermission("cs.admin")) {
             player.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             return true;
         }
 
-        // Ensure correct usage
         if (args.length < 3) {
             player.sendMessage(ChatColor.RED + "Usage: /coins <set|add|remove> <player> <amount>");
             return true;
@@ -53,7 +48,6 @@ public class CoinsCommand implements CommandExecutor {
             return true;
         }
 
-        // Find the target player
         Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
         if (targetPlayer == null) {
             player.sendMessage(ChatColor.RED + "Player not found.");
@@ -64,19 +58,19 @@ public class CoinsCommand implements CommandExecutor {
 
         switch (action.toLowerCase()) {
             case "set":
-                dataManager.setPlayerCoins(targetUUID, amount);
+                plugin.getDbConnection().setPlayerCoins(targetUUID, amount);
                 player.sendMessage(ChatColor.GREEN + "You have set " + targetPlayerName + "'s coins to " + amount + ".");
                 targetPlayer.sendMessage(ChatColor.GREEN + "Your coins have been set to " + amount + " by " + player.getName() + ".");
                 break;
 
             case "add":
-                dataManager.addPlayerCoins(targetUUID, amount);
+                plugin.getDbConnection().addPlayerCoins(targetUUID, amount);
                 player.sendMessage(ChatColor.GREEN + "You have added " + amount + " coins to " + targetPlayerName + ".");
                 targetPlayer.sendMessage(ChatColor.GREEN + "You have received " + amount + " coins from " + player.getName() + ".");
                 break;
 
             case "remove":
-                dataManager.removePlayerCoins(targetUUID, amount, success -> {
+                plugin.getDbConnection().removePlayerCoins(targetUUID, amount, success -> {
                     if (success) {
                         player.sendMessage(ChatColor.GREEN + "You have removed " + amount + " coins from " + targetPlayerName + ".");
                         targetPlayer.sendMessage(ChatColor.RED + "You have lost " + amount + " coins, removed by " + player.getName() + ".");

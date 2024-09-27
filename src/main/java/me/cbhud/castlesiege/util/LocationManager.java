@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 public class LocationManager {
 
@@ -93,6 +94,25 @@ public class LocationManager {
         config.set(path + ".pitch", location.getPitch());
 
         plugin.saveConfig();
+    }
+
+    public void teleportPlayersToLobby() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+
+            if (plugin.getLocationManager().getLobbyLocation() != null) {
+
+                Location lobbyLocation = plugin.getLocationManager().getLobbyLocation();
+
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        player.teleport(lobbyLocation);
+                        plugin.getPlayerManager().setPlayerAsLobby(player);
+                    });
+                }
+            } else {
+                Bukkit.getLogger().warning("World is null!");
+            }
+        });
     }
 
 

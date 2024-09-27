@@ -30,12 +30,10 @@ public class StatsCommand implements CommandExecutor {
             sendStats(sender, username);
             return true;
         } else if (args.length == 1) {
-            // If a player's username is provided as an argument, show their stats
             String username = args[0];
             sendStats(sender, username);
             return true;
         } else {
-            // Incorrect command usage
             sender.sendMessage("Usage: /stats [player]");
             return true;
         }
@@ -46,19 +44,16 @@ public class StatsCommand implements CommandExecutor {
         ResultSet resultSet = null;
 
         try {
-            // Prepare the SQL query
             String sql = "SELECT wins, kills, deaths, king_kills, coins FROM player_stats WHERE username=? LIMIT 1"; // Add LIMIT 1 to ensure only one result is returned
             synchronized (plugin.getDbConnection().getConnection()) {
                 statement = plugin.getDbConnection().getConnection().prepareStatement(sql);
             }
             statement.setString(1, username);
 
-            // Execute the query
             synchronized (plugin.getDbConnection().getConnection()) {
                 resultSet = statement.executeQuery();
             }
 
-            // Process the result
             if (resultSet.next()) {
                 int wins = resultSet.getInt("wins");
                 int kills = resultSet.getInt("kills");
@@ -67,7 +62,6 @@ public class StatsCommand implements CommandExecutor {
                 int kingKills = resultSet.getInt("king_kills");
                 int coins = resultSet.getInt("coins");
 
-                // Send player stats to the sender
                 sender.sendMessage(ChatColor.YELLOW + "Stats for: " + ChatColor.AQUA + username);
                 sender.sendMessage(ChatColor.AQUA + "Wins: " + ChatColor.WHITE + wins);
                 sender.sendMessage(ChatColor.AQUA + "Kills: " + ChatColor.WHITE + kills);
@@ -80,9 +74,8 @@ public class StatsCommand implements CommandExecutor {
             }
         } catch (SQLException e) {
             sender.sendMessage(ChatColor.RED + "An error occurred while fetching player stats.");
-            e.printStackTrace(); // Consider logging the exception instead
+            e.printStackTrace();
         } finally {
-            // Close resources
             try {
                 if (resultSet != null) {
                     resultSet.close();
@@ -91,7 +84,7 @@ public class StatsCommand implements CommandExecutor {
                     statement.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace(); // Consider logging the exception instead
+                e.printStackTrace();
             }
         }
     }

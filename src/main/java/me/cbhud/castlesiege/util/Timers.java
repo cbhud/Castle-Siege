@@ -24,7 +24,7 @@ public class Timers {
     public Timers(CastleSiege plugin) {
         this.plugin = plugin;
         this.playersToStart = plugin.getConfigManager().getConfig().getInt("auto-start-players");
-        this.initialCountdownSeconds = plugin.getConfigManager().getConfig().getInt("auto-start-countdown", 60);
+        this.initialCountdownSeconds = plugin.getConfigManager().getAutoStartCountdown();
         this.countdownSeconds = initialCountdownSeconds;
     }
 
@@ -45,22 +45,21 @@ public class Timers {
                 }
                 countdownSeconds--;
             } else {
-                cancelCountdown(); // Cancel the repeating task after starting the game
+                cancelCountdown();
                 Bukkit.broadcastMessage(ChatColor.GREEN + "Starting the game!");
                 String command = "cs start";
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 Bukkit.dispatchCommand(console, command);
             }
-        }, 0L, 20L); // 20 ticks per second
-
-        taskIds.add(taskId); // Store the task ID
+        }, 0L, 20L);
+        taskIds.add(taskId);
     }
 
     private void cancelCountdown() {
         for (int taskId : taskIds) {
             Bukkit.getScheduler().cancelTask(taskId);
         }
-        taskIds.clear(); // Clear the list
+        taskIds.clear();
         if (plugin.getGame().getState() == GameState.IN_GAME) {
             plugin.getGameEndHandler().setWinner(Team.Defenders);
             plugin.getGameEndHandler().handleGameEnd();
@@ -102,14 +101,13 @@ public class Timers {
             }
         };
 
-        // Run the timer task asynchronously on a separate thread
         timerTask.runTaskTimer(plugin, 0, 20); // Run every second (20 ticks)
     }
 
     public void cancelTimer() {
         if (timerTask != null) {
-            timerTask.cancel(); // Stop the timer
-            timerTask = null; // Set timerTask to null after canceling
+            timerTask.cancel();
+            timerTask = null;
         }
     }
 

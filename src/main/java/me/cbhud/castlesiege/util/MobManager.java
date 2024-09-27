@@ -4,7 +4,6 @@ import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,36 +16,36 @@ public class MobManager implements Listener {
     private final CastleSiege plugin;
     private Zombie kingZombie;
     private final double TNT_DAMAGE;
+    private String kingName;
 
     public MobManager(CastleSiege plugin) {
         this.plugin = plugin;
         TNT_DAMAGE = plugin.getConfigManager().getConfig().getDouble("tntDamage", 4);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        kingName = plugin.getConfigManager().getKingName();
     }
 
-    public void spawnCustomMob(ConfigurationSection mobConfig) {
-        Location spawnLocation = plugin.getLocationManager().getLocationFromConfig(mobConfig);
+    public void spawnCustomMob() {
+        Location spawnLocation = plugin.getLocationManager().getMobLocation();
 
         if (spawnLocation == null) {
-            // Handle case where spawnLocation is null
             return;
         }
 
         kingZombie = (Zombie) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.ZOMBIE);
         kingZombie.setCustomNameVisible(true);
-        kingZombie.setCustomName("§6§lKing Charles");
+        kingZombie.setCustomName("§6§lKing " + kingName);
 
-        kingZombie.setAI(false); // Disable AI movement
-        kingZombie.setSilent(true); // Make the zombie silent
-        kingZombie.setCanPickupItems(false); // Zombie cannot pick up items
-        kingZombie.setRemoveWhenFarAway(false); // Zombie does not despawn when far away
+        kingZombie.setAI(false);
+        kingZombie.setSilent(true);
+        kingZombie.setCanPickupItems(false);
+        kingZombie.setRemoveWhenFarAway(false);
         kingZombie.setAdult();
 
         double maxHealth = plugin.getConfigManager().getKingHealth();
         kingZombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
         kingZombie.setHealth(maxHealth);
 
-        // Add a golden helmet to the zombie
         kingZombie.getEquipment().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
     }
 
@@ -65,7 +64,7 @@ public class MobManager implements Listener {
     public Zombie getKingZombie() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().contains("King Charles")) {
+                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().contains("King")) {
                     Zombie kingZombie = (Zombie) entity;
                     double health = kingZombie.getHealth();
                     return kingZombie;
@@ -78,7 +77,7 @@ public class MobManager implements Listener {
     public void removeCustomZombie() {
         for (org.bukkit.World world : Bukkit.getWorlds()) {
             for (LivingEntity entity : world.getLivingEntities()) {
-                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().equals("§6§lKing Charles") ) {
+                if (entity instanceof Zombie && entity.getCustomName() != null && entity.getCustomName().contains("King") ) {
                     entity.remove();
                 }
             }
