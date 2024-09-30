@@ -68,35 +68,40 @@ public class GameEndHandler implements Listener
     }
 
     private void broadcastWinnerMessage() {
-        if (winner != null) {
-            String winnerName = winner.toString();
-            if ("Attackers".equalsIgnoreCase(winnerName)) {
-                for (String line : plugin.getMessagesConfig().getVikingsWinMsg()) {
-                    line = line.replace("{killer}", getKillername());
-                    line = line.replace("{attackers}", plugin.getConfigManager().getAttacker());
-                    Bukkit.broadcastMessage(line);
-                }
-
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.RED + plugin.getConfigManager().getConfig().getString("attackersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.MASTER, 1.0f, 0.9f);
-                }
-            } else {
-
-                for (String line : plugin.getMessagesConfig().getFranksWinMsg()) {
-                    line = line.replace("{defenders}", plugin.getConfigManager().getDefender());
-                    Bukkit.broadcastMessage(line);
-                }
-
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.BLUE + plugin.getConfigManager().getConfig().getString("defendersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1.0f, 0.9f);
-                }
-            }
-        } else {
+        if (winner == null) {
             Bukkit.broadcastMessage(ChatColor.RED + "Game cancelled, both teams have disconnected.");
+            return;
+        }
+
+        String winnerName = winner.toString();
+
+        if ("Attackers".equalsIgnoreCase(winnerName)) {
+            for (String line : plugin.getMessagesConfig().getVikingsWinMsg()) {
+                line = line.replace("{killer}", getKillername());
+                line = line.replace("{attackers}", plugin.getConfigManager().getAttacker());
+                Bukkit.broadcastMessage(line);
+            }
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendTitle(ChatColor.RED + plugin.getConfigManager().getConfig().getString("attackersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
+                player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.MASTER, 1.0f, 0.9f);
+            }
+
+            return;
+        }
+
+        // If not attackers defenders won
+        for (String line : plugin.getMessagesConfig().getFranksWinMsg()) {
+            line = line.replace("{defenders}", plugin.getConfigManager().getDefender());
+            Bukkit.broadcastMessage(line);
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendTitle(ChatColor.BLUE + plugin.getConfigManager().getConfig().getString("defendersTeamName"), ChatColor.YELLOW + "won the game", 10, 70, 20);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1.0f, 0.9f);
         }
     }
+
 
 
 }
