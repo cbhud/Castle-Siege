@@ -41,21 +41,19 @@ public class RightClickEffects implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK){
             return;}
 
-        if (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR && plugin.getTeamManager().getTeam(player) == Team.Attackers && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe) || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK && plugin.getTeamManager().getTeam(player) == Team.Attackers && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe)) {
+        if ((event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) && plugin.getGame().getState() == GameState.IN_GAME && player.getInventory().getItemInMainHand().isSimilar(Manager.axe)) {
             try {
                 Item axe = player.getWorld().dropItem(player.getEyeLocation(), player.getInventory().getItemInMainHand());
-                axe.setVelocity(player.getEyeLocation().getDirection().multiply(1.75));
+                axe.setVelocity(player.getEyeLocation().getDirection().multiply(1.1));
                 player.getInventory().getItemInMainHand().setAmount(0);
 
                 new BukkitRunnable() {
                     public void run() {
-                        for (Entity ent : axe.getNearbyEntities(0.4, 0.4, 0.4)) {
+                        for (Entity ent : axe.getNearbyEntities(0.5, 0.5, 0.5)) {
                             if (ent instanceof LivingEntity) {
                                 LivingEntity target = (LivingEntity) ent;
-                                if (ent == player) {
-                                    continue;
-                                }
-                                target.damage(1.5);
+
+                                target.damage(2.5);
                                 axe.setVelocity(new Vector(0, 0, 0));
                                 this.cancel();
                                 axe.remove();
@@ -119,7 +117,7 @@ public class RightClickEffects implements Listener {
                 if (nearbyPlayer.getLocation().distance(player.getLocation()) <= 10 &&
                         plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Attackers) {
                     applyRandomEffect(nearbyPlayer);
-                    player.sendMessage(ChatColor.RED + "You cast spell on your opponents");
+                    player.sendMessage(ChatColor.RED + "Your spell has struck your opponents with powerful magic!");
                 }
             }
             return true;
@@ -130,7 +128,7 @@ public class RightClickEffects implements Listener {
                 if (nearbyPlayer.getLocation().distance(player.getLocation()) <= 10 &&
                         plugin.getTeamManager().getTeam(nearbyPlayer) == Team.Defenders) {
                     applyRandomSupportEffect(nearbyPlayer);
-                    player.sendMessage(ChatColor.GREEN + "You cast spell on your teammates helping them");
+                    player.sendMessage(ChatColor.GREEN + "You have cast a supportive spell, empowering your nearby allies!");
                 }
             }
             return true;
@@ -144,15 +142,15 @@ public class RightClickEffects implements Listener {
         switch (effectIndex) {
             case 0:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, EFFECT_DURATION, 1));
-                player.sendMessage(ChatColor.RED + "Opponent team wizard cast poison spell on you");
+                player.sendMessage(ChatColor.RED + "A poison spell has been cast upon you, draining your health over time.");
                 break;
             case 1:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, EFFECT_DURATION, 1));
-                player.sendMessage(ChatColor.RED + "Opponent team wizard cast slowness spell on you");
+                player.sendMessage(ChatColor.RED + "A slowness spell binds you, reducing your movement speed.");
                 break;
             case 2:
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, EFFECT_DURATION, 1));
-                player.sendMessage(ChatColor.RED + "Opponent team wizard cast blindness spell on you");
+                player.sendMessage(ChatColor.RED + "A blindness spell has taken effect, clouding your vision.");
                 break;
             default:
                 break;
@@ -163,19 +161,19 @@ public class RightClickEffects implements Listener {
         int effectIndex = rand.nextInt(3);
         switch (effectIndex) {
             case 0:
-                player.sendMessage(ChatColor.GREEN + "Your wizard cast regeneration on you!");
+                player.sendMessage(ChatColor.GREEN + "You have been granted regeneration by a supportive spell, slowly restoring health.");
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, EFFECT_DURATION, 1));
                 break;
             case 1:
-                player.sendMessage(ChatColor.GREEN + "Your wizard cast absorption on you!");
+                player.sendMessage(ChatColor.GREEN + "A spell of absorption surrounds you, temporarily granting extra health.");
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, EFFECT_DURATION * 3, 1));
                 break;
             case 2:
-                player.sendMessage(ChatColor.GREEN + "Your wizard cast speed on you!");
+                player.sendMessage(ChatColor.GREEN + "A speed spell has been cast upon you, increasing your movement speed.");
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, 1));
                 break;
             default:
-                player.sendMessage(ChatColor.RED + "Your spell was weak this time!");
+                player.sendMessage(ChatColor.RED + "The spell was too weak to have any effect this time.");
         }
     }
 

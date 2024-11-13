@@ -3,6 +3,7 @@ package me.cbhud.castlesiege;
 import me.cbhud.castlesiege.commands.CoinsCommand;
 import me.cbhud.castlesiege.commands.Commands;
 import me.cbhud.castlesiege.commands.StatsCommand;
+import me.cbhud.castlesiege.commands.UnlockKitCommand;
 import me.cbhud.castlesiege.util.*;
 import org.bukkit.plugin.java.*;
 import me.cbhud.castlesiege.playerstate.*;
@@ -62,6 +63,7 @@ public class CastleSiege extends JavaPlugin
         this.gameEndHandler = new GameEndHandler(this, team);
         this.saveDefaultConfig();
         this.reloadConfig();
+        this.getCommand("kit").setExecutor(new UnlockKitCommand(this));
         this.getCommand("stats").setExecutor(new StatsCommand(this));
         this.getCommand("coins").setExecutor(new CoinsCommand(this));
         this.getCommand("cs").setExecutor(new Commands(this));
@@ -123,7 +125,7 @@ public class CastleSiege extends JavaPlugin
     public ScoreboardManager getScoreboardManager() {
         return this.scoreboardManager;
     }
-public KitManager getKitManager(){return  this.kitManager;}
+    public KitManager getKitManager(){return  this.kitManager;}
     public TeamSelector getTeamSelector() {
         return this.teamSelector;
     }

@@ -19,11 +19,15 @@ public class MapRegeneration implements Listener {
 
     private final Map<Location, Material> originalBlockStates;
     private final Map<Location, Material> changedBlocks;
+    private final Map<Location, Material> PlaceoriginalBlockStates;
+    private final Map<Location, Material> PlacechangedBlocks;
     private final CastleSiege plugin;
 
     public MapRegeneration(CastleSiege plugin) {
         originalBlockStates = new HashMap<>();
         changedBlocks = new HashMap<>();
+        PlacechangedBlocks = new HashMap<>();
+        PlaceoriginalBlockStates = new HashMap<>();
         this.plugin = plugin;
     }
 
@@ -61,19 +65,29 @@ public class MapRegeneration implements Listener {
         if (plugin.getGame().getState() == GameState.IN_GAME && event.getBlock().getType() == Material.OAK_FENCE && plugin.getTeamManager().getTeam(player) ==  Team.Defenders){
                 event.setCancelled(false);
                 Location location = event.getBlock().getLocation();
-                originalBlockStates.put(location, Material.AIR);
-                changedBlocks.put(location, Material.OAK_FENCE);
+                PlaceoriginalBlockStates.put(location, Material.AIR);
+                PlacechangedBlocks.put(location, Material.OAK_FENCE);
         }else event.setCancelled(!player.isOp() || !player.hasPermission("cs.admin"));
     }
 
     public void regenerateChangedBlocks() {
+        for (Map.Entry<Location, Material> entry : PlacechangedBlocks.entrySet()) {
+            Location location = entry.getKey();
+            Material originalMaterial = PlaceoriginalBlockStates.get(location);
+            if (originalMaterial != null) {
+                location.getBlock().setType(originalMaterial);
+
+            }
+        }
         for (Map.Entry<Location, Material> entry : changedBlocks.entrySet()) {
             Location location = entry.getKey();
             Material originalMaterial = originalBlockStates.get(location);
             if (originalMaterial != null) {
-                location.getBlock().setType(originalMaterial);
+                    location.getBlock().setType(originalMaterial);
             }
         }
+        PlaceoriginalBlockStates.clear();
+        PlacechangedBlocks.clear();
         changedBlocks.clear();
         originalBlockStates.clear();
     }

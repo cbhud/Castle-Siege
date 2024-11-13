@@ -282,6 +282,21 @@ public class DataManager {
         return false;
     }
 
+    public void lockPlayerKit(UUID uuid, KitManager.KitData kitType) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try (PreparedStatement statement = connection.prepareStatement(
+                        "UPDATE player_kits SET " + kitType.getName() + " = FALSE WHERE uuid = ?")) {
+                    statement.setString(1, uuid.toString());
+                    statement.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(plugin);
+    }
+
     public void unlockPlayerKit(UUID uuid, KitManager.KitData kitType) {
         new BukkitRunnable() {
             @Override

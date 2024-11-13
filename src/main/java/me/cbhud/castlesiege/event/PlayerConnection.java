@@ -39,8 +39,7 @@ public class PlayerConnection implements Listener {
                 Bukkit.broadcastMessage(plugin.getConfigManager().getMainColor() + "The game requires " + ChatColor.WHITE + (plugin.getConfigManager().getAutoStartPlayers() - onlinePlayers) + plugin.getConfigManager().getMainColor() + " more players to start.");
             }
         } else {
-            player.sendTitle(ChatColor.GRAY + "You are spectating now!", ChatColor.GRAY + "Wait until the game finishes.", 10, 70, 20);
-            plugin.getPlayerManager().setPlayerAsSpectator(player);
+            player.sendTitle(ChatColor.GRAY + "You are now a spectator.", ChatColor.GRAY + "Please wait until the game concludes.", 10, 70, 20);            plugin.getPlayerManager().setPlayerAsSpectator(player);
             teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
         }
     }

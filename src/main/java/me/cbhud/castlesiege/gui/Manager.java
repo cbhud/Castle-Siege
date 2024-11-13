@@ -45,7 +45,7 @@ public class Manager {
 
     private void createSpear() {
         spear = ItemBuilder.from(Material.TRIDENT)
-                .name(Component.text("§cThrowable Axe"))
+                .name(Component.text("§cThrowable Spear"))
                 .lore(Component.text("§7Right-click to throw"))
                 .enchant(Enchantment.LOYALTY, 1)
                 .build();

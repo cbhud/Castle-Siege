@@ -29,12 +29,14 @@ public class TeamSelector {
     private void init() {
         GuiItem vikingTeamItem = ItemBuilder.from(Material.RED_STAINED_GLASS_PANE)
                 .name(Component.text(ChatColor.RED + plugin.getConfigManager().getAttacker()))
-                .lore(Component.text("§7Assassinate the king and conquer the castle"))
+                .lore(
+                        Component.text("§eAssassinate the king and conquer the castle"))
                 .asGuiItem(event -> handleTeamSelection(event, Team.Attackers));
 
         GuiItem franksTeamItem = ItemBuilder.from(Material.CYAN_STAINED_GLASS_PANE)
                 .name(Component.text(ChatColor.AQUA + plugin.getConfigManager().getDefender()))
-                .lore(Component.text("§7Defend the castle and king"))
+                .lore(
+                        Component.text("§eDefend the castle and king"))
                 .asGuiItem(event -> handleTeamSelection(event, Team.Defenders));
 
         gui.setItem(3, franksTeamItem);

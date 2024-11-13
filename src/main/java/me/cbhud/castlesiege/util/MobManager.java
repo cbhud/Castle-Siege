@@ -106,25 +106,26 @@ public class MobManager implements Listener {
 
         }
 
-            if (event.getDamager() instanceof Player) {
-                Player damager = (Player) event.getDamager();
+        if (event.getDamager() instanceof Player && event.getEntity() instanceof Zombie) {
+            Player damager = (Player) event.getDamager();
+            Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
-                Team damagerTeam = plugin.getTeamManager().getTeam(damager);
+            // Cancel event only if the damager is a Defender and the damaged entity is a Zombie
+            if (damagerTeam == Team.Defenders) {
+                event.setCancelled(true);
+            }
+        } else if (event.getDamager() instanceof Projectile) {
+            Projectile projectile = (Projectile) event.getDamager();
 
-                if (damagerTeam == Team.Defenders || damagerTeam == null) {
+            if (projectile.getShooter() instanceof Player) {
+                Player shooter = (Player) projectile.getShooter();
+                Team shooterTeam = plugin.getTeamManager().getTeam(shooter);
+
+                // Cancel event only if the shooter is a Defender and the damaged entity is a Zombie
+                if (shooterTeam == Team.Defenders && event.getEntity() instanceof Zombie) {
                     event.setCancelled(true);
                 }
-            } else if (event.getDamager() instanceof Projectile) {
-                Projectile projectile = (Projectile) event.getDamager();
-
-                if (projectile.getShooter() instanceof Player) {
-                    Player shooter = (Player) projectile.getShooter();
-                    Team shooterTeam = plugin.getTeamManager().getTeam(shooter);
-
-                    if (shooterTeam == Team.Defenders || shooterTeam == null) {
-                        event.setCancelled(true);
-                    }
-                }
             }
+        }
         }
     }
