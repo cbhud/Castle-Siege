@@ -26,7 +26,7 @@ hardcoremsg:
   - "&cHardcore &emode has been" ## it is automatically gonna say if its enabled or disabled you dont need that part
 
 hardcoreEnabled:
-  - "&7(&e!!!&7)&4Hardcore is enabled if you die, you won't respawn"
+  - "&7(&e!!!&7)&cHardcore is enabled if you die, you won't respawn"
 
 forcestopmsg:
   - "&cThe game has been force-stopped by an administrator!"

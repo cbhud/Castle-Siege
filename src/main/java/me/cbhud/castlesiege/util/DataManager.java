@@ -298,9 +298,7 @@ public class DataManager {
     }
 
     public void unlockPlayerKit(UUID uuid, KitManager.KitData kitType) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+
                 try (PreparedStatement statement = connection.prepareStatement(
                         "UPDATE player_kits SET " + kitType.getName() + " = TRUE WHERE uuid = ?")) {
                     statement.setString(1, uuid.toString());
@@ -309,8 +307,6 @@ public class DataManager {
                     e.printStackTrace();
                 }
             }
-        }.runTaskAsynchronously(plugin);
-    }
 
     public void setPlayerCoins(UUID uuid, int amount) {
         new BukkitRunnable() {

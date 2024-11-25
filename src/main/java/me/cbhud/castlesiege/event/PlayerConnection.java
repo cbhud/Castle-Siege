@@ -67,11 +67,13 @@ public class PlayerConnection implements Listener {
 
 
     private void teleport(Player player, Location location, String locationName) {
-        if (location != null) {
-            player.teleport(location);
-        } else {
+        if(location == null){
             player.sendMessage(ChatColor.RED + locationName + " location is not set.");
-            player.sendMessage(ChatColor.RED + "Please configure it properly.");
+            player.sendMessage(ChatColor.RED + "Use /cs setlobby to set it.");
+            return;
         }
+            player.teleport(location);
     }
+
+
 }

@@ -1,12 +1,12 @@
 name: CastleSiege
 main: me.cbhud.castlesiege.CastleSiege
 author: cbhud
-version: 1.3.1
+version: 1.3.2
 api-version: 1.17
 commands:
   cs:
     description: Castle Siege main command
-    usage: /<command> <endgame|setlobby|setmobspawn|start|teamspawn>
+    usage: /<command> <setlobby|teamspawn|setmobspawn|start|endgame|type>
     permission: cs.admin
   stats:
     description: Check player stats

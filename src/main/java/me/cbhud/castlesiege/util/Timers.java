@@ -70,6 +70,12 @@ public class Timers {
             }
         }
     }
+    public void cancelCountdown2() {
+        for (int taskId : taskIds) {
+            Bukkit.getScheduler().cancelTask(taskId);
+        }
+        taskIds.clear();
+        }
 
     private void resetCountdown() {
         countdownSeconds = initialCountdownSeconds;
@@ -113,6 +119,10 @@ public class Timers {
 
     public int getSecondsLeft() {
         return countdownTimer;
+    }
+
+    public boolean isRunning(){
+        return taskId != 0;
     }
 
 }

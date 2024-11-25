@@ -20,7 +20,7 @@ public class MobManager implements Listener {
 
     public MobManager(CastleSiege plugin) {
         this.plugin = plugin;
-        TNT_DAMAGE = plugin.getConfigManager().getConfig().getDouble("tntDamage", 4);
+        TNT_DAMAGE = plugin.getConfigManager().getConfig().getDouble("tntDamage", 3);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         kingName = plugin.getConfigManager().getKingName();
     }
@@ -98,9 +98,7 @@ public class MobManager implements Listener {
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                if (plugin.getTeamManager().getTeam(player) != Team.Attackers) {
                     event.setDamage(TNT_DAMAGE);
-                }
             }
 
 

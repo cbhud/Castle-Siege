@@ -1,12 +1,12 @@
 ##MAX PLAYERS IN TEAM
-maxPlayersPerTeam: 16
+maxPlayersPerTeam: 8
 
 ##CHANGE TEAM NAMES
-attackersTeamName: Vikings
-defendersTeamName: Franks
+attackersTeamName: Attackers
+defendersTeamName: Defenders
 
 ##AUTOSTART ADJUSTMENTS
-auto-start-players: 8
+auto-start-players: 16
 auto-start-countdown: 60
 
 ## TIME BEFORE VIKINGS HAS TO KILL THE KING
@@ -20,11 +20,12 @@ coins-on-kill: 1
 king-health: 80.0
 king-name: Marcus
 
-## ADJUST BOMBARDIER KIT TNT COOLDOWN TO YOUR NEEDS
-tntCooldown: 120
+## ADJUST BOMBARDIER KIT TNT COOLDOWN IN SECONDS TO YOUR NEEDS
+tntCooldown: 20
 
-## ADJUST TNT DAMAGE TO FRANKS
-tntDamage: 6.0
+## ADJUST TNT DAMAGE TO PLAYERS TNT CANNOT DAMAGE KING
+tntDamage: 7.0
+## 7.0 damage = 2 hearts
 
 
 #####################################
@@ -45,7 +46,7 @@ secondary-color: WHITE
 ######################################
 
 ##SET THIS INGAME VIA COMMANDS
-##YOU CAN SET SPAWNS IN-GAME /cs setlobby /cs teamspawn ATTACKERS/DEFENDERS /cs setmobspawn
+##YOU CAN SET SPAWNS IN-GAME /cs setlobby /cs setmobspawn /cs teamspawn ATTACKERS/DEFENDERS
 spawnLocations:
   vikings:
     world: world

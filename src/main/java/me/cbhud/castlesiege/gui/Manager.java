@@ -60,7 +60,7 @@ public class Manager {
 
     private void createRage() {
         rage = ItemBuilder.from(Material.RED_DYE)
-                .name(Component.text("§cBerserker's RAGE"))
+                .name(Component.text("§cBerserker's Rage"))
                 .lore(Component.text("§7Gives special berserker effects"))
                 .build();
     }
@@ -89,7 +89,7 @@ public class Manager {
     private void createSword() {
         sword = ItemBuilder.from(Material.STONE_SWORD)
                 .name(Component.text("§dMystic Sword"))
-                .lore(Component.text("§70.06% chance to poison on hit"))
+                .lore(Component.text("§70.06% chance to poison on damage"))
                 .build();
     }
 

@@ -26,7 +26,7 @@ public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /cs <endgame|setlobby|setmobspawn|start|teamspawn>");
+            sender.sendMessage(ChatColor.RED + "Usage: /cs <teamspawn|setlobby|setmobspawn|start|endgame|type>");
             return true;
         }
 
@@ -126,6 +126,9 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "The game is not in LOBBY STATE. You cannot start it now.");
             return true;
         }
+            if(plugin.getTimer().isRunning()){
+                plugin.getTimer().cancelCountdown2();
+            }
 
                 if (plugin.getLocationManager().getMobLocation() != null) {
                     plugin.getMobManager().spawnCustomMob();
@@ -214,18 +217,21 @@ public class Commands implements CommandExecutor {
         if (plugin.getGame().getState() == GameState.LOBBY) {
             if (sender.hasPermission("cs.admin")) {
 
+                String msg = plugin.getMessagesConfig().getHardcoreMsg().toString().replaceAll("]", "");
+                msg = msg.replace("[", "");
+
                 if (plugin.getType().getState() == Type.Normal) {
                     plugin.getType().setState(Type.Hardcore);
-                    Bukkit.broadcastMessage(plugin.getMessagesConfig().getHardcoreMsg().toString() + " §aenabled!");
+
+                    Bukkit.broadcastMessage(msg + " §aenabled!");
                 }else{
                     plugin.getType().setState(Type.Normal);
-                    Bukkit.broadcastMessage(plugin.getMessagesConfig().getHardcoreMsg().toString() + " §cdisabled!");
+                    Bukkit.broadcastMessage(msg + " §cdisabled!");
                 }
                 plugin.getScoreboardManager().updateScoreboardForAll();
             }
         }
         return true;
     }
-
 
 }

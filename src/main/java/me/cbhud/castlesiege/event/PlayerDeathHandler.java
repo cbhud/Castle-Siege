@@ -8,6 +8,7 @@ import me.cbhud.castlesiege.state.Type;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,6 +46,7 @@ public class PlayerDeathHandler implements Listener {
                 plugin.getPlayerManager().setPlayerAsSpectator(player);
                 plugin.getScoreboardManager().decrementTeamPlayersCount(player);
                 player.sendTitle(ChatColor.RED + "You have died!", ChatColor.GRAY + "Better luck next time!", 10, 70, 20);
+                teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
                 if (plugin.getScoreboardManager().getVikings() < 1) {
                     plugin.getGameEndHandler().setWinner(Team.Defenders);
                     plugin.getGameEndHandler().handleGameEnd();
@@ -114,9 +116,13 @@ public class PlayerDeathHandler implements Listener {
         }
     }
 
-
-
-
-
+    protected void teleport(Player player, Location location, String locationName) {
+        if(location == null){
+            player.sendMessage(ChatColor.RED + locationName + " location is not set.");
+            player.sendMessage(ChatColor.RED + "Use /cs setlobby to set it.");
+            return;
+        }
+        player.teleport(location);
+    }
 
 }

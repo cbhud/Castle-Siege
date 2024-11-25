@@ -100,7 +100,7 @@ public class KitSelector {
                 .flags(ItemFlag.HIDE_ATTRIBUTES)
                 .asGuiItem(event -> handleKitSelection(event, kitManager.getKitByName("Spearman")));
 
-        GuiItem wizardItem = ItemBuilder.from(Material.SPLASH_POTION)
+        GuiItem wizardItem = ItemBuilder.from(Material.HONEY_BOTTLE)
                 .name(Component.text("§r§bWizard"))
                 .lore(
                         Component.text("§r§3Empower your magic with wizard kit"),
@@ -167,6 +167,7 @@ public class KitSelector {
             if (success) {
                 plugin.getDbConnection().unlockPlayerKit(player.getUniqueId(), kit);
                 player.sendMessage("§aYou have successfully purchased the " + kit.getName() + " kit!");
+                selectKit(player, kit);
             } else {
                 player.sendMessage("§cYou do not have enough coins to purchase this kit. You need " + kitPrice + " coins!");
             }
