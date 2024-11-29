@@ -2,10 +2,12 @@ package me.cbhud.castlesiege.event;
 
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
-import me.cbhud.castlesiege.state.GameState;
+import me.cbhud.castlesiege.game.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Rotation;
+import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,7 +52,7 @@ public class RightClickEffects implements Listener {
                 new BukkitRunnable() {
                     public void run() {
                         for (Entity ent : axe.getNearbyEntities(0.5, 0.5, 0.5)) {
-                            if (ent instanceof LivingEntity) {
+                            if (ent instanceof LivingEntity && ent != player) {
                                 LivingEntity target = (LivingEntity) ent;
 
                                 target.damage(2.5);
@@ -61,8 +63,8 @@ public class RightClickEffects implements Listener {
                         }
                         if (axe.isOnGround()) {
                             axe.setVelocity(new Vector(0, 0, 0));
-                            this.cancel();
                             axe.remove();
+                            this.cancel();
                         }
                     }
                 }.runTaskTimer(this.plugin, 0L, 1L);

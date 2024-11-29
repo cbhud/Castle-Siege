@@ -6,20 +6,19 @@ import me.cbhud.castlesiege.commands.StatsCommand;
 import me.cbhud.castlesiege.commands.UnlockKitCommand;
 import me.cbhud.castlesiege.util.*;
 import org.bukkit.plugin.java.*;
-import me.cbhud.castlesiege.playerstate.*;
+import me.cbhud.castlesiege.player.*;
 import me.cbhud.castlesiege.scoreboard.*;
 import me.cbhud.castlesiege.gui.*;
 import me.cbhud.castlesiege.team.*;
 import me.cbhud.castlesiege.kits.*;
 import org.bukkit.plugin.*;
 import me.cbhud.castlesiege.event.*;
-import me.cbhud.castlesiege.state.*;
+import me.cbhud.castlesiege.game.*;
 
 
 public class CastleSiege extends JavaPlugin
 {
     private Game game;
-    private TypeManager type;
     private GameEndHandler gameEndHandler;
     private TeamManager teamManager;
     private PlayerManager playerManager;
@@ -51,7 +50,6 @@ public class CastleSiege extends JavaPlugin
         messagesConfig.loadConfig();
 
         this.game = new Game(this);
-        this.type = new TypeManager(this);
         manager = new Manager();
         kitManager = new KitManager(this);
         this.playerKitManager = new PlayerKitManager(this);
@@ -85,8 +83,8 @@ public class CastleSiege extends JavaPlugin
     }
 
     public void onDisable() {
-        this.getServer().getConsoleSender().sendMessage("CastleSiege has been disabled!");
         dataManager.disconnect();
+        this.getServer().getConsoleSender().sendMessage("CastleSiege has been disabled!");
     }
 
     public Game getGame() {
@@ -95,10 +93,6 @@ public class CastleSiege extends JavaPlugin
 
     public ConfigManager getConfigManager() {
         return configManager;
-    }
-
-    public TypeManager getType(){
-        return this.type;
     }
 
     public TeamManager getTeamManager() {

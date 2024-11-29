@@ -2,7 +2,7 @@ package me.cbhud.castlesiege.scoreboard;
 
 import fr.mrmicky.fastboard.FastBoard;
 import me.cbhud.castlesiege.CastleSiege;
-import me.cbhud.castlesiege.state.GameState;
+import me.cbhud.castlesiege.game.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -68,7 +68,7 @@ public class ScoreboardManager {
         board.updateLine(0, " ");
         board.updateLine(1, mainColor +"Online: " +secondaryColor+ Bukkit.getOnlinePlayers().size());
         board.updateLine(2, " ");
-        board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
+        board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getGame().getType());
         Team team = plugin.getTeamManager().getTeam(player);
         board.updateLine(4, " ");
         board.updateLine(5, mainColor +"Team: " +secondaryColor+ (team != null ? getTeamName(team) : "No Team"));
@@ -166,7 +166,7 @@ public class ScoreboardManager {
         board.updateLines("", "", "");
         board.updateLine(1, mainColor +"Online: " + secondaryColor + Bukkit.getOnlinePlayers().size());
         board.updateLine(2, " ");
-        board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getType().getState());
+        board.updateLine(3, mainColor + "Type: " + secondaryColor + plugin.getGame().getType());
         Team team = plugin.getTeamManager().getTeam(player);
         board.updateLine(4, " ");
         board.updateLine(5, mainColor +"Team: " + secondaryColor + (team != null ? getTeamName(team) : "No Team"));

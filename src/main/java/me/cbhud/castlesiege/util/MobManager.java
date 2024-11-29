@@ -41,7 +41,6 @@ public class MobManager implements Listener {
         kingZombie.setCanPickupItems(false);
         kingZombie.setRemoveWhenFarAway(false);
         kingZombie.setAdult();
-
         double maxHealth = plugin.getConfigManager().getKingHealth();
         kingZombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
         kingZombie.setHealth(maxHealth);

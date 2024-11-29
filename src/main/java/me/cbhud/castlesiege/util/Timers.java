@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
-import me.cbhud.castlesiege.state.GameState;
+import me.cbhud.castlesiege.game.GameState;
 import me.cbhud.castlesiege.team.Team;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,9 @@ public class Timers {
     }
 
     public void checkAutoStart(int currentPlayers) {
+        if(isRunning()){
+            return;
+        }
         if (currentPlayers >= playersToStart) {
             startCountdown();
         } else {

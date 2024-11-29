@@ -3,6 +3,7 @@ package me.cbhud.castlesiege.util;
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -113,6 +114,15 @@ public class LocationManager {
                 Bukkit.getLogger().warning("World is null!");
             }
         });
+    }
+
+    public void teleport(Player player, Location location, String locationName) {
+        if(location == null){
+            player.sendMessage(ChatColor.RED + locationName + " location is not set.");
+            player.sendMessage(ChatColor.RED + "Use /cs setlobby to set it.");
+            return;
+        }
+        player.teleport(location);
     }
 
 

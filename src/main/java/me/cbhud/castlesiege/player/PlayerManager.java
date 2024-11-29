@@ -1,4 +1,4 @@
-package me.cbhud.castlesiege.playerstate;
+package me.cbhud.castlesiege.player;
 
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import me.cbhud.castlesiege.CastleSiege;
@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.cbhud.castlesiege.playerstate.PlayerStates.*;
+import static me.cbhud.castlesiege.player.PlayerStates.*;
 
 public class PlayerManager {
 
@@ -35,13 +35,9 @@ public class PlayerManager {
 
     public void setPlayerAsPlaying(Player player) {
         playerStates.put(player, PLAYING);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.setGameMode(GameMode.SURVIVAL);
-            }
-        }.runTask(plugin);
+        player.setGameMode(GameMode.SURVIVAL);
     }
+
 
     public void setPlayerAsLobby(Player player) {
         playerStates.put(player, PLAYERLOBBY);
@@ -53,19 +49,12 @@ public class PlayerManager {
             if (!plugin.getTeamManager().tryRandomTeamJoin(player)) {
                 player.sendTitle(ChatColor.GRAY + "Both teams are full, ", ChatColor.GRAY + "wait until the game finishes in spectator.", 10, 70, 20);
                 plugin.getPlayerManager().setPlayerAsSpectator(player);
-                teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
+                plugin.getLocationManager().teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
                 return;
             }
 
             plugin.getTeamManager().tryRandomTeamJoin(player);
         }
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.setGameMode(GameMode.SURVIVAL);
-            }
-        }.runTask(plugin);
 
         player.getInventory().clear();
         player.setHealth(20);
@@ -89,17 +78,9 @@ public class PlayerManager {
             @Override
             public void run() {
                 player.setGameMode(GameMode.SPECTATOR);
+
             }
         }.runTask(plugin);
-    }
-
-    private void teleport(Player player, Location location, String locationName) {
-        if (location != null) {
-            player.teleport(location);
-        } else {
-            player.sendMessage(ChatColor.RED + locationName + " location is not set.");
-            player.sendMessage(ChatColor.RED + "Please configure it properly.");
-        }
     }
 
 

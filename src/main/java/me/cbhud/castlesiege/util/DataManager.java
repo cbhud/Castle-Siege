@@ -108,7 +108,7 @@ public class DataManager {
         return false;
     }
 
-    public void createProfileIfNotExists(UUID playerUUID, String username) {
+    public void createProfile(UUID playerUUID, String username) {
         new BukkitRunnable() {
             @Override
             public void run() {

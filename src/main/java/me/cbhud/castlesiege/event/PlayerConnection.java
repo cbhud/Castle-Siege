@@ -2,7 +2,7 @@ package me.cbhud.castlesiege.event;
 
 import me.cbhud.castlesiege.CastleSiege;
 
-import me.cbhud.castlesiege.state.GameState;
+import me.cbhud.castlesiege.game.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,12 +24,12 @@ public class PlayerConnection implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if(!plugin.getDbConnection().hasData(player.getUniqueId())){
-            plugin.getDbConnection().createProfileIfNotExists(player.getUniqueId(), player.getName());
+            plugin.getDbConnection().createProfile(player.getUniqueId(), player.getName());
         }
         plugin.getScoreboardManager().setupScoreboard(player);
         if (plugin.getGame().getState() == GameState.LOBBY) {
             plugin.getPlayerManager().setPlayerAsLobby(player);
-            teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
+            plugin.getLocationManager().teleport(player, plugin.getLocationManager().getLobbyLocation(), "Lobby");
             int onlinePlayers = Bukkit.getOnlinePlayers().size();
             if (onlinePlayers >= plugin.getConfigManager().getAutoStartPlayers()) {
                 plugin.getTimer().checkAutoStart(onlinePlayers);
@@ -39,8 +39,9 @@ public class PlayerConnection implements Listener {
                 Bukkit.broadcastMessage(plugin.getConfigManager().getMainColor() + "The game requires " + ChatColor.WHITE + (plugin.getConfigManager().getAutoStartPlayers() - onlinePlayers) + plugin.getConfigManager().getMainColor() + " more players to start.");
             }
         } else {
-            player.sendTitle(ChatColor.GRAY + "You are now a spectator.", ChatColor.GRAY + "Please wait until the game concludes.", 10, 70, 20);            plugin.getPlayerManager().setPlayerAsSpectator(player);
-            teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
+            player.sendTitle(ChatColor.GRAY + "You are now a spectator.", ChatColor.GRAY + "Please wait until the game concludes.", 10, 70, 20);
+            plugin.getPlayerManager().setPlayerAsSpectator(player);
+            plugin.getLocationManager().teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
         }
     }
 
@@ -66,14 +67,7 @@ public class PlayerConnection implements Listener {
     }
 
 
-    private void teleport(Player player, Location location, String locationName) {
-        if(location == null){
-            player.sendMessage(ChatColor.RED + locationName + " location is not set.");
-            player.sendMessage(ChatColor.RED + "Use /cs setlobby to set it.");
-            return;
-        }
-            player.teleport(location);
-    }
+
 
 
 }

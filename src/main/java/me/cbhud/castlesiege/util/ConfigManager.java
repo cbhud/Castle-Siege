@@ -74,11 +74,6 @@ public class ConfigManager {
         return config.getInt("coins-on-win", 3);
     }
 
-
-    public int getTntCooldown() {
-        return config.getInt("tntCooldown", 120);
-    }
-
     public String getTeamName(Team team){
         if (team == Team.Attackers){
             return config.getString("attackersTeamName");

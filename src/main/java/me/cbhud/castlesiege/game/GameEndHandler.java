@@ -1,4 +1,4 @@
-package me.cbhud.castlesiege.state;
+package me.cbhud.castlesiege.game;
 
 import me.cbhud.castlesiege.*;
 import org.bukkit.*;

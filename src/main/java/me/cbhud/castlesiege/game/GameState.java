@@ -1,4 +1,4 @@
-package me.cbhud.castlesiege.state;
+package me.cbhud.castlesiege.game;
 
 public enum GameState {
     LOBBY,

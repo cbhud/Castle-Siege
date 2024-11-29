@@ -1,6 +1,7 @@
 package me.cbhud.castlesiege.util;
 
 import me.cbhud.castlesiege.CastleSiege;
+import me.cbhud.castlesiege.game.GameState;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ import java.util.UUID;
 
 public class TNTThrower implements Listener {
 
-    private static final double TNT_VELOCITY = 1.5;
+    private static final double TNT_VELOCITY = 1.6;
     private CastleSiege plugin;
     private final Map<UUID, Long> cooldowns = new HashMap<>();
     private long COOLDOWN_DURATION;
@@ -34,7 +35,7 @@ public class TNTThrower implements Listener {
         Player player = event.getPlayer();
         ItemStack mainHandItem = player.getInventory().getItemInMainHand();
 
-        if (event.getAction() == Action.RIGHT_CLICK_AIR && mainHandItem.getType() == Material.TNT) {
+        if (event.getAction() == Action.RIGHT_CLICK_AIR && mainHandItem.getType() == Material.TNT && plugin.getGame().getState() == GameState.IN_GAME) {
             UUID playerId = player.getUniqueId();
             long currentTime = System.currentTimeMillis();
             if (!cooldowns.containsKey(playerId) || currentTime - cooldowns.get(playerId) >= COOLDOWN_DURATION) {

@@ -3,8 +3,8 @@ package me.cbhud.castlesiege.event;
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
 import me.cbhud.castlesiege.kits.KitManager;
-import me.cbhud.castlesiege.state.GameState;
-import me.cbhud.castlesiege.state.Type;
+import me.cbhud.castlesiege.game.GameState;
+import me.cbhud.castlesiege.game.Type;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,11 +42,11 @@ public class PlayerDeathHandler implements Listener {
                 }
             });
             event.getDrops().clear();
-            if (plugin.getType().getState() == Type.Hardcore) {
+            if (plugin.getGame().getType() == Type.Hardcore) {
                 plugin.getPlayerManager().setPlayerAsSpectator(player);
                 plugin.getScoreboardManager().decrementTeamPlayersCount(player);
                 player.sendTitle(ChatColor.RED + "You have died!", ChatColor.GRAY + "Better luck next time!", 10, 70, 20);
-                teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
+                plugin.getLocationManager().teleport(player, plugin.getLocationManager().getMobLocation(), "Mob spawn location");
                 if (plugin.getScoreboardManager().getVikings() < 1) {
                     plugin.getGameEndHandler().setWinner(Team.Defenders);
                     plugin.getGameEndHandler().handleGameEnd();
@@ -116,13 +116,6 @@ public class PlayerDeathHandler implements Listener {
         }
     }
 
-    protected void teleport(Player player, Location location, String locationName) {
-        if(location == null){
-            player.sendMessage(ChatColor.RED + locationName + " location is not set.");
-            player.sendMessage(ChatColor.RED + "Use /cs setlobby to set it.");
-            return;
-        }
-        player.teleport(location);
-    }
+
 
 }

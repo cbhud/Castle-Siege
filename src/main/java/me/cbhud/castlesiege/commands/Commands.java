@@ -2,9 +2,9 @@ package me.cbhud.castlesiege.commands;
 
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.kits.KitManager;
-import me.cbhud.castlesiege.playerstate.PlayerStates;
-import me.cbhud.castlesiege.state.GameState;
-import me.cbhud.castlesiege.state.Type;
+import me.cbhud.castlesiege.player.PlayerStates;
+import me.cbhud.castlesiege.game.GameState;
+import me.cbhud.castlesiege.game.Type;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -70,7 +70,7 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             }
         } else {
-            sender.sendMessage(ChatColor.RED + "The game is not in GAME STATE. You cannot end it now.");
+            sender.sendMessage(ChatColor.RED + "You cannot end game in this STATE");
         }
 
         return true;
@@ -149,7 +149,7 @@ public class Commands implements CommandExecutor {
                     line = line.replace("{defenders}", plugin.getConfigManager().getDefender());
                     Bukkit.broadcastMessage(line);
                 }
-                if (plugin.getType().getState() == Type.Hardcore){
+                if (plugin.getGame().getType() == Type.Hardcore){
                 for (String line : plugin.getMessagesConfig().getHardCoreEnabledMsg()){
                     Bukkit.broadcastMessage(line);
                     }
@@ -191,23 +191,23 @@ public class Commands implements CommandExecutor {
                 if (teamSpawn != null) {
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         if (plugin.getTeamManager().getTeam(player) == team) {
-                            plugin.getPlayerManager().setPlayerAsPlaying(player);
-
-                            Bukkit.getScheduler().runTask(plugin, () -> player.teleport(teamSpawn));
-
+                            // Call setPlayerAsPlaying directly (no need for extra scheduling)
                             Bukkit.getScheduler().runTask(plugin, () -> {
+                                plugin.getPlayerManager().setPlayerAsPlaying(player);
+                                player.teleport(teamSpawn);
+
                                 if (plugin.getPlayerManager().getPlayerState(player) == PlayerStates.PLAYING) {
                                     KitManager.KitData selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
                                     plugin.getPlayerKitManager().giveKit(player, selectedKit);
                                 }
                             });
                         }
-
                     }
                 }
             }
         });
     }
+
 
 
 
@@ -220,12 +220,12 @@ public class Commands implements CommandExecutor {
                 String msg = plugin.getMessagesConfig().getHardcoreMsg().toString().replaceAll("]", "");
                 msg = msg.replace("[", "");
 
-                if (plugin.getType().getState() == Type.Normal) {
-                    plugin.getType().setState(Type.Hardcore);
+                if (plugin.getGame().getType() == Type.Normal) {
+                    plugin.getGame().setType(Type.Hardcore);
 
                     Bukkit.broadcastMessage(msg + " §aenabled!");
                 }else{
-                    plugin.getType().setState(Type.Normal);
+                    plugin.getGame().setType(Type.Normal);
                     Bukkit.broadcastMessage(msg + " §cdisabled!");
                 }
                 plugin.getScoreboardManager().updateScoreboardForAll();

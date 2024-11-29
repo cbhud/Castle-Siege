@@ -2,7 +2,7 @@ package me.cbhud.castlesiege.event;
 
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.gui.Manager;
-import me.cbhud.castlesiege.state.GameState;
+import me.cbhud.castlesiege.game.GameState;
 import me.cbhud.castlesiege.team.Team;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

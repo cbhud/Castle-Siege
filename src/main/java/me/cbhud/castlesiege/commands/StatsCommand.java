@@ -13,9 +13,14 @@ import java.sql.SQLException;
 public class StatsCommand implements CommandExecutor {
 
     private final CastleSiege plugin;
+    ChatColor main;
+    ChatColor second;
 
     public StatsCommand(CastleSiege plugin) {
+
         this.plugin = plugin;
+        this.main = plugin.getConfigManager().getMainColor();
+        this.second = plugin.getConfigManager().getSecondaryColor();
     }
 
     @Override
@@ -59,16 +64,17 @@ public class StatsCommand implements CommandExecutor {
                 int kills = resultSet.getInt("kills");
                 int deaths = resultSet.getInt("deaths");
                 double kdr = (deaths == 0) ? kills : ((double) kills / deaths); // Calculate KDR (handle division by zero)
+                String formattedKdr = String.format("%.2f", kdr);  // Round to 2 decimal places);
                 int kingKills = resultSet.getInt("king_kills");
                 int coins = resultSet.getInt("coins");
 
-                sender.sendMessage(ChatColor.YELLOW + "Stats for: " + ChatColor.AQUA + username);
-                sender.sendMessage(ChatColor.AQUA + "Wins: " + ChatColor.WHITE + wins);
-                sender.sendMessage(ChatColor.AQUA + "Kills: " + ChatColor.WHITE + kills);
-                sender.sendMessage(ChatColor.AQUA + "Deaths: " + ChatColor.WHITE + deaths);
-                sender.sendMessage(ChatColor.AQUA + "KDR: " + ChatColor.WHITE + kdr);
-                sender.sendMessage(ChatColor.AQUA + "King Kills: " + ChatColor.WHITE + kingKills);
-                sender.sendMessage(ChatColor.AQUA + "Coins " + ChatColor.WHITE + coins);
+                sender.sendMessage(main + "Stats for: " + second + username);
+                sender.sendMessage(main + "Wins: " + second + wins);
+                sender.sendMessage(main + "Kills: " + second + kills);
+                sender.sendMessage(main + "Deaths: " + second + deaths);
+                sender.sendMessage(main + "KDR: " + second + formattedKdr);
+                sender.sendMessage(main + "King Kills: " + second + kingKills);
+                sender.sendMessage(main + "Coins " + second + coins);
             } else {
                 sender.sendMessage(ChatColor.RED + "Player " + username + " has no stats recorded.");
             }
