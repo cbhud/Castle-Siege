@@ -1,4 +1,3 @@
-
 # Castle Siege Plugin Documentation
 
 ## Introduction
@@ -9,18 +8,18 @@
 
 ## Features Overview
 
--   **Teams**: Two sides – Defenders and Attackers.
--   **8 Kits**: Four unique kits per team, each with custom abilities.
--   **Modes**: Normal (respawn allowed) or Hardcore (no respawns).
--   **Abilities**: Special items for kits with various effects.
--   **Coins**: Earned through gameplay to unlock new kits.
--   **Kill Rewards**: Get boosts like Speed or Regeneration on kills.
--   **Throwable Weapons**: Berserker’s throwable axes and Bombardier’s TNT to damage players or destroy obstacles.
--   **Map Regeneration**: Automatically rebuilds destroyed fences after each game.
--   **Statistics Tracking**: Tracks kills, deaths, and wins for each player.
--   **Fully Configurable**: Modify teams, kits, coins, messages, and more.
--   **Autostart**: Game can automatically begin when enough players join.
--   **Free Map**: Pre-made map available for download and use.
+- **Teams**: Engage in battle as a Defender or Attacker.
+- **8 Kits**: Choose from 4 specialized kits per team, each with custom abilities.
+- **Game Modes**: Play in Normal Mode or Hardcore Mode (where respawning is disabled).
+- **Abilities**: Each kit includes a unique ability item, adding strategic depth to gameplay.
+- **Coins**: Earn coins by eliminating opponents or winning the game. Use coins to purchase additional kits.
+- **Kill Rewards**: Gain temporary effects, like speed or regeneration, upon defeating enemies.
+- **Throwable Weapons**: Berserkers throw axes, and Bombardiers use TNT to damage players or destroy barriers.
+- **Map Regeneration**: The map’s defenses (like fences) automatically regenerate after each game.
+- **Statistics Tracking**: Tracks kills, deaths, and wins for each player.
+- **Fully Configurable**: All settings, kits, and messages can be customized to fit your preferences.
+- **Autostart**: Games can start automatically with adjustable settings.
+- **Map Included**: A custom map is provided for Castle Siege gameplay.
 
 ----------
 
@@ -28,16 +27,15 @@
 
 ### Requirements:
 
--   Minecraft server running **Spigot** or **Paper** (version 1.17+).
--   Java **17** or later.
--   **Maven** for compiling the plugin (optional for development).
+- Minecraft server running **Spigot**, **Paper**, or **Purpur** (version 1.17+).
+- Java **17** or later.
 
 ### Steps:
 
-1.  Download the latest Castle Siege JAR from the [releases](https://www.spigotmc.org/resources/castle-siege.115123/) page.
-2.  Place the JAR file into your server’s `plugins/` folder.
-3.  Restart the server to enable the plugin.
-4.  Configure the plugin using the provided configuration files.
+1. Download the latest Castle Siege JAR from [SpigotMC](https://www.spigotmc.org/resources/castle-siege-king-teams-kits-abilities-coins-stats-map-regeneration-more.115123/) or [GitHub](https://github.com/cbhud/Castle-Siege).
+2. Place the JAR file into your server's `plugins/` folder.
+3. Restart the server to enable the plugin.
+4. Configure the plugin using the provided configuration files.
 
 ----------
 
@@ -47,40 +45,51 @@
 
 Adjust key settings such as team names, game duration, kit prices, king health, and coin rewards.
 
--   **maxPlayersPerTeam**: Maximum players per team (default: 16).
--   **auto-start-players**: Minimum players required to start the game automatically.
--   **king-health**: Health points for the King (default: 80.0).
--   **coins-on-kill / coins-on-win**: Set coin rewards for kills and victories.
+- **maxPlayersPerTeam**: Maximum players per team (default: 16).
+- **auto-start-players**: Minimum players required to start the game automatically.
+- **king-health**: Health points for the King (default: 80.0).
+- **coins-on-kill / coins-on-win**: Set coin rewards for kills and victories.
+- **auto-start-countdown**: Set countdown timer for the game to begin.
+- **timerMinutes**: Duration of the game in minutes.
+- **tntCooldown**: Adjust cooldown for Bombardier TNT.
 
 ### Kit Configuration (`kits.yml`)
 
-The **kits.yml** file allows you to customize kits, item prices, and abilities. For now, it's recommended to only adjust kit items and prices without altering kit names or teams.
+The **kits.yml** file allows customization of kits, item prices, and abilities. For stability, avoid altering team and kit names.
 
 ### Map Regeneration
 
-Attackers can destroy **Oak Fences**, and Defenders can rebuild them. Fences automatically regenerate after the game.
+The **Map Regeneration System** ensures that gameplay starts fresh after every round by restoring broken or modified map elements. Key features include:
+
+- **Automatic Fence Restoration**: Any destroyed oak fences, crucial to gameplay as obstacles or defenses, are rebuilt at the end of each game.
+- **Manual Saving**: Server admins can use the `/cs save` command to define new fence positions if the map layout changes or is edited.
+- **Real-Time Repair During Gameplay**: Defenders can manually rebuild destroyed fences during the game to slow down attackers. This mechanic adds a strategic layer to team defense.
+- **Performance Optimized**: The regeneration process is lightweight, ensuring no lag or performance drops even on large maps.
+
+To customize this system, ensure proper configuration in the plugin's settings and use the `/cs save` command after editing your map.
 
 ----------
 
 ## Commands
 
 ### Permissions:
--   `cs.admin`: Full access to admin commands.
+- `cs.admin`: Full access to admin commands.
+
 ### Admin Commands:
 
--   `/cs setlobby`: Set the lobby location.
--   `/cs setspawn <team>`: Set spawn locations for Attackers or Defenders.
--   `/cs setmobspawn`: Set the King's spawn point.
--   `/cs start`: Start the game manually.
--   `/cs endgame`: End the game without a winner.
--   `/cs type`: Toggle between Normal and Hardcore modes.
-
--   `/coins <set | add | remove> <player> <amount>`: Manage player coins.
+- `/cs setlobby`: Set the lobby location.
+- `/cs setspawn <team>`: Set spawn locations for Attackers or Defenders.
+- `/cs setkingspawn`: Set the King's spawn point.
+- `/cs start`: Start the game manually.
+- `/cs endgame`: End the game without a winner.
+- `/cs type`: Toggle between Normal and Hardcore modes.
+- `/cs save`: Save fence locations for map regeneration.
+- `/coins <set | add | remove> <player> <amount>`: Manage player coins.
+- `/kit <lock | unlock> <kit> <player>`: Lock or unlock kits for players.
 
 ### Player Commands:
 
--   `USE SELECTOR`:  Join a specific team or select a kit.
--   `/stats [player]`: View player statistics.
+- `/stats [player]`: View statistics for yourself or another player.
 
 ----------
 
@@ -88,11 +97,11 @@ Attackers can destroy **Oak Fences**, and Defenders can rebuild them. Fences aut
 
 ### Normal Mode:
 
-Players respawn 5 seconds after death. It’s suitable for more casual gameplay where players can keep battling after death.
+Players respawn 5 seconds after death. Ideal for casual gameplay.
 
 ### Hardcore Mode:
 
-Players do not respawn after death, raising the stakes for each move.
+No respawns after death, increasing the stakes.
 
 Use `/cs type` to switch between **Normal** and **Hardcore**.
 
@@ -102,72 +111,61 @@ Use `/cs type` to switch between **Normal** and **Hardcore**.
 
 ### Attackers:
 
-1.  **Skald**:
-    
-    -   Weapons: Stone Sword, Bow (32 arrows), Healing Stew (2x)
-    -   Ability: **Skald Sight** (Jump Boost, Speed, Night Vision)
-    -   Kill Effects: Harm Arrow, Regeneration, Absorption
-2.  **Bombardier**:
-    
-    -   Weapons: Stone Sword, Throwable TNT, Chain Armor, Healing Stew
-    -   Ability: **Throwable TNT** (destroys fences)
-    -   Kill Effects: Speed, Jump Boost
-3.  **Berserker**:
-    
-    -   Weapons: Iron Axe, Throwable Axe, Chain Armor, Healing Stew
-    -   Ability: **Rage** (Speed, Resistance, Strength)
-    -   Kill Effects: Absorption, Regeneration
-4.  **Warrior**:
-    
-    -   Weapons: Iron Sword, Iron Armor, Healing Stew
-    -   Ability: **Ragnarok** (Strength 1, Speed 1)
-    -   Kill Effects: Resistance
+1. **Skald**:
+    - Weapons: Stone Sword, Bow (32 arrows), Healing Stew (2x)
+    - Ability: **Skald Sight** (Jump Boost, Speed, Night Vision)
+    - Kill Effects: Harm Arrow, Regeneration, Absorption
+2. **Bombardier**:
+    - Weapons: Stone Sword, Throwable TNT, Chain Armor, Healing Stew
+    - Ability: **Throwable TNT** (destroys fences)
+    - Kill Effects: Speed, Jump Boost
+3. **Berserker**:
+    - Weapons: Iron Axe, Throwable Axe, Chain Armor, Healing Stew
+    - Ability: **Rage** (Speed, Resistance, Strength)
+    - Kill Effects: Absorption, Regeneration
+4. **Warrior**:
+    - Weapons: Iron Sword, Iron Armor, Healing Stew
+    - Ability: **Ragnarok** (Strength 1, Speed 1)
+    - Kill Effects: Resistance
 
 ### Defenders:
 
-1.  **Marksman**:
-    
-    -   Weapons: Stone Sword, Crossbow (32 arrows), Chain Armor, Healing Stew
-    -   Kill Effects: Spectral Arrow, Speed
-2.  **Spearman**:
-    
-    -   Weapons: Iron Sword, Loyalty Spear, Chain Armor, Healing Stew
-    -   Kill Effects: Speed
-3.  **Wizard**:
-    
-    -   Weapons: Mystic Sword (chance to cast poison), Attack Wand (cast poison, slowness, or blindness), Support Wand (boost teammates)
-    -   Kill Effects: Blast enemies within 10 blocks for 3 hearts of damage
-4.  **Knight**:
-    
-    -   Weapons: Iron Sword, Iron Armor, Healing Stew
-    -   Kill Effects: Speed, Resistance
+1. **Marksman**:
+    - Weapons: Stone Sword, Crossbow (32 arrows), Chain Armor, Healing Stew
+    - Kill Effects: Spectral Arrow, Speed
+2. **Spearman**:
+    - Weapons: Iron Sword, Loyalty Spear, Chain Armor, Healing Stew
+    - Kill Effects: Speed
+3. **Wizard**:
+    - Weapons: Mystic Sword (chance to cast poison), Attack Wand, Support Wand
+    - Kill Effects: Blast enemies within 10 blocks
+4. **Knight**:
+    - Weapons: Iron Sword, Iron Armor, Healing Stew
+    - Kill Effects: Speed, Resistance
 
 ----------
 
 ## Coin System
 
-Players earn coins for kills and wins, which can be used to purchase and unlock kits. The number of coins rewarded can be configured in `config.yml`:
+Earn coins for kills and victories, configurable in `config.yml`:
 
--   **coins-on-kill**: Coins earned per kill.
--   **coins-on-win**: Coins earned for winning the game.
+- **coins-on-kill**: Coins earned per kill.
+- **coins-on-win**: Coins earned for winning the game.
 
-----------
-
-## Map Regeneration System
-
-Attackers can destroy **Oak Fences**, while Defenders can rebuild them during the game. After the game ends, all destroyed or placed fences are automatically regenerated.
+Coins unlock kits or upgrades. Admins can manage coins using `/coins` commands.
 
 ----------
 
-## Free Map
+## Map Details
 
-A pre-built map is available for download:
+A pre-built map is included for Castle Siege gameplay:
 
--   [Map Download Link](https://www.mediafire.com/file/7b348d4d9f2ugxo/world.rar/file)
--   Coordinates: `-751, 116, 607`
+- Coordinates: `X: 63, Y: 105, Z: -80`
+
+Use `/cs save` if fences are modified.
 
 ----------
 
 ## Future Updates
 
-The plugin will receive monthly updates with bug fixes, new features, and balance improvements. For feedback or bug reports, contact me via Discord: cbhud.
+The plugin receives frequent updates with new features and bug fixes. Planned features include advanced configuration options, multi-arena support, and enhanced customization. For feedback or bug reports, contact via Discord: cbhud.
