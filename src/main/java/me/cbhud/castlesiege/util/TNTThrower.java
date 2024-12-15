@@ -39,7 +39,7 @@ public class TNTThrower implements Listener {
             UUID playerId = player.getUniqueId();
             long currentTime = System.currentTimeMillis();
             if (!cooldowns.containsKey(playerId) || currentTime - cooldowns.get(playerId) >= COOLDOWN_DURATION) {
-                // Player is not on cooldown or cooldown has expired
+
                 cooldowns.put(playerId, currentTime);
 
                 Vector direction = player.getLocation().getDirection();
@@ -49,7 +49,6 @@ public class TNTThrower implements Listener {
                 primedTnt.setVelocity(direction);
                 event.setCancelled(true); // Cancel the event to prevent TNT placement
             } else {
-                // Player is on cooldown
                 long remainingCooldown = COOLDOWN_DURATION - (currentTime - cooldowns.get(playerId));
                 int remainingCooldownSeconds = (int) (remainingCooldown / 1000);
                 for (String line : plugin.getMessagesConfig().getCooldown()){

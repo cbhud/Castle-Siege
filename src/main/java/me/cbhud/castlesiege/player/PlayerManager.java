@@ -74,13 +74,7 @@ public class PlayerManager {
 
     public void setPlayerAsSpectator(Player player) {
         playerStates.put(player, SPECTATOR);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.setGameMode(GameMode.SPECTATOR);
-
-            }
-        }.runTask(plugin);
+        player.setGameMode(GameMode.SPECTATOR);
     }
 
 

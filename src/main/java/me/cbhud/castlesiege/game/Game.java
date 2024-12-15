@@ -1,7 +1,6 @@
 package me.cbhud.castlesiege.game;
 import me.cbhud.castlesiege.CastleSiege;
 
-
 public class Game {
     private final CastleSiege plugin;
     private GameState currentState;

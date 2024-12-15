@@ -38,8 +38,10 @@ public class Commands implements CommandExecutor {
                 return endGameCommand(sender);
             case "setlobby":
                 return lobbyCommand(sender);
-            case "setmobspawn":
+            case "setkingspawn":
                 return setMobSpawnCommand(sender);
+            case "save":
+                return saveCommand(sender);
             case "start":
                 return startCommand(sender);
             case "teamspawn":
@@ -130,6 +132,8 @@ public class Commands implements CommandExecutor {
                 plugin.getTimer().cancelCountdown2();
             }
 
+                plugin.getMapRegeneration().saveOriginalFenceLocations();
+
                 if (plugin.getLocationManager().getMobLocation() != null) {
                     plugin.getMobManager().spawnCustomMob();
                 } else {
@@ -209,7 +213,22 @@ public class Commands implements CommandExecutor {
     }
 
 
+    private boolean saveCommand(CommandSender sender) {
 
+        if (plugin.getGame().getState() == GameState.LOBBY) {
+            if (sender.hasPermission("cs.admin")) {
+
+                    Bukkit.broadcastMessage("§aMap changes have been saved for OAK FENCES");
+                    plugin.getMapRegeneration().setSaved();
+                    plugin.getMapRegeneration().saveOriginalFenceLocations();
+                return true;
+
+            }
+
+        }
+        sender.sendMessage("§cYou can only save map regen in Lobby state!");
+        return false;
+    }
 
 
     private boolean typeCommand(CommandSender sender) {

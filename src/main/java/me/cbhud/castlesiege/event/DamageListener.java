@@ -26,18 +26,15 @@ public class DamageListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        // Only process damage events involving players
         if (!(event.getEntity() instanceof Player)) return;
 
         Player damagedPlayer = (Player) event.getEntity();
 
-        // Cancel damage if the game is in the LOBBY or END states
         if (plugin.getGame().getState() == GameState.LOBBY || plugin.getGame().getState() == GameState.END) {
             event.setCancelled(true);
             return;
         }
 
-        // Only process EntityDamageByEntityEvent events
         if (!(event instanceof EntityDamageByEntityEvent)) return;
 
         EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) event;
@@ -45,17 +42,14 @@ public class DamageListener implements Listener {
 
         if (damager == null) return;
 
-        // Check team affiliations of the damaged player and damager
         Team damagedPlayerTeam = plugin.getTeamManager().getTeam(damagedPlayer);
         Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
-        // Cancel event only if the damager and damaged player are on the same team
         if (damagedPlayerTeam != null && damagedPlayerTeam.equals(damagerTeam)) {
             event.setCancelled(true);
             return;
         }
 
-        // If the damager is using a specific sword, apply a poison effect with a chance
         ItemMeta damagerItemMeta = damager.getInventory().getItemInMainHand().getItemMeta();
         if (damagerItemMeta != null && damagerItemMeta.equals(Manager.sword.getItemMeta())) {
             if (rand.nextInt(15) == 5) {
@@ -64,7 +58,6 @@ public class DamageListener implements Listener {
         }
     }
 
-    // Helper method to identify the damager as a player, if applicable
     private Player getDamagerPlayer(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
             return (Player) event.getDamager();

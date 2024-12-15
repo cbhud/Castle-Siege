@@ -3,8 +3,11 @@ package me.cbhud.castlesiege.util;
 import me.cbhud.castlesiege.CastleSiege;
 import me.cbhud.castlesiege.game.GameState;
 import me.cbhud.castlesiege.team.Team;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,23 +15,52 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapRegeneration implements Listener {
 
-    private final Map<Location, Material> originalBlockStates;
-    private final Map<Location, Material> changedBlocks;
-    private final Map<Location, Material> PlaceoriginalBlockStates;
-    private final Map<Location, Material> PlacechangedBlocks;
+    private final List<Location> originalLocation;
+    private final List<Location> changedBlocks;
+    private final List<Location> placedBlocks;
     private final CastleSiege plugin;
+    private boolean isSaved;
 
     public MapRegeneration(CastleSiege plugin) {
-        originalBlockStates = new HashMap<>();
-        changedBlocks = new HashMap<>();
-        PlacechangedBlocks = new HashMap<>();
-        PlaceoriginalBlockStates = new HashMap<>();
+        originalLocation = new ArrayList<>();
+        changedBlocks = new ArrayList<>();
+        placedBlocks = new ArrayList<>();
         this.plugin = plugin;
+        this.isSaved = false;
+    }
+
+    public void setSaved(){
+        this.isSaved = false;
+    }
+    public void saveOriginalFenceLocations() {
+        if (isSaved){
+            return;
+        }
+        // Only scan the overworld ("world") for oak fences
+        Bukkit.getWorlds().stream()
+                .filter(world -> world.getName().equalsIgnoreCase("world")) // Only the overworld
+                .forEach(world -> {
+                    // Iterate over the loaded chunks in the world
+                    for (Chunk chunk : world.getLoadedChunks()) {
+                        // Iterate through the blocks within the chunk
+                        for (int x = 0; x < 16; x++) {  // Chunk width (16 blocks)
+                            for (int y = 0; y < world.getMaxHeight(); y++) {  // Chunk height (up to world height)
+                                for (int z = 0; z < 16; z++) {  // Chunk depth (16 blocks)
+                                    Block block = chunk.getBlock(x, y, z);
+                                    if (block.getType() == Material.OAK_FENCE) {
+                                        originalLocation.add(block.getLocation());  // Track oak fences
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    this.isSaved = true;
+                });
     }
 
     @EventHandler
@@ -38,57 +70,48 @@ public class MapRegeneration implements Listener {
         if (plugin.getGame().getState() == GameState.IN_GAME && event.getBlock().getType() == Material.OAK_FENCE) {
             event.setCancelled(false);
             Location location = event.getBlock().getLocation();
-            originalBlockStates.put(location, Material.OAK_FENCE);
-            changedBlocks.put(location, Material.AIR);
-            if(plugin.getTeamManager().getTeam(player) == Team.Defenders){
+            changedBlocks.add(location); // Mark the oak fence as broken
+            if (plugin.getTeamManager().getTeam(player) == Team.Defenders) {
                 player.getInventory().addItem(new ItemStack(Material.OAK_FENCE, 1));
             }
 
-                event.getBlock().setType(Material.AIR);
-
-        } else event.setCancelled(!player.hasPermission("cs.admin") || !player.isOp());
-
+            event.getBlock().setType(Material.AIR); // Remove the block
+        } else {
+            event.setCancelled(!player.hasPermission("cs.admin") || !player.isOp());
+        }
     }
 
-
-    public void add(Location location){
-        originalBlockStates.put(location, Material.OAK_FENCE);
-        changedBlocks.put(location, Material.AIR);
+    public void add(Location location) {
+        changedBlocks.add(location); // Add broken oak fence to the list
     }
-
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event){
+    public void onBlockPlace(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
 
-        Player player = (Player) event.getPlayer();
-
-        if (plugin.getGame().getState() == GameState.IN_GAME && event.getBlock().getType() == Material.OAK_FENCE && plugin.getTeamManager().getTeam(player) ==  Team.Defenders){
-                event.setCancelled(false);
-                Location location = event.getBlock().getLocation();
-                PlaceoriginalBlockStates.put(location, Material.AIR);
-                PlacechangedBlocks.put(location, Material.OAK_FENCE);
-        }else event.setCancelled(!player.isOp() || !player.hasPermission("cs.admin"));
+        if (plugin.getGame().getState() == GameState.IN_GAME && event.getBlock().getType() == Material.OAK_FENCE && plugin.getTeamManager().getTeam(player) == Team.Defenders) {
+            event.setCancelled(false);
+            placedBlocks.add(event.getBlock().getLocation()); // Mark the oak fence as placed
+        } else {
+            event.setCancelled(!player.isOp() || !player.hasPermission("cs.admin"));
+        }
     }
 
     public void regenerateChangedBlocks() {
-        for (Map.Entry<Location, Material> entry : PlacechangedBlocks.entrySet()) {
-            Location location = entry.getKey();
-            Material originalMaterial = PlaceoriginalBlockStates.get(location);
-            if (originalMaterial != null) {
-                location.getBlock().setType(originalMaterial);
+        for (Location location : placedBlocks) {
+            Block block = location.getBlock();
+                block.setType(Material.AIR);
+        }
 
+        for (Location location : originalLocation) {
+            Block block = location.getBlock();
+            if (block.getType() == Material.AIR) {
+                block.setType(Material.OAK_FENCE); // Regenerate the original oak fence block
             }
         }
-        for (Map.Entry<Location, Material> entry : changedBlocks.entrySet()) {
-            Location location = entry.getKey();
-            Material originalMaterial = originalBlockStates.get(location);
-            if (originalMaterial != null) {
-                    location.getBlock().setType(originalMaterial);
-            }
-        }
-        PlaceoriginalBlockStates.clear();
-        PlacechangedBlocks.clear();
+
+        // Clear the tracking list after regeneration
         changedBlocks.clear();
-        originalBlockStates.clear();
+        placedBlocks.clear();
     }
 }

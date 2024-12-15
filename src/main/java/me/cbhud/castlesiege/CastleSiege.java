@@ -65,7 +65,7 @@ public class CastleSiege extends JavaPlugin
         this.getCommand("stats").setExecutor(new StatsCommand(this));
         this.getCommand("coins").setExecutor(new CoinsCommand(this));
         this.getCommand("cs").setExecutor(new Commands(this));
-        this.getServer().getPluginManager().registerEvents(new PlayerConnection(this), (Plugin)this);
+        this.getServer().getPluginManager().registerEvents(new PlayerConnection(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeathHandler(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(this), (Plugin)this);
         this.getServer().getPluginManager().registerEvents(new RightClickEffects(this), (Plugin)this);
