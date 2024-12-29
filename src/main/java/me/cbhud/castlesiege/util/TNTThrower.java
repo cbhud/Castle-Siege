@@ -64,13 +64,15 @@ public class TNTThrower implements Listener {
         if (!(event.getEntity() instanceof TNTPrimed)) return;
 
         boolean hasOakFence = false;
-        for (Iterator<Block> iterator = event.blockList().iterator(); iterator.hasNext();) {
+        Iterator<Block> iterator = event.blockList().iterator();
+
+        while (iterator.hasNext()) {
             Block block = iterator.next();
             if (block.getType() == Material.OAK_FENCE) {
                 block.breakNaturally();
-                hasOakFence = true;
                 plugin.getMapRegeneration().add(block.getLocation());
-            }else {
+                hasOakFence = true;
+            } else {
                 iterator.remove();
             }
         }
@@ -79,6 +81,7 @@ public class TNTThrower implements Listener {
             event.setCancelled(true);
         }
     }
+
 
     public void clearCooldowns() {
         cooldowns.clear();

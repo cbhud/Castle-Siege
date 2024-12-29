@@ -34,11 +34,10 @@ public class CastleSiege extends JavaPlugin
     private KitManager kitManager;
     private PlayerKitManager playerKitManager;
     private DataManager dataManager;
-
     private ConfigManager configManager;
-
     private MessagesConfiguration messagesConfig;
     private TNTThrower tntThrower;
+    private BBar bossBar;
 
     public void onEnable() {
 
@@ -48,7 +47,7 @@ public class CastleSiege extends JavaPlugin
         dataManager.connect();
         messagesConfig = new MessagesConfiguration(this);
         messagesConfig.loadConfig();
-
+        bossBar = new BBar(this);
         this.game = new Game(this);
         manager = new Manager();
         kitManager = new KitManager(this);
@@ -141,4 +140,5 @@ public class CastleSiege extends JavaPlugin
 
     public LocationManager getLocationManager(){return  locationManager;}
     public MessagesConfiguration getMessagesConfig(){return messagesConfig;}
+    public BBar getBossBar(){return  bossBar;}
 }

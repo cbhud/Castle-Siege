@@ -26,7 +26,7 @@ public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /cs <teamspawn|setlobby|setmobspawn|start|endgame|type>");
+            sender.sendMessage(ChatColor.RED + "Usage: /cs <teamspawn|setlobby|setkingspawn|start|endgame|type>");
             return true;
         }
 
@@ -40,8 +40,6 @@ public class Commands implements CommandExecutor {
                 return lobbyCommand(sender);
             case "setkingspawn":
                 return setMobSpawnCommand(sender);
-            case "save":
-                return saveCommand(sender);
             case "start":
                 return startCommand(sender);
             case "teamspawn":
@@ -51,7 +49,7 @@ public class Commands implements CommandExecutor {
                 }
                 return teamSpawnCommand(sender, args[1]);
             default:
-                sender.sendMessage(ChatColor.RED + "Unknown command. Available commands: endgame, setlobby, setmobspawn, start, teamspawn");
+                sender.sendMessage(ChatColor.RED + "Unknown command. Available commands: endgame, setlobby, setkingspawn, start, teamspawn");
                 return true;
         }
     }
@@ -128,16 +126,14 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "The game is not in LOBBY STATE. You cannot start it now.");
             return true;
         }
-            if(plugin.getTimer().isRunning()){
+            if(plugin.getTimer().isRun()){
                 plugin.getTimer().cancelCountdown2();
             }
-
-                plugin.getMapRegeneration().saveOriginalFenceLocations();
 
                 if (plugin.getLocationManager().getMobLocation() != null) {
                     plugin.getMobManager().spawnCustomMob();
                 } else {
-                    Bukkit.broadcastMessage(ChatColor.RED + "Mob spawn location not set. Use /setmobspawn to set the location.");
+                    Bukkit.broadcastMessage(ChatColor.RED + "King spawn location not set. Use /setkingspawn to set the location.");
                     return true;
                 }
             plugin.getScoreboardManager().loadTeamCount();
@@ -199,7 +195,7 @@ public class Commands implements CommandExecutor {
                             Bukkit.getScheduler().runTask(plugin, () -> {
                                 plugin.getPlayerManager().setPlayerAsPlaying(player);
                                 player.teleport(teamSpawn);
-
+                                plugin.getBossBar().showZombieHealthBar(plugin.getMobManager().getKingZombie());
                                 if (plugin.getPlayerManager().getPlayerState(player) == PlayerStates.PLAYING) {
                                     KitManager.KitData selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
                                     plugin.getPlayerKitManager().giveKit(player, selectedKit);
@@ -210,24 +206,6 @@ public class Commands implements CommandExecutor {
                 }
             }
         });
-    }
-
-
-    private boolean saveCommand(CommandSender sender) {
-
-        if (plugin.getGame().getState() == GameState.LOBBY) {
-            if (sender.hasPermission("cs.admin")) {
-
-                    Bukkit.broadcastMessage("§aMap changes have been saved for OAK FENCES");
-                    plugin.getMapRegeneration().setSaved();
-                    plugin.getMapRegeneration().saveOriginalFenceLocations();
-                return true;
-
-            }
-
-        }
-        sender.sendMessage("§cYou can only save map regen in Lobby state!");
-        return false;
     }
 
 

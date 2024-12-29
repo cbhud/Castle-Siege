@@ -20,16 +20,18 @@ public class Timers {
     private int countdownTimer;
     private final List<Integer> taskIds = new ArrayList<>();
     private BukkitRunnable timerTask;
+    private boolean isRunning;
 
     public Timers(CastleSiege plugin) {
         this.plugin = plugin;
         this.playersToStart = plugin.getConfigManager().getConfig().getInt("auto-start-players");
         this.initialCountdownSeconds = plugin.getConfigManager().getAutoStartCountdown();
         this.countdownSeconds = initialCountdownSeconds;
+        this.isRunning = false;
     }
 
     public void checkAutoStart(int currentPlayers) {
-        if(isRunning()){
+        if(isRunning){
             return;
         }
         if (currentPlayers >= playersToStart) {
@@ -41,6 +43,7 @@ public class Timers {
 
     private void startCountdown() {
         resetCountdown();
+        this.isRunning = true;
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if (countdownSeconds > 0) {
                 if (countdownSeconds == initialCountdownSeconds || countdownSeconds == 45 || countdownSeconds == 30 || countdownSeconds == 15 || countdownSeconds == 10 || countdownSeconds <= 5) {
@@ -53,6 +56,7 @@ public class Timers {
                 String command = "cs start";
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 Bukkit.dispatchCommand(console, command);
+                this.isRunning = false;
             }
         }, 0L, 20L);
         taskIds.add(taskId);
@@ -77,6 +81,7 @@ public class Timers {
         for (int taskId : taskIds) {
             Bukkit.getScheduler().cancelTask(taskId);
         }
+        this.isRunning = false;
         taskIds.clear();
         }
 
@@ -124,8 +129,8 @@ public class Timers {
         return countdownTimer;
     }
 
-    public boolean isRunning(){
-        return taskId != 0;
+    public boolean isRun(){
+        return this.isRunning;
     }
 
 }

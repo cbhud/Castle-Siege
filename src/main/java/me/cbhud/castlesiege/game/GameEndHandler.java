@@ -29,9 +29,7 @@ public class GameEndHandler implements Listener
         }, 200L);
         Bukkit.getScheduler().runTaskLater((Plugin)this.plugin, () -> {
             this.plugin.getMapRegeneration().regenerateChangedBlocks();
-            if (Bukkit.getOnlinePlayers().size() >= this.plugin.getConfigManager().getAutoStartPlayers()) {
-                this.plugin.getTimer().checkAutoStart(Bukkit.getOnlinePlayers().size());
-            }
+            this.plugin.getTimer().checkAutoStart(Bukkit.getOnlinePlayers().size());
         }, 300L);
     }
 
