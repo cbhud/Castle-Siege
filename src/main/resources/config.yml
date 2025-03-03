@@ -27,6 +27,9 @@ tntCooldown: 20
 tntDamage: 7.0
 ## 7.0 damage = 2 hearts
 
+##King Health Bossbar true/false
+bossbar-enabled: true
+
 
 #####################################
 ##ADJUST SCOREBOARD

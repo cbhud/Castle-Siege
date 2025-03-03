@@ -195,7 +195,9 @@ public class Commands implements CommandExecutor {
                             Bukkit.getScheduler().runTask(plugin, () -> {
                                 plugin.getPlayerManager().setPlayerAsPlaying(player);
                                 player.teleport(teamSpawn);
+                                if (plugin.getConfigManager().getBossBar()){
                                 plugin.getBossBar().showZombieHealthBar(plugin.getMobManager().getKingZombie());
+                                }
                                 if (plugin.getPlayerManager().getPlayerState(player) == PlayerStates.PLAYING) {
                                     KitManager.KitData selectedKit = plugin.getPlayerKitManager().getSelectedKit(player);
                                     plugin.getPlayerKitManager().giveKit(player, selectedKit);

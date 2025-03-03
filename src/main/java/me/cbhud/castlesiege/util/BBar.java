@@ -49,15 +49,12 @@ public class BBar {
                 Overlay.PROGRESS
         );
 
-        // Show the boss bar to all players
         this.adventure().players().showBossBar(this.bar);
 
-        // Update the boss bar periodically
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (!zombie.isValid() || zombie.isDead()) {
-                    // Remove the boss bar if the zombie is no longer valid
                     adventure().players().hideBossBar(bar);
                     cancel();
                     return;

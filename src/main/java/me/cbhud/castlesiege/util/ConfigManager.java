@@ -103,5 +103,7 @@ public class ConfigManager {
         return config.getString("king-name", "Charles");
     }
 
-
+    public boolean getBossBar() {
+        return config.getBoolean("bossbar-enabled", true);
+    }
 }
